@@ -1,0 +1,3 @@
+provider: generic
+url: https://futurescale.com/auto-updates
+updaterCacheDirName: puzzlemaster-updater
