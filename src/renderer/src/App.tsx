@@ -1,25 +1,13 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/puzzle-box.svg'
-
-import { API } from "../../shared/types"
-
-
-
-/*
-import { ElectronAPI } from "@electron-toolkit/preload";
-
-export interface API {
-  marco: () => string
-}
-
+import { ElectronAPI } from '@electron-toolkit/preload'
+import { API } from '../../shared/types'
 declare global {
-  interface Window {
+  export interface Window {
     electron: ElectronAPI
     api: API
   }
 }
-*/
-
 function App(): JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
   const marco = (): void => console.log(window.api.marco())

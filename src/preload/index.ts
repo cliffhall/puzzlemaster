@@ -1,7 +1,7 @@
 import { contextBridge } from 'electron'
-import { ElectronAPI, electronAPI } from '@electron-toolkit/preload'
-
-export interface API {
+import { electronAPI } from '@electron-toolkit/preload'
+import { API } from '../shared/types'
+/*export interface API {
   marco: () => string
 }
 
@@ -11,11 +11,12 @@ declare global {
     api: API
   }
 }
-
+*/
 // Custom APIs for renderer
 const api: API = {
   marco: () => 'polo'
 }
+
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
