@@ -6,14 +6,14 @@
   "author": "futurescale.com",
   "homepage": "https://electron-vite.org",
   "scripts": {
+    "dev": "electron-vite dev",
+    "build": "npm run typecheck && electron-vite build",
+    "start": "electron-vite preview",
     "format": "prettier --write .",
     "lint": "eslint --cache .",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
-    "start": "electron-vite preview",
-    "dev": "electron-vite dev",
-    "build": "npm run typecheck && electron-vite build",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
@@ -23,6 +23,10 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
+    "@puremvc/puremvc-typescript-multicore-framework": "^2.1.2",
+    "@puremvc/puremvc-typescript-util-async-command": "^1.0.1",
+    "@puremvc/puremvc-typescript-util-state-machine": "^1.0.2",
+    "dotenv": "^16.5.0",
     "electron-updater": "^6.3.9"
   },
   "devDependencies": {
