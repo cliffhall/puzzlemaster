@@ -12,7 +12,6 @@ export class StartupCommand extends AsyncMacroCommand {
   public override initializeAsyncMacroCommand(): void {
     this.addSubCommand(() => new PrepareModelCommand())
     this.addSubCommand(() => new PrepareViewCommand())
-
   }
 
   /**
