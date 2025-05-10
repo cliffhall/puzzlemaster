@@ -1,6 +1,6 @@
 import { IFacade, Facade } from '@puremvc/puremvc-typescript-multicore-framework'
 import { ConsoleMediator } from './view/ConsoleMediator'
-import { StartupCommand } from './controller/StartupCommand.js'
+import { StartupCommand } from './controller/StartupCommand'
 import { STARTUP } from './constants/AppConstants'
 
 export interface IAppFacade extends IFacade {

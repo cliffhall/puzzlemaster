@@ -36,7 +36,7 @@ function App(): JSX.Element {
         </div>
         <div className="action">
           <a target="_blank" rel="noreferrer" onClick={marco}>
-            Holla
+            Marco
           </a>
         </div>
       </div>

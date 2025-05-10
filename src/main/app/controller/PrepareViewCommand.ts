@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { IAppFacade } from '../AppFacade'
-import icon from '../../../resources/icon.png?asset'
+import icon from '../../../../resources/icon.png?asset'
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { INotification, SimpleCommand } from '@puremvc/puremvc-typescript-multicore-framework'

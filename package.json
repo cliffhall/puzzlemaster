@@ -21,13 +21,20 @@
     "build:linux": "electron-vite build && electron-builder --linux"
   },
   "dependencies": {
-    "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^4.0.0",
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@google/generative-ai": "^0.24.0",
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "@modelcontextprotocol/server-filesystem": "^2025.1.14",
     "@puremvc/puremvc-typescript-multicore-framework": "^2.1.2",
     "@puremvc/puremvc-typescript-util-async-command": "^1.0.1",
     "@puremvc/puremvc-typescript-util-state-machine": "^1.0.2",
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
+    "electron-updater": "^6.3.9",
     "dotenv": "^16.5.0",
-    "electron-updater": "^6.3.9"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.8.2"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
@@ -37,17 +44,14 @@
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^35.1.5",
     "electron-builder": "^25.1.8",
+    "electron": "^35.1.5",
     "electron-vite": "^3.1.0",
     "eslint": "^9.23.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "prettier": "^3.5.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^5.8.2",
     "vite": "^6.2.3"
   }
 }
