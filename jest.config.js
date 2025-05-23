@@ -7,4 +7,4 @@ export default {
   coverageDirectory: 'coverage',
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.ts']
-};
+}

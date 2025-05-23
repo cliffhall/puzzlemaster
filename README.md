@@ -1,24 +1,31 @@
 # puzzlemaster
 
 An MCP client that allows teams of agents to complete long-horizon tasks.
-* Uses the [puzzlebox MCP server](https://github.com/cliffhall/puzzlebox) for agent coordination.
-* Built with Electron, React, and TypeScript
+
+- Uses the [puzzlebox MCP server](https://github.com/cliffhall/puzzlebox) for agent coordination.
+- Built with Electron, React, and TypeScript
 
 <details><summary>Project Setup</summary>
 
-### Install
+## Install
 
 ```bash
 $ npm install
 ```
 
-### Development
+## Development
 
 ```bash
 $ npm run dev
 ```
 
-### Build
+## Test
+
+```bash
+$ npm run test
+```
+
+## Build
 
 ```bash
 # For windows
@@ -32,7 +39,6 @@ $ npm run build:linux
 ```
 
 </details>
-
 
 <details><summary>Domain Model</summary>
 
@@ -117,4 +123,5 @@ erDiagram
     TASK ||--o| VALIDATOR : has
 
 ```
+
 </details>
