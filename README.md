@@ -44,7 +44,11 @@ $ npm run build:linux
 
 </details>
 
-<details><summary>Domain Model</summary>
+<details><summary>
+
+## Domain Model
+
+</summary>
 
 ### Entity Relationships
 
