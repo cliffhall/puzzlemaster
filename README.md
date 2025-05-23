@@ -43,9 +43,9 @@ $ npm run build:linux
 
 ## Domain Model
 
-</summary>
-
 ### Entity Relationships
+
+
 
 ```mermaid
 erDiagram
