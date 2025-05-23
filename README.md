@@ -1,6 +1,8 @@
 # puzzlemaster
 
-An Electron application with React and TypeScript
+An MCP client that allows teams of agents to complete long-horizon tasks.
+* Uses the [puzzlebox MCP server](https://github.com/cliffhall/puzzlebox) for agent coordination.
+* Built with Electron, React, and TypeScript
 
 <details><summary>Project Setup</summary>
 
@@ -115,3 +117,4 @@ erDiagram
     TASK ||--o| VALIDATOR : has
 
 ```
+</details>
