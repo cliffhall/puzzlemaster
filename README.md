@@ -2,11 +2,7 @@
 
 An Electron application with React and TypeScript
 
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-
-## Project Setup
+<details><summary>Project Setup</summary>
 
 ### Install
 
@@ -31,4 +27,91 @@ $ npm run build:mac
 
 # For Linux
 $ npm run build:linux
+```
+
+</details>
+
+
+<details><summary>Domain Model</summary>
+
+### Entity Relationships
+
+```mermaid
+erDiagram
+    direction LR
+    PROJECT {
+        string id PK
+        string planId FK
+        string name
+        string description
+    }
+    PLAN {
+        string id PK
+        string projectId FK
+        string description
+        array phases
+    }
+    PHASE {
+        string id PK
+        string jobId FK
+        string name
+        array actions
+    }
+    VALIDATOR {
+        string id PK
+        string template
+        string resource
+    }
+
+    ACTION {
+        string id PK
+        string targetPhaseId FK
+        string validatorId FK
+        string name
+    }
+    TEAM {
+        string id PK
+        string phaseId FK
+        string name
+        array agents
+    }
+    AGENT {
+        string id PK
+        string teamId FK
+        string roleId FK
+        string name
+        array tasks
+    }
+    ROLE {
+        string id PK
+        string name
+        string description
+    }
+    JOB {
+        string id PK
+        string phaseId FK
+        string name
+        string description
+        array tasks
+    }
+    TASK {
+        string id PK
+        string jobId FK
+        string agentId FK
+        string validatorId FK
+        string name
+        string description
+    }
+    PROJECT ||--o| PLAN : has
+    PLAN ||--|{ PHASE : contains
+    TEAM ||--|{ AGENT : contains
+    AGENT ||--o| ROLE : has
+    AGENT ||--|{ TASK : "is assigned"
+    PHASE ||--|{ ACTION : contains
+    PHASE ||--o| JOB : has
+    PHASE ||--o| TEAM : has
+    JOB ||--|{ TASK : contains
+    ACTION ||--o| VALIDATOR : has
+    TASK ||--o| VALIDATOR : has
+
 ```
