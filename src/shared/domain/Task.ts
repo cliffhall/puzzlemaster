@@ -1,3 +1,8 @@
+/**
+ * Task
+ * - Part of a job assigned to a single agent for completion
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'

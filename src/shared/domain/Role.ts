@@ -1,3 +1,8 @@
+/**
+ * Plan
+ * - A project's plan, to be implemented in one or more phases
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'

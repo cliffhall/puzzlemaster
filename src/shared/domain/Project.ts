@@ -1,3 +1,8 @@
+/**
+ * Project
+ * - A project with an implementation plan that can be executed by teams of agents
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'

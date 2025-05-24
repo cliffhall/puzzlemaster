@@ -1,3 +1,8 @@
+/**
+ * Team
+ * - One or more agents assigned to complete a job associated with a single phase of a plan
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'

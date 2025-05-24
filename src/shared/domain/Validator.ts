@@ -1,3 +1,8 @@
+/**
+ * Validator
+ * - A prompt template intended to validate a particular resource
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'
