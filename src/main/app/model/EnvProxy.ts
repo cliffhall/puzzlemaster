@@ -17,9 +17,9 @@ export class EnvProxy extends Proxy {
    *
    * @param cwd
    * @param env
-   * @param warnlogger
+   * @param warnLogger
    */
-  constructor(cwd: string, env: ProcessEnv, warnlogger: (message: string, indent: number) => void) {
+  constructor(cwd: string, env: ProcessEnv, warnLogger: (message: string, indent: number) => void) {
     super(EnvProxy.NAME, null)
     const warnMsg: string = 'EnvProxy - Missing environment variable: '
 
@@ -50,12 +50,12 @@ export class EnvProxy extends Proxy {
       } else if (this.isProduction) {
         // In production, use default and log warning
         const defaultValue = defaults.get(envKey)
-        warnlogger(`${warnMsg}${envKey}, using default value "${defaultValue}"`, 2)
+        warnLogger(`${warnMsg}${envKey}, using default value "${defaultValue}"`, 2)
         this[propKey] = defaultValue
         this.missingVars.push(envKey)
       } else {
         // In development, log the issue but don't halt
-        warnlogger(`${warnMsg}${envKey}`, 2)
+        warnLogger(`${warnMsg}${envKey}`, 2)
         this[propKey] = defaults.get(envKey)
         this.missingVars.push(envKey)
       }
@@ -82,5 +82,9 @@ export class EnvProxy extends Proxy {
    */
   public getMissingVars(): string[] {
     return [...this.missingVars]
+  }
+
+  public varByKey(key): string | undefined {
+    return this.env[key]
   }
 }

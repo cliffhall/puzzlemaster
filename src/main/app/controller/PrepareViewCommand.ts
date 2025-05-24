@@ -4,6 +4,7 @@ import icon from '../../../../resources/icon.png?asset'
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { INotification, SimpleCommand } from '@puremvc/puremvc-typescript-multicore-framework'
+import { EnvProxy } from '../model/EnvProxy'
 
 export class PrepareViewCommand extends SimpleCommand {
   /**
@@ -13,8 +14,9 @@ export class PrepareViewCommand extends SimpleCommand {
     const f: IAppFacade = this.facade as IAppFacade
     f.log('⚙️ PrepareViewCommand - Creating app window', 2)
 
+    const envProxy = f.retrieveProxy(EnvProxy.NAME) as EnvProxy
+
     function createWindow(): void {
-      // Create the browser window.
       const mainWindow = new BrowserWindow({
         width: 900,
         height: 670,
@@ -38,8 +40,10 @@ export class PrepareViewCommand extends SimpleCommand {
 
       // HMR for renderer base on electron-vite cli.
       // Load the remote URL for development or the local html file for production.
-      if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-        mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
+      const url = envProxy.varByKey('ELECTRON_RENDERER_URL')
+      if (is.dev && url) {
+        mainWindow.loadURL(url)
+        mainWindow.webContents.openDevTools({ mode: 'detach' })
       } else {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
       }
