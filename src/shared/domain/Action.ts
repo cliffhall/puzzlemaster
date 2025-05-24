@@ -1,3 +1,8 @@
+/**
+ * Action
+ * - An action that an agent can take to trigger a change to another phase of a plan
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'

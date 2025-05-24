@@ -1,4 +1,8 @@
-/** Generic domain error */
+/**
+ * DomainError
+ * - A domain-specific error
+ */
+
 export class DomainError extends Error {
   constructor(message: string) {
     super(message)

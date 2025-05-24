@@ -5,7 +5,6 @@ An MCP client that allows teams of agents to complete long-horizon tasks.
 - Uses the [puzzlebox MCP server](https://github.com/cliffhall/puzzlebox) for agent coordination.
 - Built with Electron, React, and TypeScript
 
-
 ## Project Setup
 
 ### Install
@@ -57,7 +56,7 @@ $ npm run build:linux
 
 ### Entity Relationships
 
-
+* [In Mermaid Editor](https://www.mermaidchart.com/app/projects/c1568af3-b180-46e6-bd34-bee129ef3c3d/diagrams/d3cd4cd7-81b3-4c28-8a38-e4158f0ea532/version/v0.1/edit)
 
 ```mermaid
 erDiagram

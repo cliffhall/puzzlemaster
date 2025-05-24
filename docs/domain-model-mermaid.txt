@@ -1,3 +1,4 @@
+%%{init: {'theme':'forest'}}%%
 erDiagram
     direction LR
     PROJECT {
@@ -15,6 +16,7 @@ erDiagram
     PHASE {
         string id PK
         string jobId FK
+        string phaseId FK
         string name
         array actions
     }

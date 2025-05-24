@@ -1,3 +1,8 @@
+/**
+ * Job
+ * - A job is composed of one or more tasks that will complete a phase of a plan.
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'

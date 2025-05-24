@@ -1,3 +1,8 @@
+/**
+ * Agent
+ * - An agent with a specific role and assigned task list
+ */
+
 import { z } from 'zod'
 import { Result, ok, err } from 'neverthrow'
 import { DomainError } from './DomainError'
