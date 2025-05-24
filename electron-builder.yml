@@ -1,18 +1,19 @@
 appId: com.futurescale.puzzlemaster
 productName: puzzlemaster
 directories:
-  buildResources: build
+  buildResources: resources
 files:
   - '!**/.vscode/*'
   - '!src/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
-  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+  - '!{.env,.env.*,.npmrc}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 asarUnpack:
   - resources/**
 win:
   executableName: puzzlemaster
+  icon: resources/icon
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
@@ -24,6 +25,7 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
+  icon: resources/icon
 dmg:
   artifactName: ${name}-${version}.${ext}
 linux:
@@ -33,6 +35,7 @@ linux:
     - deb
   maintainer: futurescale.com
   category: Utility
+  icon: resources/icon
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false

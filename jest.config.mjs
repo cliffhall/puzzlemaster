@@ -2,7 +2,7 @@
 export default {
   testEnvironment: 'node',
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.(t|j)s$': ['ts-jest', { diagnostics: { ignoreCodes: ['TS151001'] } }]
   },
   coverageDirectory: 'coverage',
   collectCoverage: true,

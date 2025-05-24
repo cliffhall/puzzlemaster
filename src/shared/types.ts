@@ -10,11 +10,3 @@ declare global {
     api: API
   }
 }
-
-declare global {
-  interface ProcessEnv {
-    [key: string]: string | undefined
-    DATABASE_URL: string
-    API_KEY?: string
-  }
-}

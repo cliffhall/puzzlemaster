@@ -1,6 +1,5 @@
 import { join } from 'path'
 import { IAppFacade } from '../AppFacade'
-import icon from '../../../../resources/icon.png?asset'
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { INotification, SimpleCommand } from '@puremvc/puremvc-typescript-multicore-framework'
@@ -22,7 +21,6 @@ export class PrepareViewCommand extends SimpleCommand {
         height: 670,
         show: false,
         autoHideMenuBar: true,
-        ...(process.platform === 'linux' ? { icon } : {}),
         webPreferences: {
           preload: join(__dirname, '../preload/index.js'),
           sandbox: false
@@ -40,7 +38,9 @@ export class PrepareViewCommand extends SimpleCommand {
 
       // HMR for renderer base on electron-vite cli.
       // Load the remote URL for development or the local html file for production.
-      const url = envProxy.varByKey('ELECTRON_RENDERER_URL')
+      //const url = envProxy.varByKey('ELECTRON_RENDERER_URL');
+      const url = envProxy.getVar('ELECTRON_RENDERER_URL')
+
       if (is.dev && url) {
         mainWindow.loadURL(url)
         mainWindow.webContents.openDevTools({ mode: 'detach' })
