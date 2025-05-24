@@ -1,6 +1,6 @@
 /**
  * Validator
- * - A prompt template intended to validate a particular resource
+ * - A prompt template intended to validate whether a task is complete or if action can be taken.
  */
 
 import { z } from 'zod'

@@ -1,6 +1,6 @@
 /**
- * Plan
- * - A project's plan, to be implemented in one or more phases
+ * Role
+ * - An agent's role within a team.
  */
 
 import { z } from 'zod'
