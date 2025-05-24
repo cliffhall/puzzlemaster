@@ -43,41 +43,52 @@ $ npm run build:linux
 ### Entities
 
 [**Action**](src/shared/domain/Action.ts)
-* An action that an agent can take to trigger a change to another phase of a plan.
+
+- An action that an agent can take to trigger a change to another phase of a plan.
 
 [**Agent**](src/shared/domain/Agent.ts)
-* An agent with a specific role and assigned task list.
+
+- An agent with a specific role and assigned task list.
 
 [**Job**](src/shared/domain/Job.ts)
-* A job is composed of one or more tasks that will complete a phase of a plan.
+
+- A job is composed of one or more tasks that will complete a phase of a plan.
 
 [**Phase**](src/shared/domain/Phase.ts)
-* A phase of a project's implementation plan. has an associated team and a job to complete before other phases can commence.
+
+- A phase of a project's implementation plan. has an associated team and a job to complete before other phases can commence.
 
 [**Plan**](src/shared/domain/Plan.ts)
-* A project's plan, to be implemented in one or more phases.
+
+- A project's plan, to be implemented in one or more phases.
 
 [**Project**](src/shared/domain/Project.ts)
-* A project with an implementation plan that can be executed by teams of agents.
+
+- A project with an implementation plan that can be executed by teams of agents.
 
 [**Role**](src/shared/domain/Role.ts)
-* An agent's role within a team.
+
+- An agent's role within a team.
 
 [**Task**](src/shared/domain/Task.ts)
-* Part of a job assigned to a single agent for completion.
+
+- Part of a job assigned to a single agent for completion.
 
 [**Team**](src/shared/domain/Team.ts)
-* One or more agents assigned to complete a job associated with a single phase of a plan.
+
+- One or more agents assigned to complete a job associated with a single phase of a plan.
 
 [**Validator**](src/shared/domain/Validator.ts)
-* A prompt template intended to validate whether a task is complete or if action can be taken.
+
+- A prompt template intended to validate whether a task is complete or if action can be taken.
 
 [DomainError](src/shared/domain/DomainError.ts)
-* An error generated when creating or interacting with a domain entity.
+
+- An error generated when creating or interacting with a domain entity.
 
 ### Entity Relationships
 
-* [In Mermaid Editor](https://www.mermaidchart.com/app/projects/c1568af3-b180-46e6-bd34-bee129ef3c3d/diagrams/d3cd4cd7-81b3-4c28-8a38-e4158f0ea532/version/v0.1/edit)
+- [In Mermaid Editor](https://www.mermaidchart.com/app/projects/c1568af3-b180-46e6-bd34-bee129ef3c3d/diagrams/d3cd4cd7-81b3-4c28-8a38-e4158f0ea532/version/v0.1/edit)
 
 ```mermaid
 erDiagram

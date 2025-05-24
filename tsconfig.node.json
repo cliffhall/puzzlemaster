@@ -7,6 +7,7 @@
     "src/shared/**/*"
   ],
   "compilerOptions": {
+    "esModuleInterop": true,
     "composite": true,
     "types": ["electron-vite/node"]
   }

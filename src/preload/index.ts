@@ -1,17 +1,7 @@
 import { contextBridge } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { API } from '../shared/types'
-/*export interface API {
-  marco: () => string
-}
 
-declare global {
-  interface Window {
-    electron: ElectronAPI
-    api: API
-  }
-}
-*/
 // Custom APIs for renderer
 const api: API = {
   marco: () => 'polo'

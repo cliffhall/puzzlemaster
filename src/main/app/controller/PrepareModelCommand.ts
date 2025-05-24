@@ -8,7 +8,6 @@ export class PrepareModelCommand extends SimpleCommand {
    * - EnvProxy provides access to the environment
    * - ArgsProxy provides access to the command line arguments
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade
     f.log('⚙️ PrepareModelCommand - Registering Proxies', 2)

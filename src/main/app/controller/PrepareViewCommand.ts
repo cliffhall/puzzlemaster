@@ -9,7 +9,6 @@ export class PrepareViewCommand extends SimpleCommand {
   /**
    * Create app window
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade
     f.log('⚙️ PrepareViewCommand - Creating app window', 2)
