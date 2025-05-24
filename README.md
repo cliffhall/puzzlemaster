@@ -8,8 +8,6 @@ An MCP client that allows teams of agents to complete long-horizon tasks.
 
 ## Project Setup
 
-</summary>
-
 ### Install
 
 ```bash
@@ -42,6 +40,20 @@ $ npm run build:linux
 ```
 
 ## Domain Model
+
+### Entities
+
+[**Action**](src/shared/domain/Action.ts) |
+[**Agent**](src/shared/domain/Agent.ts) |
+[**Job**](src/shared/domain/Job.ts) |
+[**Phase**](src/shared/domain/Phase.ts) |
+[**Plan**](src/shared/domain/Plan.ts) |
+[**Project**](src/shared/domain/Project.ts) |
+[**Role**](src/shared/domain/Role.ts) |
+[**Task**](src/shared/domain/Task.ts) |
+[**Team**](src/shared/domain/Team.ts) |
+[**Validator**](src/shared/domain/Validator.ts) |
+[DomainError](src/shared/domain/DomainError.ts)
 
 ### Entity Relationships
 
