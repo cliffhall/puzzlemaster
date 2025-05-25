@@ -1,7 +1,7 @@
-import { getPreferences, setPreferences } from '../api'
+import { setPreferences } from '../api'
 
 import { useState, ReactElement } from 'react'
-import { Button, Card, Switch, Title, Combobox, InputBase, useCombobox, Input } from '@mantine/core'
+import { Card, Switch, Title, Combobox, InputBase, useCombobox, Input } from '@mantine/core'
 
 function Home(): ReactElement {
   const [theme, setTheme] = useState('light')
@@ -25,7 +25,7 @@ function Home(): ReactElement {
     </Combobox.Option>
   ))
 
-  const getLanguageComboBox = () => (
+  const getLanguageComboBox = (): ReactElement => (
     <Combobox
       store={langComboBox}
       withinPortal={false}
