@@ -1,0 +1,160 @@
+'m working on a desktop app where users can create long-horizon projects which teams of agents will complete in phases.
+
+
+
+Domain Model Entities:
+
+```markdown
+
+## Action
+
+An action that an agent can take to trigger a change to another phase of a plan.
+
+
+
+## Agent
+
+An agent with a specific role and assigned task list.
+
+
+
+##Job
+
+A job is composed of one or more tasks that will complete a phase of a plan.
+
+
+
+## Phase
+
+A phase of a project's implementation plan. has an associated team and a job to complete before other phases can commence.
+
+
+
+## Plan
+
+A project's plan, to be implemented in one or more phases.
+
+
+
+##Project
+
+A project with an implementation plan that can be executed by teams of agents.
+
+
+
+## Role
+
+An agent's role within a team.
+
+
+
+##Task
+
+Part of a job assigned to a single agent for completion.
+
+
+
+## Team
+
+One or more agents assigned to complete a job associated with a single phase of a plan.
+
+
+
+## Validator
+
+A prompt template intended to validate whether a task is complete or if action can be taken.
+
+```
+
+
+
+Entity Relationships
+
+```mermaid
+
+erDiagram
+    direction LR
+    PROJECT {
+        string id PK
+        string planId FK
+        string name
+        string description
+    }
+    PLAN {
+        string id PK
+        string projectId FK
+        string description
+        array phases
+    }
+    PHASE {
+        string id PK
+        string jobId FK
+        string name
+        array actions
+    }
+    VALIDATOR {
+        string id PK
+        string template
+        string resource
+    }
+
+    ACTION {
+        string id PK
+        string targetPhaseId FK
+        string validatorId FK
+        string name
+    }
+    TEAM {
+        string id PK
+        string phaseId FK
+        string name
+        array agents
+    }
+    AGENT {
+        string id PK
+        string teamId FK
+        string roleId FK
+        string name
+        array tasks
+    }
+    ROLE {
+        string id PK
+        string name
+        string description
+    }
+    JOB {
+        string id PK
+        string phaseId FK
+        string name
+        string description
+        array tasks
+    }
+    TASK {
+        string id PK
+        string jobId FK
+        string agentId FK
+        string validatorId FK
+        string name
+        string description
+    }
+    PROJECT ||--o| PLAN : has
+    PLAN ||--|{ PHASE : contains
+    TEAM ||--|{ AGENT : contains
+    AGENT ||--o| ROLE : has
+    AGENT ||--|{ TASK : "is assigned"
+    PHASE ||--|{ ACTION : contains
+    PHASE ||--o| JOB : has
+    PHASE ||--o| TEAM : has
+    JOB ||--|{ TASK : contains
+    ACTION ||--o| VALIDATOR : has
+    TASK ||--o| VALIDATOR : has
+
+```
+
+
+
+I want to be able to maintain stock Plans, Roles, Teams, then when creating a project, I can add a stock Plan which has Phases with Teams and Agents ready to go.
+
+
+
+Executing a Plan is a dashboard view where we can see the current Phase of the Plan, and each Agent's status as a card. Clicking on an Agent would cause it to go to a view where I could see all of the Agent's history and progress, and interact with that agent as it is running, giving it feedback to guide its progress.

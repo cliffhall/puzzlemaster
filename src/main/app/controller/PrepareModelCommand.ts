@@ -3,7 +3,6 @@ import { IAppFacade } from '../AppFacade'
 import { EnvProxy } from '../model/EnvProxy'
 
 export class PrepareModelCommand extends SimpleCommand {
-
   /**
    * Initialize and register proxies
    * - EnvProxy provides access to the environment
