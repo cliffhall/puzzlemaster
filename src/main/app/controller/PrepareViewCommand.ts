@@ -23,6 +23,7 @@ export class PrepareViewCommand extends SimpleCommand {
         autoHideMenuBar: true,
         webPreferences: {
           preload: join(__dirname, '../preload/index.js'),
+          contextIsolation: true,
           sandbox: false
         }
       })
@@ -63,25 +64,36 @@ export class PrepareViewCommand extends SimpleCommand {
         optimizer.watchWindowShortcuts(window)
       })
 
+      // Quit when all windows are closed, except on macOS
+      app.on('window-all-closed', () => {
+        if (process.platform !== 'darwin') {
+          app.quit()
+        }
+      })
+
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
       app.on('activate', function () {
-        // On macOS it's common to re-create a window in the app when the
-        // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
       })
-    })
-
-    // Quit when all windows are closed, except on macOS. There, it's common
-    // for applications and their menu bar to stay active until the user quits
-    // explicitly with Cmd + Q.
-    app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
-        app.quit()
-      }
     })
 
     // IPC test
     ipcMain.on('ping', () => console.log('pong'))
 
+    // TODO - move to PrepareControllerCommand
+    //  send a notification for each handler, passing the loaded data, handle with a command
+    // Load preferences from file/storage
+    ipcMain.handle('load-prefs', () => {
+      return { theme: 'dark', language: 'en' }
+    })
+
+    // Save preferences to file/storage
+    ipcMain.handle('save-prefs', (_event, prefs) => {
+      console.log('Saving preferences:', prefs)
+    })
+
+    // Create window
     createWindow()
   }
 }

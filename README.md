@@ -42,47 +42,47 @@ $ npm run build:linux
 
 ### Entities
 
-[**Action**](src/shared/domain/Action.ts)
+[**Action**](src/types/domain/Action.ts)
 
 - An action that an agent can take to trigger a change to another phase of a plan.
 
-[**Agent**](src/shared/domain/Agent.ts)
+[**Agent**](src/types/domain/Agent.ts)
 
 - An agent with a specific role and assigned task list.
 
-[**Job**](src/shared/domain/Job.ts)
+[**Job**](src/types/domain/Job.ts)
 
 - A job is composed of one or more tasks that will complete a phase of a plan.
 
-[**Phase**](src/shared/domain/Phase.ts)
+[**Phase**](src/types/domain/Phase.ts)
 
 - A phase of a project's implementation plan. has an associated team and a job to complete before other phases can commence.
 
-[**Plan**](src/shared/domain/Plan.ts)
+[**Plan**](src/types/domain/Plan.ts)
 
 - A project's plan, to be implemented in one or more phases.
 
-[**Project**](src/shared/domain/Project.ts)
+[**Project**](src/types/domain/Project.ts)
 
 - A project with an implementation plan that can be executed by teams of agents.
 
-[**Role**](src/shared/domain/Role.ts)
+[**Role**](src/types/domain/Role.ts)
 
 - An agent's role within a team.
 
-[**Task**](src/shared/domain/Task.ts)
+[**Task**](src/types/domain/Task.ts)
 
 - Part of a job assigned to a single agent for completion.
 
-[**Team**](src/shared/domain/Team.ts)
+[**Team**](src/types/domain/Team.ts)
 
 - One or more agents assigned to complete a job associated with a single phase of a plan.
 
-[**Validator**](src/shared/domain/Validator.ts)
+[**Validator**](src/types/domain/Validator.ts)
 
 - A prompt template intended to validate whether a task is complete or if action can be taken.
 
-[DomainError](src/shared/domain/DomainError.ts)
+[DomainError](src/types/domain/DomainError.ts)
 
 - An error generated when creating or interacting with a domain entity.
 
