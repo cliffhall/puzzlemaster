@@ -32,8 +32,8 @@ describe('Task', () => {
       expect(task.description).toBe(validDTO.description)
     })
 
-    it.each(['validatorId', 'id', 'jobId', 'agentId'])('should return a DomainError if %s is not a valid UUID', field => {
-      const dto = { ...validDTO, [field]: 'bad-uuid' } as TaskDTO
+    it.each(['id', 'jobId', 'agentId', 'validatorId'])('should return a DomainError if %s is not a valid UUID', field => {
+      const dto = { ...validDTO, [field]: 'not-a-uuid' } as TaskDTO
       const result = Task.create(dto)
 
       expect(result.isErr()).toBe(true)
@@ -42,7 +42,7 @@ describe('Task', () => {
       expect(error.message).toContain(field)
     })
 
-    it.each(['jobId', 'agentId', 'validatorId', 'name', 'id'])('should return a DomainError if %s is missing', field => {
+    it.each(['id', 'jobId', 'agentId', 'validatorId', 'name'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Task.create(dto as TaskDTO)
 

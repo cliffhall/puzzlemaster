@@ -26,14 +26,14 @@ describe('Validator', () => {
       expect(validator.resource).toBe(validDTO.resource)
     })
 
-    it.each(['id'])('should return a DomainError if %s is not a valid UUID', field => {
-      const dto = { ...validDTO, [field]: 'bad-uuid' } as ValidatorDTO
-      const result = Validator.create(dto)
+    it('should return a DomainError if id is not a valid UUID', () => {
+      const invalidDTO: ValidatorDTO = { ...validDTO, id: 'not-a-uuid' }
+      const result = Validator.create(invalidDTO)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain(field)
+      expect(error.message).toContain('id')
     })
 
     it('should return a DomainError if template is empty', () => {
@@ -46,7 +46,7 @@ describe('Validator', () => {
       expect(error.message).toContain('template')
     })
 
-    it.each(['resource', 'template', 'id'])('should return a DomainError if %s is missing', field => {
+    it.each(['id', 'resource', 'template'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Validator.create(dto as ValidatorDTO)
 

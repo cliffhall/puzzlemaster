@@ -28,8 +28,8 @@ describe('Project', () => {
       expect(project.description).toBe(validDTO.description)
     })
 
-    it.each(['planId', 'id'])('should return a DomainError if %s is not a valid UUID', field => {
-      const dto = { ...validDTO, [field]: 'bad-uuid' } as ProjectDTO
+    it.each(['id', 'planId'])('should return a DomainError if %s is not a valid UUID', field => {
+      const dto = { ...validDTO, [field]: 'not-a-uuid' } as ProjectDTO
       const result = Project.create(dto)
 
       expect(result.isErr()).toBe(true)
@@ -57,7 +57,7 @@ describe('Project', () => {
       expect(project.description).toBeUndefined()
     })
 
-    it.each(['planId', 'name', 'id'])('should return a DomainError if %s is missing', field => {
+    it.each(['id', 'planId', 'name'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Project.create(dto as ProjectDTO)
 

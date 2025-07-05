@@ -30,8 +30,8 @@ describe('Phase', () => {
       expect(phase.actions).toEqual(validDTO.actions)
     })
 
-    it.each(['teamId', 'id', 'jobId'])('should return a DomainError if %s is not a valid UUID', field => {
-      const dto = { ...validDTO, [field]: 'bad-uuid' } as PhaseDTO
+    it.each(['id', 'teamId', 'jobId'])('should return a DomainError if %s is not a valid UUID', field => {
+      const dto = { ...validDTO, [field]: 'not-a-uuid' } as PhaseDTO
       const result = Phase.create(dto)
 
       expect(result.isErr()).toBe(true)
@@ -41,7 +41,7 @@ describe('Phase', () => {
     })
 
     it('should return a DomainError if actions contain invalid UUIDs', () => {
-      const invalidDTO: PhaseDTO = { ...validDTO, actions: ['bad-uuid'] }
+      const invalidDTO: PhaseDTO = { ...validDTO, actions: ['not-a-uuid'] }
       const result = Phase.create(invalidDTO)
 
       expect(result.isErr()).toBe(true)
@@ -59,7 +59,7 @@ describe('Phase', () => {
       expect(phase.actions).toEqual([])
     })
 
-    it.each(['teamId', 'jobId', 'name', 'actions', 'id'])('should return a DomainError if %s is missing', field => {
+    it.each(['id', 'teamId', 'jobId', 'name', 'actions'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Phase.create(dto as PhaseDTO)
 

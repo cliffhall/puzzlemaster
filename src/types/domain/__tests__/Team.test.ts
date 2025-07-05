@@ -29,7 +29,7 @@ describe('Team', () => {
     })
 
     it.each(['id', 'phaseId'])('should return a DomainError if %s is not a valid UUID', field => {
-      const dto = { ...validDTO, [field]: 'bad-uuid' } as TeamDTO
+      const dto = { ...validDTO, [field]: 'not-a-uuid' } as TeamDTO
       const result = Team.create(dto)
 
       expect(result.isErr()).toBe(true)
@@ -39,7 +39,7 @@ describe('Team', () => {
     })
 
     it('should return a DomainError if agents contain invalid UUIDs', () => {
-      const invalidDTO: TeamDTO = { ...validDTO, agents: ['bad-uuid'] }
+      const invalidDTO: TeamDTO = { ...validDTO, agents: ['not-a-uuid'] }
       const result = Team.create(invalidDTO)
 
       expect(result.isErr()).toBe(true)
@@ -57,7 +57,7 @@ describe('Team', () => {
       expect(team.agents).toEqual([])
     })
 
-    it.each(['phaseId', 'name', 'agents', 'id'])('should return a DomainError if %s is missing', field => {
+    it.each(['id', 'phaseId', 'name', 'agents'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Team.create(dto as TeamDTO)
 
