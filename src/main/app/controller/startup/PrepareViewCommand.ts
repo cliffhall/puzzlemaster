@@ -1,17 +1,15 @@
 import { join } from 'path'
-import { IAppFacade } from '../AppFacade'
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { IAppFacade } from '../../AppFacade'
+import { app, shell, BrowserWindow } from 'electron'
+import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { INotification, SimpleCommand } from '@puremvc/puremvc-typescript-multicore-framework'
-import { EnvProxy } from '../model/EnvProxy'
+import { EnvProxy } from '../../model/EnvProxy'
 
 export class PrepareViewCommand extends SimpleCommand {
-  /**
-   * Create app window
-   */
+
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade
-    f.log('⚙️ PrepareViewCommand - Creating app window', 2)
+    f.log('⚙️ PrepareViewCommand - Creating Main App Window', 2)
 
     const envProxy = f.retrieveProxy(EnvProxy.NAME) as EnvProxy
 
@@ -42,7 +40,7 @@ export class PrepareViewCommand extends SimpleCommand {
       //const url = envProxy.varByKey('ELECTRON_RENDERER_URL');
       const url = envProxy.getVar('ELECTRON_RENDERER_URL')
 
-      if (is.dev && url) {
+      if (envProxy.isDev() && url) {
         mainWindow.loadURL(url)
         mainWindow.webContents.openDevTools({ mode: 'detach' })
       } else {
@@ -76,21 +74,6 @@ export class PrepareViewCommand extends SimpleCommand {
       app.on('activate', function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
       })
-    })
-
-    // IPC test
-    ipcMain.on('ping', () => console.log('pong'))
-
-    // TODO - move to PrepareControllerCommand
-    //  send a notification for each handler, passing the loaded data, handle with a command
-    // Load preferences from file/storage
-    ipcMain.handle('load-prefs', () => {
-      return { theme: 'dark', language: 'en' }
-    })
-
-    // Save preferences to file/storage
-    ipcMain.handle('save-prefs', (_event, prefs) => {
-      console.log('Saving preferences:', prefs)
     })
 
     // Create window

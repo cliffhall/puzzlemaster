@@ -1,6 +1,6 @@
 import { IFacade, Facade } from '@puremvc/puremvc-typescript-multicore-framework'
 import { ConsoleMediator } from './view/ConsoleMediator'
-import { StartupCommand } from './controller/StartupCommand'
+import { StartupCommand } from './controller/startup/StartupCommand'
 import { STARTUP } from './constants/AppConstants'
 
 export interface IAppFacade extends IFacade {
@@ -51,7 +51,7 @@ export class AppFacade extends Facade {
    */
   public startup(): void {
     this.log(`▶️ ${this.multitonKey}`)
-    this.log('🔱 AppFacade ')
+    this.log('🔱 AppFacade - Preparing Primary MVC Core')
     this.sendNotification(STARTUP)
   }
 
