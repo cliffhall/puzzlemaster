@@ -1,6 +1,6 @@
 import { INotification, SimpleCommand } from '@puremvc/puremvc-typescript-multicore-framework'
-import { IAppFacade } from '../AppFacade'
-import { EnvProxy } from '../model/EnvProxy'
+import { IAppFacade } from '../../AppFacade'
+import { EnvProxy } from '../../model/EnvProxy'
 
 export class PrepareModelCommand extends SimpleCommand {
   /**

@@ -2,25 +2,27 @@ import { AsyncMacroCommand } from '@puremvc/puremvc-typescript-util-async-comman
 import { INotification } from '@puremvc/puremvc-typescript-multicore-framework'
 import { PrepareModelCommand } from './PrepareModelCommand'
 import { PrepareViewCommand } from './PrepareViewCommand'
-import { IAppFacade } from '../AppFacade'
+import { PrepareControllerCommand } from './PrepareControllerCommand'
+import { IAppFacade } from '../../AppFacade'
 
 export class StartupCommand extends AsyncMacroCommand {
   /**
-   * Create the primary command pipeline for the App
+   * Create the startup command pipeline for the App
    * @override
    */
   public override initializeAsyncMacroCommand(): void {
     this.addSubCommand(() => new PrepareModelCommand())
     this.addSubCommand(() => new PrepareViewCommand())
+    this.addSubCommand(() => new PrepareControllerCommand())
   }
 
   /**
-   * Execute the primary command pipeline
+   * Execute the startup command pipeline
    * @override
    * @param {object} note the notification that triggered this command
    */
   public override execute(note: INotification): void {
-    ;(this.facade as IAppFacade).log('⚙️ StartupCommand - Running Subcommands', 1)
+    ;(this.facade as IAppFacade).log('⚙️ StartupCommand - Running Startup Subcommands', 1)
     super.execute(note)
   }
 }
