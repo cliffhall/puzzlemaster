@@ -62,5 +62,14 @@ describe('Task', () => {
       expect(error.message).toContain('name')
     })
 
+    it('should create a Task without a description', () => {
+      const { description: _omit, ...dto } = validDTO
+      const result = Task.create(dto as TaskDTO)
+
+      expect(result.isOk()).toBe(true)
+      const task = result._unsafeUnwrap()
+      expect(task.description).toBeUndefined()
+    })
+
   })
 })

@@ -70,5 +70,23 @@ describe('Job', () => {
       expect(error.message).toContain('name')
     })
 
+    it('should create a Job when tasks array is empty', () => {
+      const dto: JobDTO = { ...validDTO, tasks: [] }
+      const result = Job.create(dto)
+
+      expect(result.isOk()).toBe(true)
+      const job = result._unsafeUnwrap()
+      expect(job.tasks).toEqual([])
+    })
+
+    it('should create a Job without a description', () => {
+      const { description: _omit, ...dto } = validDTO
+      const result = Job.create(dto as JobDTO)
+
+      expect(result.isOk()).toBe(true)
+      const job = result._unsafeUnwrap()
+      expect(job.description).toBeUndefined()
+    })
+
   })
 })

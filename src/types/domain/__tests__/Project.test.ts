@@ -48,6 +48,15 @@ describe('Project', () => {
       expect(error.message).toContain('name')
     })
 
+    it('should create a Project without a description', () => {
+      const { description: _omit, ...dto } = validDTO
+      const result = Project.create(dto as ProjectDTO)
+
+      expect(result.isOk()).toBe(true)
+      const project = result._unsafeUnwrap()
+      expect(project.description).toBeUndefined()
+    })
+
     it.each(['planId', 'name', 'id'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Project.create(dto as ProjectDTO)

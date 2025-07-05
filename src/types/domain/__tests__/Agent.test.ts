@@ -50,6 +50,15 @@ describe('Agent', () => {
       expect(error.message).toContain('tasks')
     })
 
+    it('should create an Agent when tasks array is empty', () => {
+      const dto: AgentDTO = { ...validDTO, tasks: [] }
+      const result = Agent.create(dto)
+
+      expect(result.isOk()).toBe(true)
+      const agent = result._unsafeUnwrap()
+      expect(agent.tasks).toEqual([])
+    })
+
     it('should return a DomainError if name is empty', () => {
       const invalidDTO: AgentDTO = { ...validDTO, name: '' }
       const result = Agent.create(invalidDTO)

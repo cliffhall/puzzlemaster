@@ -48,6 +48,24 @@ describe('Plan', () => {
       expect(error.message).toContain('phases')
     })
 
+    it('should create a Plan when phases array is empty', () => {
+      const dto: PlanDTO = { ...validDTO, phases: [] }
+      const result = Plan.create(dto)
+
+      expect(result.isOk()).toBe(true)
+      const plan = result._unsafeUnwrap()
+      expect(plan.phases).toEqual([])
+    })
+
+    it('should create a Plan without a description', () => {
+      const { description: _omit, ...dto } = validDTO
+      const result = Plan.create(dto as PlanDTO)
+
+      expect(result.isOk()).toBe(true)
+      const plan = result._unsafeUnwrap()
+      expect(plan.description).toBeUndefined()
+    })
+
     it.each(['projectId', 'phases', 'id'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Plan.create(dto as PlanDTO)

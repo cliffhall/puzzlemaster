@@ -48,6 +48,15 @@ describe('Team', () => {
       expect(error.message).toContain('agents')
     })
 
+    it('should create a Team when agents array is empty', () => {
+      const dto: TeamDTO = { ...validDTO, agents: [] }
+      const result = Team.create(dto)
+
+      expect(result.isOk()).toBe(true)
+      const team = result._unsafeUnwrap()
+      expect(team.agents).toEqual([])
+    })
+
     it.each(['phaseId', 'name', 'agents', 'id'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Team.create(dto as TeamDTO)

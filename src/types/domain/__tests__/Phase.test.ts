@@ -50,6 +50,15 @@ describe('Phase', () => {
       expect(error.message).toContain('actions')
     })
 
+    it('should create a Phase when actions array is empty', () => {
+      const dto: PhaseDTO = { ...validDTO, actions: [] }
+      const result = Phase.create(dto)
+
+      expect(result.isOk()).toBe(true)
+      const phase = result._unsafeUnwrap()
+      expect(phase.actions).toEqual([])
+    })
+
     it.each(['teamId', 'jobId', 'name', 'actions', 'id'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Phase.create(dto as PhaseDTO)

@@ -46,6 +46,15 @@ describe('Role', () => {
       expect(error.message).toContain('name')
     })
 
+    it('should create a Role without a description', () => {
+      const { description: _omit, ...dto } = validDTO
+      const result = Role.create(dto as RoleDTO)
+
+      expect(result.isOk()).toBe(true)
+      const role = result._unsafeUnwrap()
+      expect(role.description).toBeUndefined()
+    })
+
     it.each(['name', 'id'])('should return a DomainError if %s is missing', field => {
       const { [field]: _omit, ...dto } = validDTO as any
       const result = Role.create(dto as RoleDTO)
