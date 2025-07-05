@@ -30,17 +30,14 @@ describe('Agent', () => {
       expect(agent.tasks).toEqual(validDTO.tasks)
     })
 
-    it.each([
-      ['teamId', { ...validDTO, teamId: 'bad-uuid' }],
-      ['id', { ...validDTO, id: 'bad-uuid' }],
-      ['roleId', { ...validDTO, roleId: 'bad-uuid' }]
-    ])('should return a DomainError if %s is not a valid UUID', (_field, dto) => {
-      const result = Agent.create(dto as AgentDTO)
+    it.each(['teamId', 'id', 'roleId'])('should return a DomainError if %s is not a valid UUID', field => {
+      const dto = { ...validDTO, [field]: 'bad-uuid' } as AgentDTO
+      const result = Agent.create(dto)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain(_field)
+      expect(error.message).toContain(field)
     })
 
     it('should return a DomainError if tasks contain invalid UUIDs', () => {
@@ -63,15 +60,9 @@ describe('Agent', () => {
       expect(error.message).toContain('name')
     })
 
-    it.each([
-      ['teamId', () => { const { teamId: _t, ...dto } = validDTO; return dto as AgentDTO }],
-      ['roleId', () => { const { roleId: _r, ...dto } = validDTO; return dto as AgentDTO }],
-      ['name', () => { const { name: _n, ...dto } = validDTO; return dto as AgentDTO }],
-      ['tasks', () => { const { tasks: _tsk, ...dto } = validDTO; return dto as AgentDTO }],
-      ['id', () => { const { id: _id, ...dto } = validDTO; return dto as AgentDTO }]
-    ])('should return a DomainError if %s is missing', (field, dtoBuilder) => {
-      const dto = dtoBuilder()
-      const result = Agent.create(dto)
+    it.each(['teamId', 'roleId', 'name', 'tasks', 'id'])('should return a DomainError if %s is missing', field => {
+      const { [field]: _omit, ...dto } = validDTO as any
+      const result = Agent.create(dto as AgentDTO)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()

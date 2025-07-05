@@ -30,16 +30,14 @@ describe('Job', () => {
       expect(job.tasks).toEqual(validDTO.tasks)
     })
 
-    it.each([
-      ['phaseId', { ...validDTO, phaseId: 'bad-uuid' }],
-      ['id', { ...validDTO, id: 'bad-uuid' }]
-    ])('should return a DomainError if %s is not a valid UUID', (_field, dto) => {
-      const result = Job.create(dto as JobDTO)
+    it.each(['phaseId', 'id'])('should return a DomainError if %s is not a valid UUID', field => {
+      const dto = { ...validDTO, [field]: 'bad-uuid' } as JobDTO
+      const result = Job.create(dto)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain(_field)
+      expect(error.message).toContain(field)
     })
 
     it('should return a DomainError if tasks contain invalid UUIDs', () => {
@@ -52,14 +50,9 @@ describe('Job', () => {
       expect(error.message).toContain('tasks')
     })
 
-    it.each([
-      ['phaseId', () => { const { phaseId: _p, ...dto } = validDTO; return dto as JobDTO }],
-      ['name', () => { const { name: _n, ...dto } = validDTO; return dto as JobDTO }],
-      ['tasks', () => { const { tasks: _t, ...dto } = validDTO; return dto as JobDTO }],
-      ['id', () => { const { id: _id, ...dto } = validDTO; return dto as JobDTO }]
-    ])('should return a DomainError if %s is missing', (field, dtoBuilder) => {
-      const dto = dtoBuilder()
-      const result = Job.create(dto)
+    it.each(['phaseId', 'name', 'tasks', 'id'])('should return a DomainError if %s is missing', field => {
+      const { [field]: _omit, ...dto } = validDTO as any
+      const result = Job.create(dto as JobDTO)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()

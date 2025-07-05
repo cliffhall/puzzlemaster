@@ -30,17 +30,14 @@ describe('Phase', () => {
       expect(phase.actions).toEqual(validDTO.actions)
     })
 
-    it.each([
-      ['teamId', { ...validDTO, teamId: 'not-a-uuid' }],
-      ['id', { ...validDTO, id: 'bad-uuid' }],
-      ['jobId', { ...validDTO, jobId: 'bad-uuid' }]
-    ])('should return a DomainError if %s is not a valid UUID', (_field, dto) => {
-      const result = Phase.create(dto as PhaseDTO)
+    it.each(['teamId', 'id', 'jobId'])('should return a DomainError if %s is not a valid UUID', field => {
+      const dto = { ...validDTO, [field]: 'bad-uuid' } as PhaseDTO
+      const result = Phase.create(dto)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain(_field)
+      expect(error.message).toContain(field)
     })
 
     it('should return a DomainError if actions contain invalid UUIDs', () => {
@@ -53,15 +50,9 @@ describe('Phase', () => {
       expect(error.message).toContain('actions')
     })
 
-    it.each([
-      ['teamId', () => { const { teamId: _t, ...dto } = validDTO; return dto as PhaseDTO }],
-      ['jobId', () => { const { jobId: _j, ...dto } = validDTO; return dto as PhaseDTO }],
-      ['name', () => { const { name: _n, ...dto } = validDTO; return dto as PhaseDTO }],
-      ['actions', () => { const { actions: _a, ...dto } = validDTO; return dto as PhaseDTO }],
-      ['id', () => { const { id: _id, ...dto } = validDTO; return dto as PhaseDTO }]
-    ])('should return a DomainError if %s is missing', (field, dtoBuilder) => {
-      const dto = dtoBuilder()
-      const result = Phase.create(dto)
+    it.each(['teamId', 'jobId', 'name', 'actions', 'id'])('should return a DomainError if %s is missing', field => {
+      const { [field]: _omit, ...dto } = validDTO as any
+      const result = Phase.create(dto as PhaseDTO)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
