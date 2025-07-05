@@ -26,6 +26,17 @@ describe('Role', () => {
       expect(role.description).toBe(validDTO.description)
     })
 
+    it.each([
+      ['id', { ...validDTO, id: 'bad-uuid' }]
+    ])('should return a DomainError if %s is not a valid UUID', (_field, dto) => {
+      const result = Role.create(dto as RoleDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain(_field)
+    })
+
     it('should return a DomainError if name is empty', () => {
       const invalidDTO: RoleDTO = { ...validDTO, name: '' }
       const result = Role.create(invalidDTO)
@@ -36,34 +47,17 @@ describe('Role', () => {
       expect(error.message).toContain('name')
     })
 
-    it('should return a DomainError if id is not a valid UUID', () => {
-      const invalidDTO: RoleDTO = { ...validDTO, id: 'bad-uuid' }
-      const result = Role.create(invalidDTO)
+    it.each([
+      ['name', () => { const { name: _n, ...dto } = validDTO; return dto as RoleDTO }],
+      ['id', () => { const { id: _id, ...dto } = validDTO; return dto as RoleDTO }]
+    ])('should return a DomainError if %s is missing', (field, dtoBuilder) => {
+      const dto = dtoBuilder()
+      const result = Role.create(dto)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('id')
-    })
-
-    it('should return a DomainError if name is missing', () => {
-      const { name: _n, ...dtoWithoutName } = validDTO
-      const result = Role.create(dtoWithoutName as RoleDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('name')
-    })
-
-    it('should return a DomainError if id is missing', () => {
-      const { id: _id, ...dto } = validDTO
-      const result = Role.create(dto as RoleDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('id')
+      expect(error.message).toContain(field)
     })
   })
 })

@@ -26,6 +26,17 @@ describe('Validator', () => {
       expect(validator.resource).toBe(validDTO.resource)
     })
 
+    it.each([
+      ['id', { ...validDTO, id: 'bad-uuid' }]
+    ])('should return a DomainError if %s is not a valid UUID', (_field, dto) => {
+      const result = Validator.create(dto as ValidatorDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain(_field)
+    })
+
     it('should return a DomainError if template is empty', () => {
       const invalidDTO: ValidatorDTO = { ...validDTO, template: '' }
       const result = Validator.create(invalidDTO)
@@ -36,24 +47,18 @@ describe('Validator', () => {
       expect(error.message).toContain('template')
     })
 
-    it('should return a DomainError if id is not a valid UUID', () => {
-      const invalidDTO: ValidatorDTO = { ...validDTO, id: 'bad-uuid' }
-      const result = Validator.create(invalidDTO)
+    it.each([
+      ['resource', () => { const { resource: _r, ...dto } = validDTO; return dto as ValidatorDTO }],
+      ['template', () => { const { template: _t, ...dto } = validDTO; return dto as ValidatorDTO }],
+      ['id', () => { const { id: _i, ...dto } = validDTO; return dto as ValidatorDTO }]
+    ])('should return a DomainError if %s is missing', (field, dtoBuilder) => {
+      const dto = dtoBuilder()
+      const result = Validator.create(dto)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('id')
-    })
-
-    it('should return a DomainError if resource is missing', () => {
-      const { resource: _r, ...dtoWithoutResource } = validDTO
-      const result = Validator.create(dtoWithoutResource as ValidatorDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('resource')
+      expect(error.message).toContain(field)
     })
 
     it('should return a DomainError if resource is empty', () => {
@@ -64,26 +69,6 @@ describe('Validator', () => {
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
       expect(error.message).toContain('resource')
-    })
-
-    it('should return a DomainError if template is missing', () => {
-      const { template: _t, ...dto } = validDTO
-      const result = Validator.create(dto as ValidatorDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('template')
-    })
-
-    it('should return a DomainError if id is missing', () => {
-      const { id: _i, ...dto } = validDTO
-      const result = Validator.create(dto as ValidatorDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('id')
     })
   })
 })

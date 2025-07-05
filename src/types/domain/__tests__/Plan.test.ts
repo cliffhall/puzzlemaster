@@ -28,14 +28,16 @@ describe('Plan', () => {
       expect(plan.description).toBe(validDTO.description)
     })
 
-    it('should return a DomainError if projectId is not a valid UUID', () => {
-      const invalidDTO: PlanDTO = { ...validDTO, projectId: 'bad-uuid' }
-      const result = Plan.create(invalidDTO)
+    it.each([
+      ['projectId', { ...validDTO, projectId: 'bad-uuid' }],
+      ['id', { ...validDTO, id: 'bad-uuid' }]
+    ])('should return a DomainError if %s is not a valid UUID', (_field, dto) => {
+      const result = Plan.create(dto as PlanDTO)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('projectId')
+      expect(error.message).toContain(_field)
     })
 
     it('should return a DomainError if phases contain invalid UUIDs', () => {
@@ -48,44 +50,18 @@ describe('Plan', () => {
       expect(error.message).toContain('phases')
     })
 
-    it('should return a DomainError if id is not a valid UUID', () => {
-      const invalidDTO: PlanDTO = { ...validDTO, id: 'bad-uuid' }
-      const result = Plan.create(invalidDTO)
+    it.each([
+      ['projectId', () => { const { projectId: _p, ...dto } = validDTO; return dto as PlanDTO }],
+      ['phases', () => { const { phases: _ph, ...dto } = validDTO; return dto as PlanDTO }],
+      ['id', () => { const { id: _id, ...dto } = validDTO; return dto as PlanDTO }]
+    ])('should return a DomainError if %s is missing', (field, dtoBuilder) => {
+      const dto = dtoBuilder()
+      const result = Plan.create(dto)
 
       expect(result.isErr()).toBe(true)
       const error = result._unsafeUnwrapErr()
       expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('id')
-    })
-
-    it('should return a DomainError if projectId is missing', () => {
-      const { projectId: _p, ...dto } = validDTO
-      const result = Plan.create(dto as PlanDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('projectId')
-    })
-
-    it('should return a DomainError if phases are missing', () => {
-      const { phases: _ph, ...dto } = validDTO
-      const result = Plan.create(dto as PlanDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('phases')
-    })
-
-    it('should return a DomainError if id is missing', () => {
-      const { id: _id, ...dtoWithoutId } = validDTO
-      const result = Plan.create(dtoWithoutId as PlanDTO)
-
-      expect(result.isErr()).toBe(true)
-      const error = result._unsafeUnwrapErr()
-      expect(error).toBeInstanceOf(DomainError)
-      expect(error.message).toContain('id')
+      expect(error.message).toContain(field)
     })
   })
 })
