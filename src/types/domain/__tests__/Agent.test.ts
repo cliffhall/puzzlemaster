@@ -50,6 +50,76 @@ describe('Agent', () => {
       expect(error.message).toContain('tasks')
     })
 
+    it('should return a DomainError if id is not a valid UUID', () => {
+      const invalidDTO: AgentDTO = { ...validDTO, id: 'bad-uuid' }
+      const result = Agent.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('id')
+    })
+
+    it('should return a DomainError if roleId is not a valid UUID', () => {
+      const invalidDTO: AgentDTO = { ...validDTO, roleId: 'bad-uuid' }
+      const result = Agent.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('roleId')
+    })
+
+    it('should return a DomainError if name is empty', () => {
+      const invalidDTO: AgentDTO = { ...validDTO, name: '' }
+      const result = Agent.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('name')
+    })
+
+    it('should return a DomainError if teamId is missing', () => {
+      const { teamId: _t, ...dto } = validDTO
+      const result = Agent.create(dto as AgentDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('teamId')
+    })
+
+    it('should return a DomainError if roleId is missing', () => {
+      const { roleId: _r, ...dto } = validDTO
+      const result = Agent.create(dto as AgentDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('roleId')
+    })
+
+    it('should return a DomainError if name is missing', () => {
+      const { name: _n, ...dto } = validDTO
+      const result = Agent.create(dto as AgentDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('name')
+    })
+
+    it('should return a DomainError if tasks are missing', () => {
+      const { tasks: _tsk, ...dto } = validDTO
+      const result = Agent.create(dto as AgentDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('tasks')
+    })
+
     it('should return a DomainError if id is missing', () => {
       const { id: _id, ...dtoWithoutId } = validDTO
       const result = Agent.create(dtoWithoutId as AgentDTO)

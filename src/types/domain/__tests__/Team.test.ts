@@ -38,6 +38,56 @@ describe('Team', () => {
       expect(error.message).toContain('agents')
     })
 
+    it('should return a DomainError if id is not a valid UUID', () => {
+      const invalidDTO: TeamDTO = { ...validDTO, id: 'bad-uuid' }
+      const result = Team.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('id')
+    })
+
+    it('should return a DomainError if phaseId is not a valid UUID', () => {
+      const invalidDTO: TeamDTO = { ...validDTO, phaseId: 'bad-uuid' }
+      const result = Team.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('phaseId')
+    })
+
+    it('should return a DomainError if name is missing', () => {
+      const { name: _n, ...dto } = validDTO
+      const result = Team.create(dto as TeamDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('name')
+    })
+
+    it('should return a DomainError if agents are missing', () => {
+      const { agents: _a, ...dto } = validDTO
+      const result = Team.create(dto as TeamDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('agents')
+    })
+
+    it('should return a DomainError if id is missing', () => {
+      const { id: _i, ...dto } = validDTO
+      const result = Team.create(dto as TeamDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('id')
+    })
+
     it('should return a DomainError if name is empty', () => {
       const invalidDTO: TeamDTO = { ...validDTO, name: '' }
       const result = Team.create(invalidDTO)

@@ -50,6 +50,46 @@ describe('Job', () => {
       expect(error.message).toContain('tasks')
     })
 
+    it('should return a DomainError if id is not a valid UUID', () => {
+      const invalidDTO: JobDTO = { ...validDTO, id: 'bad-uuid' }
+      const result = Job.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('id')
+    })
+
+    it('should return a DomainError if phaseId is missing', () => {
+      const { phaseId: _p, ...dto } = validDTO
+      const result = Job.create(dto as JobDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('phaseId')
+    })
+
+    it('should return a DomainError if name is missing', () => {
+      const { name: _n, ...dto } = validDTO
+      const result = Job.create(dto as JobDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('name')
+    })
+
+    it('should return a DomainError if tasks are missing', () => {
+      const { tasks: _t, ...dto } = validDTO
+      const result = Job.create(dto as JobDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('tasks')
+    })
+
     it('should return a DomainError if name is empty', () => {
       const invalidDTO: JobDTO = { ...validDTO, name: '' }
       const result = Job.create(invalidDTO)

@@ -50,6 +50,66 @@ describe('Phase', () => {
       expect(error.message).toContain('actions')
     })
 
+    it('should return a DomainError if id is not a valid UUID', () => {
+      const invalidDTO: PhaseDTO = { ...validDTO, id: 'bad-uuid' }
+      const result = Phase.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('id')
+    })
+
+    it('should return a DomainError if jobId is not a valid UUID', () => {
+      const invalidDTO: PhaseDTO = { ...validDTO, jobId: 'bad-uuid' }
+      const result = Phase.create(invalidDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('jobId')
+    })
+
+    it('should return a DomainError if teamId is missing', () => {
+      const { teamId: _t, ...dto } = validDTO
+      const result = Phase.create(dto as PhaseDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('teamId')
+    })
+
+    it('should return a DomainError if jobId is missing', () => {
+      const { jobId: _j, ...dto } = validDTO
+      const result = Phase.create(dto as PhaseDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('jobId')
+    })
+
+    it('should return a DomainError if name is missing', () => {
+      const { name: _n, ...dto } = validDTO
+      const result = Phase.create(dto as PhaseDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('name')
+    })
+
+    it('should return a DomainError if actions are missing', () => {
+      const { actions: _a, ...dto } = validDTO
+      const result = Phase.create(dto as PhaseDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('actions')
+    })
+
     it('should return a DomainError if name is empty', () => {
       const invalidDTO: PhaseDTO = { ...validDTO, name: '' }
       const result = Phase.create(invalidDTO)

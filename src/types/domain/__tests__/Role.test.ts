@@ -55,5 +55,15 @@ describe('Role', () => {
       expect(error).toBeInstanceOf(DomainError)
       expect(error.message).toContain('name')
     })
+
+    it('should return a DomainError if id is missing', () => {
+      const { id: _id, ...dto } = validDTO
+      const result = Role.create(dto as RoleDTO)
+
+      expect(result.isErr()).toBe(true)
+      const error = result._unsafeUnwrapErr()
+      expect(error).toBeInstanceOf(DomainError)
+      expect(error.message).toContain('id')
+    })
   })
 })
