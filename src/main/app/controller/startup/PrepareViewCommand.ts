@@ -46,7 +46,9 @@ export class PrepareViewCommand extends SimpleCommand {
         mainWindow.loadURL(url);
         mainWindow.webContents.openDevTools({ mode: "detach" });
       } else {
-        mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+        const path = join(__dirname, "../renderer/index.html");
+        console.log(path);
+        mainWindow.loadFile(path);
       }
     }
 
