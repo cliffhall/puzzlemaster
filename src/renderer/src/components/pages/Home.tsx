@@ -1,38 +1,46 @@
-import { setPreferences } from '../api'
+import { setPreferences } from "../../api";
 
-import { useState, ReactElement } from 'react'
-import { Card, Switch, Title, Combobox, InputBase, useCombobox, Input } from '@mantine/core'
+import { useState, ReactElement } from "react";
+import {
+  Card,
+  Switch,
+  Title,
+  Combobox,
+  InputBase,
+  useCombobox,
+  Input,
+} from "@mantine/core";
 
 function Home(): ReactElement {
-  const [theme, setTheme] = useState('light')
-  const [language, setLanguage] = useState('en')
+  const [theme, setTheme] = useState("light");
+  const [language, setLanguage] = useState("en");
 
   const handleThemeChanged = async (event): Promise<void> => {
-    const newValue = event.currentTarget.checked ? 'dark' : 'light'
-    setTheme(newValue)
-    await setPreferences({ theme: newValue, language })
-  }
+    const newValue = event.currentTarget.checked ? "dark" : "light";
+    setTheme(newValue);
+    await setPreferences({ theme: newValue, language });
+  };
 
   const langComboBox = useCombobox({
-    onDropdownClose: () => langComboBox.resetSelectedOption()
-  })
+    onDropdownClose: () => langComboBox.resetSelectedOption(),
+  });
 
-  const languages = ['en', 'fr', 'de']
+  const languages = ["en", "fr", "de"];
 
   const languageOptions = languages.map((item) => (
     <Combobox.Option value={item} key={item}>
       {item}
     </Combobox.Option>
-  ))
+  ));
 
   const getLanguageComboBox = (): ReactElement => (
     <Combobox
       store={langComboBox}
       withinPortal={false}
       onOptionSubmit={async (val) => {
-        setLanguage(val)
-        await setPreferences({ theme, language: val })
-        langComboBox.closeDropdown()
+        setLanguage(val);
+        await setPreferences({ theme, language: val });
+        langComboBox.closeDropdown();
       }}
     >
       <Combobox.Target>
@@ -52,16 +60,21 @@ function Home(): ReactElement {
         <Combobox.Options>{languageOptions}</Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>
-  )
+  );
   return (
     <Card>
       <Card.Section>
         <Title>Settings</Title>
       </Card.Section>
       {getLanguageComboBox()}
-      <Switch defaultChecked onChange={handleThemeChanged} label="Theme" value={theme} />
+      <Switch
+        defaultChecked
+        onChange={handleThemeChanged}
+        label="Theme"
+        value={theme}
+      />
     </Card>
-  )
+  );
 }
 
-export default Home
+export default Home;

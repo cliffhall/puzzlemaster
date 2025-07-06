@@ -7,8 +7,8 @@
     "src/types/**/*"
   ],
   "compilerOptions": {
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "composite": true,
-    "types": ["electron-vite/node"]
+    "types": ["electron-vite/node", "@testing-library/jest-dom", "vitest/globals", "@puremvc/puremvc-typescript-multicore-framework"]
   }
 }

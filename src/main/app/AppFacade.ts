@@ -1,31 +1,25 @@
-import { IFacade, Facade } from '@puremvc/puremvc-typescript-multicore-framework'
-import { ConsoleMediator } from './view/ConsoleMediator'
-import { StartupCommand } from './controller/startup/StartupCommand'
-import { STARTUP } from './constants/AppConstants'
+import {
+  IFacade,
+  Facade,
+} from "@puremvc/puremvc-typescript-multicore-framework";
+import { ConsoleMediator } from "./view/ConsoleMediator";
+import { StartupCommand } from "./controller/startup/StartupCommand";
+import { STARTUP } from "./constants/AppConstants";
 
 export interface IAppFacade extends IFacade {
-  startup(): void
-  log(message: string, indent?: number): void
-  halt(message: string, indent?: number): void
+  startup: () => void;
+  log: (message: string, indent?: number) => void;
+  halt: (message: string, indent?: number) => void;
 }
 
 export class AppFacade extends Facade {
-  /**
-   * Constructor
-   * @override
-   * @param multitonKey
-   */
-  constructor(multitonKey: string) {
-    super(multitonKey)
-  }
-
   /**
    * Initialize the `View`
    * @override
    */
   protected override initializeView(): void {
-    super.initializeView()
-    this.registerMediator(new ConsoleMediator(console))
+    super.initializeView();
+    this.registerMediator(new ConsoleMediator(console));
   }
 
   /**
@@ -33,8 +27,8 @@ export class AppFacade extends Facade {
    * @override
    */
   public override initializeController(): void {
-    super.initializeController()
-    this.registerCommand(STARTUP, () => new StartupCommand())
+    super.initializeController();
+    this.registerCommand(STARTUP, () => new StartupCommand());
   }
 
   /**
@@ -43,16 +37,19 @@ export class AppFacade extends Facade {
    * @returns {Facade}
    */
   public static getInstance(multitonKey: string): IAppFacade {
-    return Facade.getInstance(multitonKey, (k) => new AppFacade(k)) as IAppFacade
+    return Facade.getInstance(
+      multitonKey,
+      (k) => new AppFacade(k),
+    ) as IAppFacade;
   }
 
   /**
    * Start the business
    */
   public startup(): void {
-    this.log(`▶️ ${this.multitonKey}`)
-    this.log('🔱 AppFacade - Preparing Primary MVC Core')
-    this.sendNotification(STARTUP)
+    this.log(`▶️ ${this.multitonKey}`);
+    this.log("🔱 AppFacade - Preparing Primary MVC Core");
+    this.sendNotification(STARTUP);
   }
 
   /**
@@ -61,7 +58,11 @@ export class AppFacade extends Facade {
    * @param indent
    */
   public log(message: string, indent?: number): void {
-    this.sendNotification(ConsoleMediator.CONSOLE_MESSAGE, message, indent?.toString())
+    this.sendNotification(
+      ConsoleMediator.CONSOLE_MESSAGE,
+      message,
+      indent?.toString(),
+    );
   }
 
   /**
@@ -70,7 +71,7 @@ export class AppFacade extends Facade {
    * @param indent
    */
   public halt(message: string, indent?: number): void {
-    this.log(`🛑 ${message}`, indent)
-    process.exit(1)
+    this.log(`🛑 ${message}`, indent);
+    process.exit(1);
   }
 }
