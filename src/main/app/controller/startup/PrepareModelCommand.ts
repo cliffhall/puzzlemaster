@@ -1,6 +1,9 @@
-import { INotification, SimpleCommand } from '@puremvc/puremvc-typescript-multicore-framework'
-import { IAppFacade } from '../../AppFacade'
-import { EnvProxy } from '../../model/EnvProxy'
+import {
+  INotification,
+  SimpleCommand,
+} from "@puremvc/puremvc-typescript-multicore-framework";
+import { IAppFacade } from "../../AppFacade";
+import { EnvProxy } from "../../model/EnvProxy";
 
 export class PrepareModelCommand extends SimpleCommand {
   /**
@@ -9,8 +12,8 @@ export class PrepareModelCommand extends SimpleCommand {
    * - ArgsProxy provides access to the command line arguments
    */
   public override execute(_note: INotification): void {
-    const f: IAppFacade = this.facade as IAppFacade
-    f.log('⚙️ PrepareModelCommand - Registering Proxies', 2)
+    const f: IAppFacade = this.facade as IAppFacade;
+    f.log("⚙️ PrepareModelCommand - Registering Proxies", 2);
 
     // Create a warning logger for proxies
     /*
@@ -20,7 +23,7 @@ export class PrepareModelCommand extends SimpleCommand {
     */
 
     // Proxy to access the environment (with soft validation)
-    const envProxy = new EnvProxy()
-    f.registerProxy(envProxy)
+    const envProxy = new EnvProxy();
+    f.registerProxy(envProxy);
   }
 }
