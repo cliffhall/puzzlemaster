@@ -2,6 +2,7 @@ import { AsyncMacroCommand } from "@puremvc/puremvc-typescript-util-async-comman
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { IAppFacade } from "../../AppFacade";
 import { PrefsCommand } from "../api/PrefsCommand";
+import { DbDemoCommand } from "../api/DbDemoCommand";
 
 export class PrepareControllerCommand extends AsyncMacroCommand {
   /**
@@ -10,6 +11,7 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
    */
   public override initializeAsyncMacroCommand(): void {
     this.addSubCommand(() => new PrefsCommand());
+    this.addSubCommand(() => new DbDemoCommand());
   }
 
   /**

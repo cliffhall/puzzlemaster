@@ -4,6 +4,7 @@ import {
 } from "@puremvc/puremvc-typescript-multicore-framework";
 import { IAppFacade } from "../../AppFacade";
 import { EnvProxy } from "../../model/EnvProxy";
+import { DbDemoProxy } from "../../model/DbDemoProxy";
 
 export class PrepareModelCommand extends SimpleCommand {
   /**
@@ -25,5 +26,8 @@ export class PrepareModelCommand extends SimpleCommand {
     // Proxy to access the environment (with soft validation)
     const envProxy = new EnvProxy();
     f.registerProxy(envProxy);
+
+    const dbDemoProxy = new DbDemoProxy();
+    f.registerProxy(dbDemoProxy);
   }
 }
