@@ -9,10 +9,7 @@ export const setupTestDatabase = async (): Promise<PrismaClient> => {
     // Create a unique database URL for this test run
     // Using SQLite in-memory database with a unique name to avoid conflicts
     // Adding a random UUID to ensure uniqueness even if tests run in the same millisecond
-    const databaseUrl = `file:./test_${Date.now()}_${Math.random().toString(36).substring(2, 15)}.db?mode=memory`;
-
-    // Set the DATABASE_URL environment variable
-    process.env.DATABASE_URL = databaseUrl;
+    process.env.DATABASE_URL = `file:./test_${Date.now()}_${Math.random().toString(36).substring(2, 15)}.db?mode=memory`;
 
     // Create a new PrismaClient instance
     const prisma = new PrismaClient();
@@ -24,7 +21,10 @@ export const setupTestDatabase = async (): Promise<PrismaClient> => {
       `;
 
       // If the table doesn't exist, we need to create all tables
-      if (!Array.isArray(tableExists) || (tableExists as unknown[]).length === 0) {
+      if (
+        !Array.isArray(tableExists) ||
+        (tableExists as unknown[]).length === 0
+      ) {
         console.log("Creating tables for test database...");
 
         // Create Project table
@@ -110,7 +110,10 @@ export const setupTestDatabase = async (): Promise<PrismaClient> => {
       try {
         await prisma.$disconnect();
       } catch (disconnectError) {
-        console.error("Error disconnecting from test database:", disconnectError);
+        console.error(
+          "Error disconnecting from test database:",
+          disconnectError,
+        );
       }
 
       throw error;

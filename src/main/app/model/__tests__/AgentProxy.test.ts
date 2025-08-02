@@ -170,8 +170,8 @@ describe("AgentProxy", () => {
         expect(agents.length).toBe(2);
 
         // Find the agents in the result by ID
-        const foundAgent1 = agents.find(agent => agent.id === agent1DTO.id);
-        const foundAgent2 = agents.find(agent => agent.id === agent2DTO.id);
+        const foundAgent1 = agents.find((agent) => agent.id === agent1DTO.id);
+        const foundAgent2 = agents.find((agent) => agent.id === agent2DTO.id);
 
         // Verify both agents were found
         expect(foundAgent1).toBeDefined();
