@@ -10,10 +10,10 @@ describe("Phase", () => {
     beforeEach(() => {
       validDTO = {
         id: randomUUID(),
-        teamId: randomUUID(),
-        jobId: randomUUID(),
+        planId: randomUUID(), // Added planId
         name: "Test Phase",
         actions: [randomUUID()],
+        // Removed teamId and jobId
       };
     });
 
@@ -24,13 +24,13 @@ describe("Phase", () => {
       const phase = result._unsafeUnwrap();
       expect(phase).toBeInstanceOf(Phase);
       expect(phase.id).toBe(validDTO.id);
-      expect(phase.teamId).toBe(validDTO.teamId);
-      expect(phase.jobId).toBe(validDTO.jobId);
+      expect(phase.planId).toBe(validDTO.planId); // Added assertion
       expect(phase.name).toBe(validDTO.name);
       expect(phase.actions).toEqual(validDTO.actions);
+      // Removed assertions for teamId and jobId
     });
 
-    it.each(["id", "teamId", "jobId"])(
+    it.each(["id", "planId"])( // Updated fields
       "should return a DomainError if %s is not a valid UUID",
       (field) => {
         const dto = { ...validDTO, [field]: "not-a-uuid" } as PhaseDTO;
@@ -62,7 +62,7 @@ describe("Phase", () => {
       expect(phase.actions).toEqual([]);
     });
 
-    it.each(["id", "teamId", "jobId", "name", "actions"] as const)(
+    it.each(["id", "planId", "name", "actions"] as const)( // Updated fields
       "should return a DomainError if %s is missing",
       (field) => {
         const { [field]: _omit, ...dto } = validDTO;

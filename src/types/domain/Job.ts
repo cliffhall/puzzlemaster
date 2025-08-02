@@ -7,11 +7,21 @@ import { z } from "zod";
 import { Result, ok, err } from "neverthrow";
 import { DomainError } from "./DomainError";
 
+export const JobStatusSchema = z.enum([
+  "PENDING",
+  "RUNNING",
+  "COMPLETED",
+  "FAILED",
+  "CANCELLED",
+]);
+export type JobStatus = z.infer<typeof JobStatusSchema>;
+
 export const JobSchema = z.object({
   id: z.string().uuid(),
   phaseId: z.string().uuid(),
   name: z.string().min(1),
   description: z.string().optional(),
+  status: JobStatusSchema.default("PENDING"),
   tasks: z.array(z.string().uuid()),
 });
 
@@ -23,13 +33,14 @@ export class Job {
     public readonly phaseId: string,
     public name: string,
     public description: string | undefined,
+    public status: JobStatus,
     public tasks: string[],
   ) {}
 
   static create(dto: JobDTO): Result<Job, DomainError> {
     const parsed = JobSchema.safeParse(dto);
     if (!parsed.success) return err(new DomainError(parsed.error.message));
-    const { id, phaseId, name, description, tasks } = parsed.data;
-    return ok(new Job(id, phaseId, name, description, tasks));
+    const { id, phaseId, name, description, status, tasks } = parsed.data;
+    return ok(new Job(id, phaseId, name, description, status, tasks));
   }
 }

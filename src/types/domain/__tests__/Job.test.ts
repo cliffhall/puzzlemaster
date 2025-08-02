@@ -13,6 +13,7 @@ describe("Job", () => {
         phaseId: randomUUID(),
         name: "Job Name",
         description: "desc",
+        status: "PENDING", // Added status
         tasks: [randomUUID()],
       };
     });
@@ -27,7 +28,18 @@ describe("Job", () => {
       expect(job.phaseId).toBe(validDTO.phaseId);
       expect(job.name).toBe(validDTO.name);
       expect(job.description).toBe(validDTO.description);
+      expect(job.status).toBe("PENDING"); // Added assertion
       expect(job.tasks).toEqual(validDTO.tasks);
+    });
+
+    it("should default status to PENDING if not provided", () => {
+      const { status, ...dto } = validDTO;
+      // The type assertion `as JobDTO` tells TypeScript that this is a valid
+      // input for the create method at runtime, as Zod's .default() will handle it.
+      const result = Job.create(dto as JobDTO);
+      expect(result.isOk()).toBe(true);
+      const job = result._unsafeUnwrap();
+      expect(job.status).toBe("PENDING");
     });
 
     it.each(["id", "phaseId"])(

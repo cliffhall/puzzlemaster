@@ -2,11 +2,11 @@ node_modules
 dist
 out
 .DS_Store
-.eslintcache
 *.log*
 .env
 .idea
 /.idea/
 coverage
-
+.eslintcache
+.stylelintcache
 prisma/generated/

@@ -10,7 +10,7 @@ describe("Project", () => {
     beforeEach(() => {
       validDTO = {
         id: randomUUID(),
-        planId: randomUUID(),
+        // Removed planId
         name: "Test Project",
         description: "A project description",
       };
@@ -23,12 +23,12 @@ describe("Project", () => {
       const project = result._unsafeUnwrap();
       expect(project).toBeInstanceOf(Project);
       expect(project.id).toBe(validDTO.id);
-      expect(project.planId).toBe(validDTO.planId);
+      // Removed planId assertion
       expect(project.name).toBe(validDTO.name);
       expect(project.description).toBe(validDTO.description);
     });
 
-    it.each(["id", "planId"])(
+    it.each(["id"])( // Updated fields
       "should return a DomainError if %s is not a valid UUID",
       (field) => {
         const dto = { ...validDTO, [field]: "not-a-uuid" } as ProjectDTO;
@@ -60,7 +60,7 @@ describe("Project", () => {
       expect(project.description).toBeUndefined();
     });
 
-    it.each(["id", "planId", "name"] as const)(
+    it.each(["id", "name"] as const)( // Updated fields
       "should return a DomainError if %s is missing",
       (field) => {
         const { [field]: _omit, ...dto } = validDTO;

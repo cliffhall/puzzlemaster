@@ -7,6 +7,14 @@ import { z } from "zod";
 import { Result, ok, err } from "neverthrow";
 import { DomainError } from "./DomainError";
 
+export const TaskStatusSchema = z.enum([
+  "PENDING",
+  "RUNNING",
+  "COMPLETED",
+  "FAILED",
+]);
+export type TaskStatus = z.infer<typeof TaskStatusSchema>;
+
 export const TaskSchema = z.object({
   id: z.string().uuid(),
   jobId: z.string().uuid(),
@@ -14,6 +22,7 @@ export const TaskSchema = z.object({
   validatorId: z.string().uuid(),
   name: z.string().min(1),
   description: z.string().optional(),
+  status: TaskStatusSchema.default("PENDING"),
 });
 
 export type TaskDTO = z.infer<typeof TaskSchema>;
@@ -26,12 +35,16 @@ export class Task {
     public readonly validatorId: string,
     public name: string,
     public description: string | undefined,
+    public status: TaskStatus, // Added status property
   ) {}
 
   static create(dto: TaskDTO): Result<Task, DomainError> {
     const parsed = TaskSchema.safeParse(dto);
     if (!parsed.success) return err(new DomainError(parsed.error.message));
-    const { id, jobId, agentId, validatorId, name, description } = parsed.data;
-    return ok(new Task(id, jobId, agentId, validatorId, name, description));
+    const { id, jobId, agentId, validatorId, name, description, status } =
+      parsed.data;
+    return ok(
+      new Task(id, jobId, agentId, validatorId, name, description, status),
+    );
   }
 }
