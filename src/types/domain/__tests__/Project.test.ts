@@ -28,7 +28,7 @@ describe("Project", () => {
       expect(project.description).toBe(validDTO.description);
     });
 
-    it.each(["id"])( // Updated fields
+    it.each(["id"])(
       "should return a DomainError if %s is not a valid UUID",
       (field) => {
         const dto = { ...validDTO, [field]: "not-a-uuid" } as ProjectDTO;
@@ -60,7 +60,7 @@ describe("Project", () => {
       expect(project.description).toBeUndefined();
     });
 
-    it.each(["id", "name"] as const)( // Updated fields
+    it.each(["id", "name"] as const)(
       "should return a DomainError if %s is missing",
       (field) => {
         const { [field]: _omit, ...dto } = validDTO;

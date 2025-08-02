@@ -30,7 +30,7 @@ describe("Phase", () => {
       // Removed assertions for teamId and jobId
     });
 
-    it.each(["id", "planId"])( // Updated fields
+    it.each(["id", "planId"])(
       "should return a DomainError if %s is not a valid UUID",
       (field) => {
         const dto = { ...validDTO, [field]: "not-a-uuid" } as PhaseDTO;
@@ -62,7 +62,7 @@ describe("Phase", () => {
       expect(phase.actions).toEqual([]);
     });
 
-    it.each(["id", "planId", "name", "actions"] as const)( // Updated fields
+    it.each(["id", "planId", "name", "actions"] as const)(
       "should return a DomainError if %s is missing",
       (field) => {
         const { [field]: _omit, ...dto } = validDTO;
