@@ -113,7 +113,7 @@ export class AgentProxy extends Proxy {
   /**
    * Update an agent
    * @param id The agent ID
-   * @param agentDTO The agent data transfer object
+   * @param agentDTO The agent data transfer object (can be only fields that changed)
    * @returns A Result containing the updated agent or a DomainError
    */
   public async updateAgent(
