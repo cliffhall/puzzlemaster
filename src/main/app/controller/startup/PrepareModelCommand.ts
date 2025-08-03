@@ -1,12 +1,11 @@
-import {
-  INotification,
-  SimpleCommand,
-} from "@puremvc/puremvc-typescript-multicore-framework";
+import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
+import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { IAppFacade } from "../../AppFacade";
 import { EnvProxy } from "../../model/EnvProxy";
+import { AgentProxy } from "../../model/AgentProxy";
 import { DbDemoProxy } from "../../model/DbDemoProxy";
 
-export class PrepareModelCommand extends SimpleCommand {
+export class PrepareModelCommand extends AsyncCommand {
   /**
    * Initialize and register proxies
    * - EnvProxy provides access to the environment
@@ -24,10 +23,11 @@ export class PrepareModelCommand extends SimpleCommand {
     */
 
     // Proxy to access the environment (with soft validation)
-    const envProxy = new EnvProxy();
-    f.registerProxy(envProxy);
+    f.registerProxy(new EnvProxy());
+    f.registerProxy(new AgentProxy());
+    f.registerProxy(new DbDemoProxy());
 
-    const dbDemoProxy = new DbDemoProxy();
-    f.registerProxy(dbDemoProxy);
+    // Signal completion
+    this.commandComplete();
   }
 }
