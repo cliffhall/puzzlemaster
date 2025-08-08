@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { IAppFacade } from "../../AppFacade";
 import { EnvProxy } from "../../model/EnvProxy";
 import { AgentProxy } from "../../model/AgentProxy";
+import { ActionProxy } from "../../model/ActionProxy";
 import { DbDemoProxy } from "../../model/DbDemoProxy";
 
 export class PrepareModelCommand extends AsyncCommand {
@@ -25,6 +26,7 @@ export class PrepareModelCommand extends AsyncCommand {
     // Proxy to access the environment (with soft validation)
     f.registerProxy(new EnvProxy());
     f.registerProxy(new AgentProxy());
+    f.registerProxy(new ActionProxy());
     f.registerProxy(new DbDemoProxy());
 
     // Signal completion
