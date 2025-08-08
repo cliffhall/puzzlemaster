@@ -1,129 +1,182 @@
-# Test Database Setup
+# Test Database Factory
 
-This document explains how the test database is set up for the PuzzleMaster project.
+This document explains how the test database factory works for the PuzzleMaster project and how to use it for testing.
 
-## Issues and Solutions
+## Overview
 
-### Issue 1: Missing Tables
+The test database factory (`src/test/test-db-factory.ts`) provides isolated test databases for each test run. It creates unique SQLite database files with the complete schema from `prisma/schema.prisma`, ensuring that tests run in complete isolation without affecting the production database.
 
-The project was experiencing an issue where the `AgentProxy.test.ts` tests were failing with the error:
+## Key Features
 
-```
-Invalid `prisma.team.create()` invocation:
-The table `main.Project` does not exist in the current database.
-```
-
-This was happening because the test database was not being properly initialized with the required schema. The original approach was using `npx prisma migrate deploy` to apply migrations to the test database, but this was not working correctly with in-memory SQLite databases.
-
-#### Solution
-
-The solution was to create a more robust test database setup that:
-
-1. Creates a unique SQLite in-memory database for each test run
-2. Checks if the required tables already exist
-3. If they don't exist, creates them directly using SQL statements
-4. Includes proper error handling and cleanup
-
-The implementation can be found in `src/test/test-db-setup.ts`.
-
-### Issue 2: Unique Constraint Violations
-
-After fixing the missing tables issue, we encountered another problem where tests were failing with:
-
-```
-Invalid `prisma.role.create()` invocation:
-Unique constraint failed on the fields: (`name`)
-```
-
-This was happening because:
-
-1. The in-memory database was being shared between test runs due to the `cache=shared` parameter in the database URL
-2. The cleanup function was only disconnecting from the database but not clearing the data
-3. Multiple tests were creating roles with the same name ("Test Role")
-
-#### Solution
-
-We implemented a three-part solution:
-
-1. Made the database URL truly unique by adding a random string and removing the `cache=shared` parameter:
-   ```typescript
-   const databaseUrl = `file:./test_${Date.now()}_${Math.random().toString(36).substring(2, 15)}.db?mode=memory`;
-   ```
-
-2. Improved the cleanup function to properly delete all data from the tables in reverse order of their dependencies:
-   ```typescript
-   const cleanup = async (): Promise<void> => {
-     try {
-       // Delete all data from the tables in reverse order of their dependencies
-       await prisma.agent.deleteMany({});
-       await prisma.team.deleteMany({});
-       await prisma.role.deleteMany({});
-       await prisma.phase.deleteMany({});
-       await prisma.plan.deleteMany({});
-       await prisma.project.deleteMany({});
-     } catch (error) {
-       console.error("Error cleaning up test database:", error);
-     } finally {
-       // Always disconnect from the database
-       await prisma.$disconnect();
-     }
-   };
-   ```
-
-3. Updated the test to use unique role names for each test run as an additional safeguard:
-   ```typescript
-   const uniqueRoleName = `Test Role ${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
-   await testSetup.prisma.role.create({
-     data: {
-       id: roleId,
-       name: uniqueRoleName,
-     },
-   });
-   ```
-
-These changes ensure that each test gets a truly isolated database environment and that data is properly cleaned up between tests.
+- **True Isolation**: Each test gets its own unique database file
+- **Complete Schema**: All tables from `prisma/schema.prisma` are created automatically
+- **Automatic Cleanup**: Database files are automatically deleted after tests complete
+- **Schema Verification**: Ensures all expected tables are created correctly
+- **Fast Setup**: Optimized for quick test execution
 
 ## How It Works
 
-1. The `setupTestDatabase` function creates a unique SQLite in-memory database URL
-2. It sets the `DATABASE_URL` environment variable to this URL
-3. It creates a new PrismaClient instance connected to this database
-4. It checks if the Project table already exists in the database
-5. If the table doesn't exist, it creates all the necessary tables with their relationships
-6. It returns the PrismaClient instance for use in tests
+### Database Creation Process
 
-## Benefits
+1. **Unique Database URL**: Creates a unique SQLite database file using timestamp and UUID
+   ```typescript
+   const testDbName = `test_${Date.now()}_${randomUUID().replace(/-/g, "")}`;
+   const testDbUrl = `file:./${testDbName}.db`;
+   ```
 
-This approach has several benefits:
+2. **Schema Application**: Applies the complete schema from `prisma/schema.prisma` using direct SQL statements that mirror the Prisma schema definition
 
-- It's more reliable than using migrations for test databases
-- It creates exactly the tables needed for the tests
-- It's fast because it uses in-memory databases
-- It doesn't leave any files behind
-- It has proper error handling
-- It works consistently across different environments
+3. **Schema Verification**: Verifies that all expected tables exist:
+   - Demo tables: `User`, `Post`
+   - Domain tables: `Project`, `Plan`, `Phase`, `Job`, `Task`, `Action`, `Team`, `Agent`, `Role`, `Validator`
+
+4. **Cleanup Function**: Provides automatic cleanup that:
+   - Disconnects from the database
+   - Deletes the temporary database file
+
+### Schema Synchronization
+
+The factory creates tables using SQL statements that are directly derived from the `prisma/schema.prisma` file. Each CREATE TABLE statement includes comments referencing the corresponding lines in the schema file, making it easy to maintain synchronization when the schema changes.
 
 ## Usage
 
-To use this setup in your tests, import the `setupTestDatabase` function and use it to create a test database:
+### Basic Usage
+
+Import and use the `createTestPrismaClient` function:
 
 ```typescript
-import { setupTestDatabase } from "./test-db-setup";
+import { createTestPrismaClient } from "./test-db-factory";
 
-// In your test setup
-const prisma = await setupTestDatabase();
+// Create test database
+const { prisma, cleanup } = await createTestPrismaClient();
 
 // Use prisma in your tests
+const user = await prisma.user.create({
+  data: { email: "test@example.com", name: "Test User" }
+});
 
 // Clean up after tests
-await prisma.$disconnect();
+await cleanup();
 ```
+
+### Using Test Helpers
+
+For proxy classes, use the dedicated test helpers:
+
+```typescript
+// For ActionProxy tests
+import { createTestActionProxy } from "./action-proxy-test-helper";
+
+const { prisma, actionProxy, cleanup } = await createTestActionProxy();
+// Use actionProxy and prisma in tests
+await cleanup();
+
+// For AgentProxy tests
+import { createTestAgentProxy } from "./agent-proxy-test-helper";
+
+const { prisma, agentProxy, cleanup } = await createTestAgentProxy();
+// Use agentProxy and prisma in tests
+await cleanup();
+```
+
+### Test Structure Pattern
+
+Follow this pattern for new proxy tests:
+
+```typescript
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { createTestYourProxy } from "../../../test/your-proxy-test-helper";
+
+describe("YourProxy", () => {
+  let testSetup: {
+    prisma: PrismaClient;
+    yourProxy: YourProxy;
+    cleanup: () => Promise<void>;
+  };
+
+  beforeEach(async () => {
+    testSetup = await createTestYourProxy();
+  });
+
+  afterEach(async () => {
+    await testSetup.cleanup();
+  });
+
+  // Your tests here
+});
+```
+
+## Adding New Proxy Tests
+
+To add tests for a new proxy class:
+
+1. **Create a test helper** (e.g., `src/test/your-proxy-test-helper.ts`):
+   ```typescript
+   import { PrismaClient } from "db";
+   import { YourProxy } from "../main/app/model/YourProxy";
+   import { createTestPrismaClient } from "./test-db-factory";
+
+   export const createTestYourProxy = async (): Promise<{
+     prisma: PrismaClient;
+     yourProxy: YourProxy;
+     cleanup: () => Promise<void>;
+   }> => {
+     const { prisma, cleanup: dbCleanup } = await createTestPrismaClient();
+     const yourProxy = new YourProxy(prisma);
+
+     const cleanup = async (): Promise<void> => {
+       try {
+         // Clear test data in reverse dependency order
+         await prisma.yourTable.deleteMany({});
+         // Add other table cleanups as needed
+       } catch (error) {
+         console.error("Error cleaning up test data:", error);
+       } finally {
+         await dbCleanup();
+       }
+     };
+
+     return { prisma, yourProxy, cleanup };
+   };
+   ```
+
+2. **Create the test file** following the pattern shown above
+
+3. **Update the cleanup function** in your test helper to include any new tables your proxy uses
+
+## Benefits
+
+- **Reliability**: Tests produce consistent results every run
+- **Speed**: Fast database creation and cleanup
+- **Isolation**: No test interference or shared state issues
+- **Maintainability**: Schema changes only require updating the factory
+- **Debugging**: Each test database can be inspected if needed
 
 ## Troubleshooting
 
-If you encounter issues with the test database setup:
+### Common Issues
 
-1. Check the console output for error messages
-2. Ensure that the SQLite in-memory database URL is correctly formatted
-3. Verify that the SQL statements match the current schema
-4. Make sure that the tables are created in the correct order to respect foreign key constraints
+1. **Missing Tables Error**: If you see "Missing tables in test database", check that all required tables are included in the `expectedTables` array in `verifySchema()`
+
+2. **Foreign Key Constraint Errors**: Ensure tables are created in the correct order to respect foreign key dependencies
+
+3. **Cleanup Errors**: Make sure the cleanup function deletes data in reverse dependency order
+
+### Schema Updates
+
+When the `prisma/schema.prisma` file changes:
+
+1. Update the corresponding CREATE TABLE statements in `applySchemaToTestDatabase()`
+2. Update the `expectedTables` array in `verifySchema()`
+3. Update test helper cleanup functions if new tables are added
+4. Run tests to verify everything works correctly
+
+## File Structure
+
+```
+src/test/
+├── test-db-factory.ts           # Main factory for creating test databases
+├── action-proxy-test-helper.ts  # Helper for ActionProxy tests
+├── agent-proxy-test-helper.ts   # Helper for AgentProxy tests
+└── README.md                    # This documentation
+```

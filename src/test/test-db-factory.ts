@@ -27,7 +27,7 @@ export const createTestPrismaClient = async (): Promise<{
     // Apply current schema using direct SQL execution
     console.log(`Creating schema for test database: ${testDbUrl}`);
 
-    await applySchemaToTestDatabase(prisma);
+    await applySchemaToTestDatabase(testDbUrl);
 
     // Verify the schema was applied correctly
     await verifySchema(prisma);
@@ -37,9 +37,20 @@ export const createTestPrismaClient = async (): Promise<{
         await prisma.$disconnect();
 
         // Clean up temporary database file
+        // Database files are created in the prisma directory, not the current directory
         const dbPath = testDbUrl.replace("file:", "");
-        if (existsSync(dbPath)) {
-          unlinkSync(dbPath);
+        const possiblePaths = [
+          dbPath, // Try current directory first
+          `prisma/${dbPath}`, // Try prisma directory
+          `./prisma/${dbPath.replace("./", "")}`, // Try prisma directory with cleaned path
+        ];
+
+        for (const path of possiblePaths) {
+          if (existsSync(path)) {
+            unlinkSync(path);
+            console.log(`✓ Cleaned up test database: ${path}`);
+            break;
+          }
         }
       } catch (error) {
         console.error("Cleanup error:", error);
@@ -52,8 +63,18 @@ export const createTestPrismaClient = async (): Promise<{
     try {
       await prisma.$disconnect();
       const dbPath = testDbUrl.replace("file:", "");
-      if (existsSync(dbPath)) {
-        unlinkSync(dbPath);
+      const possiblePaths = [
+        dbPath, // Try current directory first
+        `prisma/${dbPath}`, // Try prisma directory
+        `./prisma/${dbPath.replace("./", "")}`, // Try prisma directory with cleaned path
+      ];
+
+      for (const path of possiblePaths) {
+        if (existsSync(path)) {
+          unlinkSync(path);
+          console.log(`✓ Cleaned up failed test database: ${path}`);
+          break;
+        }
       }
     } catch (cleanupError) {
       console.error("Error during failed setup cleanup:", cleanupError);
@@ -66,13 +87,29 @@ export const createTestPrismaClient = async (): Promise<{
 
 /**
  * Applies the current schema to the test database using direct SQL
+ * This approach ensures the test database exactly matches the Prisma schema
+ * without relying on Prisma's db push command which doesn't work well with dynamic URLs
  */
-const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> => {
-  try {
-    // Create all tables based on the current Prisma schema
+const applySchemaToTestDatabase = async (testDbUrl: string): Promise<void> => {
+  // Create a temporary PrismaClient for the test database to execute SQL
+  const tempPrisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: testDbUrl,
+      },
+    },
+  });
 
-    // Demo tables (User, Post)
-    await prisma.$executeRawUnsafe(`
+  try {
+    console.log(
+      "Applying schema from prisma/schema.prisma to test database...",
+    );
+
+    // Create all tables based on the current Prisma schema
+    // This SQL is derived from the prisma/schema.prisma file
+
+    // Demo tables (User, Post) - from schema lines 14-28
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "User" (
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         "email" TEXT NOT NULL UNIQUE,
@@ -80,7 +117,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Post" (
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         "title" TEXT NOT NULL,
@@ -91,8 +128,8 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    // Domain tables
-    await prisma.$executeRawUnsafe(`
+    // Domain tables - from schema lines 32-189
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Project" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -102,7 +139,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Plan" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "description" TEXT,
@@ -113,7 +150,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Phase" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -124,7 +161,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Job" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -137,7 +174,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Team" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -148,7 +185,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Role" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL UNIQUE,
@@ -158,7 +195,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Agent" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -171,7 +208,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Validator" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "template" TEXT NOT NULL,
@@ -181,7 +218,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Task" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -198,7 +235,7 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
       );
     `);
 
-    await prisma.$executeRawUnsafe(`
+    await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Action" (
         "id" TEXT NOT NULL PRIMARY KEY,
         "name" TEXT NOT NULL,
@@ -217,6 +254,8 @@ const applySchemaToTestDatabase = async (prisma: PrismaClient): Promise<void> =>
   } catch (error) {
     console.error("Error applying schema to test database:", error);
     throw error;
+  } finally {
+    await tempPrisma.$disconnect();
   }
 };
 

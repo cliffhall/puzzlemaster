@@ -11,7 +11,7 @@
     "build": "prisma generate && npm run typecheck && electron-vite build",
     "test": "npm run typecheck && npm run prettier && npm run lint && npm run vitest && npm run build",
     "lint": "npm run eslint && npm run stylelint",
-    "eslint": "eslint . --cache",
+    "eslint": "eslint ./**/*.{ts,tsx} --cache",
     "stylelint": "stylelint '**/*.css' --cache --allow-empty-input",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
