@@ -8,6 +8,7 @@ import { PhaseAPICommand } from "../api/PhaseAPICommand";
 import { PlanAPICommand } from "../api/PlanAPICommand";
 import { JobAPICommand } from "../api/JobAPICommand";
 import { TaskAPICommand } from "../api/TaskAPICommand";
+import { TeamAPICommand } from "../api/TeamAPICommand";
 import { DbDemoCommand } from "../api/DbDemoCommand";
 import { PrefsCommand } from "../api/PrefsCommand";
 import { IAppFacade } from "../../AppFacade";
@@ -27,6 +28,7 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
     this.addSubCommand(() => new ProjectAPICommand());
     this.addSubCommand(() => new RoleAPICommand());
     this.addSubCommand(() => new TaskAPICommand());
+    this.addSubCommand(() => new TeamAPICommand());
     this.addSubCommand(() => new DbDemoCommand());
   }
 

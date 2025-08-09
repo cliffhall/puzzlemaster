@@ -10,6 +10,7 @@ import { DbDemoProxy } from "../../model/DbDemoProxy";
 import { JobProxy } from "../../model/JobProxy";
 import { PlanProxy } from "../../model/PlanProxy";
 import { ProjectProxy } from "../../model/ProjectProxy";
+import { TeamProxy } from "../../model/TeamProxy";
 
 export class PrepareModelCommand extends AsyncCommand {
   /**
@@ -37,6 +38,7 @@ export class PrepareModelCommand extends AsyncCommand {
     f.registerProxy(new ProjectProxy());
     f.registerProxy(new RoleProxy());
     f.registerProxy(new TaskProxy());
+    f.registerProxy(new TeamProxy());
     f.registerProxy(new DbDemoProxy());
 
     // Signal completion
