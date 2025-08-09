@@ -17,6 +17,14 @@ export const PhaseSchema = z.object({
 
 export type PhaseDTO = z.infer<typeof PhaseSchema>;
 
+export enum PhaseAPIMethods {
+  CREATE_PHASE = "create-phase",
+  GET_PHASE = "get-phase",
+  GET_PHASES = "get-phases",
+  UPDATE_PHASE = "update-phase",
+  DELETE_PHASE = "delete-phase",
+}
+
 export class Phase {
   private constructor(
     public readonly id: string,

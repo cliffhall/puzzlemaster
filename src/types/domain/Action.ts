@@ -17,6 +17,15 @@ export const ActionSchema = z.object({
 
 export type ActionDTO = z.infer<typeof ActionSchema>;
 
+export enum ActionAPIMethods {
+  CREATE_ACTION = "create-action",
+  GET_ACTION = "get-action",
+  GET_ACTIONS = "get-actions",
+  GET_ACTIONS_BY_PHASE = "get-actions-by-phase",
+  UPDATE_ACTION = "update-action",
+  DELETE_ACTION = "delete-action",
+}
+
 export class Action {
   private constructor(
     public readonly id: string,

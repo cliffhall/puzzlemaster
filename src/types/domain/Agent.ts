@@ -17,6 +17,14 @@ export const AgentSchema = z.object({
 
 export type AgentDTO = z.infer<typeof AgentSchema>;
 
+export enum AgentAPIMethods {
+  CREATE_AGENT = "create-agent",
+  GET_AGENT = "get-agent",
+  GET_AGENTS = "get-agents",
+  UPDATE_AGENT = "update-agent",
+  DELETE_AGENT = "delete-agent",
+}
+
 export class Agent {
   private constructor(
     public readonly id: string,

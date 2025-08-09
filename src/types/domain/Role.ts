@@ -15,6 +15,14 @@ export const RoleSchema = z.object({
 
 export type RoleDTO = z.infer<typeof RoleSchema>;
 
+export enum RoleAPIMethods {
+  CREATE_ROLE = "create-role",
+  GET_ROLE = "get-role",
+  GET_ROLES = "get-roles",
+  UPDATE_ROLE = "update-role",
+  DELETE_ROLE = "delete-role",
+}
+
 export class Role {
   private constructor(
     public readonly id: string,

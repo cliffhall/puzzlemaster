@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { PhaseDTO } from "../../../../types/domain";
+import { PhaseDTO, PhaseAPIMethods } from "../../../../types/domain";
 import { PhaseProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";
@@ -12,28 +12,34 @@ export class PhaseAPICommand extends AsyncCommand {
     const phaseProxy = f.retrieveProxy(PhaseProxy.NAME) as PhaseProxy;
 
     // Create a phase and return it
-    ipcMain.handle("create-phase", async (_, phaseDTO: PhaseDTO) => {
-      return await phaseProxy.createPhase(phaseDTO);
-    });
+    ipcMain.handle(
+      PhaseAPIMethods.CREATE_PHASE,
+      async (_, phaseDTO: PhaseDTO) => {
+        return await phaseProxy.createPhase(phaseDTO);
+      },
+    );
 
     // Get a phase by id
-    ipcMain.handle("get-phase", async (_, id: string) => {
+    ipcMain.handle(PhaseAPIMethods.GET_PHASE, async (_, id: string) => {
       return await phaseProxy.getPhase(id);
     });
 
     // Get all phases
-    ipcMain.handle("get-phases", async () => {
+    ipcMain.handle(PhaseAPIMethods.GET_PHASES, async () => {
       return await phaseProxy.getPhases();
     });
 
     // Update a phase
-    ipcMain.handle("update-phase", async (_, phaseDTO: PhaseDTO) => {
-      const { id, ...updateData } = phaseDTO;
-      return await phaseProxy.updatePhase(id, updateData);
-    });
+    ipcMain.handle(
+      PhaseAPIMethods.UPDATE_PHASE,
+      async (_, phaseDTO: PhaseDTO) => {
+        const { id, ...updateData } = phaseDTO;
+        return await phaseProxy.updatePhase(id, updateData);
+      },
+    );
 
     // Delete a phase
-    ipcMain.handle("delete-phase", async (_, id: string) => {
+    ipcMain.handle(PhaseAPIMethods.DELETE_PHASE, async (_, id: string) => {
       return await phaseProxy.deletePhase(id);
     });
 

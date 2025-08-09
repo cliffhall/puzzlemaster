@@ -16,6 +16,14 @@ export const PlanSchema = z.object({
 
 export type PlanDTO = z.infer<typeof PlanSchema>;
 
+export enum PlanAPIMethods {
+  CREATE_PLAN = "create-plan",
+  GET_PLAN = "get-plan",
+  GET_PLANS = "get-plans",
+  UPDATE_PLAN = "update-plan",
+  DELETE_PLAN = "delete-plan",
+}
+
 export class Plan {
   private constructor(
     public readonly id: string,
