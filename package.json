@@ -9,7 +9,7 @@
     "dev": "electron-vite dev",
     "start": "electron-vite preview",
     "build": "prisma generate && npm run typecheck && electron-vite build",
-    "test": "npm run typecheck && npm run prettier && npm run lint && npm run vitest && npm run build",
+    "test": "npm run prettier && npm run lint && npm run build && npm run vitest",
     "lint": "npm run eslint && npm run stylelint",
     "eslint": "eslint ./**/*.{ts,tsx} --cache",
     "stylelint": "stylelint '**/*.css' --cache --allow-empty-input",
