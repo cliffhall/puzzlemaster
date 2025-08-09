@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { createTestAgentProxy } from "../../../../test/agent-proxy-test-helper";
-import { randomUUID } from "crypto";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { AgentDTO } from "../../../../types/domain/Agent";
-import { PrismaClient } from "db";
 import { AgentProxy } from "../AgentProxy";
+import { randomUUID } from "crypto";
+import { PrismaClient } from "db";
 
 /**
  * Helper function to create test data (team, role, and agent)

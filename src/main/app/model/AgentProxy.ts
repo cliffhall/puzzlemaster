@@ -1,8 +1,8 @@
 import { Proxy } from "@puremvc/puremvc-typescript-multicore-framework";
-import { PrismaClient } from "db";
+import { DomainError } from "../../../types/domain/DomainError";
 import { Agent, AgentDTO } from "../../../types/domain/Agent";
 import { Result, ok, err } from "neverthrow";
-import { DomainError } from "../../../types/domain/DomainError";
+import { PrismaClient } from "db";
 
 // For production code, use a singleton instance
 const prisma = new PrismaClient();

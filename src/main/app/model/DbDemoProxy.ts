@@ -1,6 +1,8 @@
 import { Proxy } from "@puremvc/puremvc-typescript-multicore-framework";
-import { PrismaClient } from "db";
+//import { DomainError } from "../../../types/domain/DomainError";
 import { CreateDemoUserResult } from "../../../types/api";
+import { PrismaClient } from "db";
+//import { err } from "neverthrow";
 
 const prisma = new PrismaClient();
 
@@ -12,13 +14,22 @@ export class DbDemoProxy extends Proxy {
   }
 
   public async createDemoUser(): Promise<CreateDemoUserResult> {
-    const user = await prisma.user.create({
-      data: {
-        name: "Alice",
-        email: "alice@prisma.io",
-      },
-    });
-    console.log(user);
-    return user;
+    try {
+      const user = await prisma.user.create({
+        data: {
+          name: "Alice",
+          email: "alice@prisma.io",
+        },
+      });
+      console.log(user);
+      return user;
+    } catch (error) {
+      // TODO result should be wrapped properly so it can be success or error
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      console.error(`Failed to create demo user: ${errorMessage}`);
+      throw new Error(`Failed to create demo user: ${errorMessage}`);
+      //return err(DomainError.fromError("Failed create demo user", error));
+    }
   }
 }

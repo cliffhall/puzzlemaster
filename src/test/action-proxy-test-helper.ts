@@ -1,6 +1,6 @@
-import { PrismaClient } from "db";
-import { ActionProxy } from "../main/app/model/ActionProxy.js";
+import { ActionProxy } from "../main/app/model/ActionProxy";
 import { createTestPrismaClient } from "./test-db-factory";
+import { PrismaClient } from "db";
 
 /**
  * Create a test instance of ActionProxy with a test database

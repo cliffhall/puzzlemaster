@@ -1,6 +1,6 @@
-import { PrismaClient } from "db";
-import { AgentProxy } from "../main/app/model/AgentProxy";
 import { createTestPrismaClient } from "./test-db-factory";
+import { AgentProxy } from "../main/app/model/AgentProxy";
+import { PrismaClient } from "db";
 
 /**
  * Create a test instance of AgentProxy with a test database
