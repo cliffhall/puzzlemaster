@@ -47,7 +47,7 @@ model Plan {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId String  @unique
 
   phases Phase[]
@@ -59,7 +59,7 @@ model Phase {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  plan   Plan   @relation(fields: [planId], references: [id])
+  plan   Plan   @relation(fields: [planId], references: [id], onDelete: Cascade)
   planId String
 
   team Team? // One-to-one with Team, linked from Team.phaseId
@@ -81,7 +81,7 @@ model Job {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  phase   Phase  @relation(fields: [phaseId], references: [id])
+  phase   Phase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
   phaseId String @unique
 
   tasks Task[]
@@ -95,7 +95,7 @@ model Task {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-  job   Job    @relation(fields: [jobId], references: [id])
+  job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
   jobId String
 
   agent   Agent  @relation(fields: [agentId], references: [id])
@@ -113,7 +113,7 @@ model Action {
 
   // Foreign key for the Phase that "owns" this action, based on `Phase.actions`.
   phaseId String
-  phase   Phase  @relation("SourcePhaseActions", fields: [phaseId], references: [id])
+  phase   Phase  @relation("SourcePhaseActions", fields: [phaseId], references: [id], onDelete: Cascade)
 
   // Foreign key for the Phase this action targets, from `Action.targetPhaseId`.
   targetPhaseId String
@@ -130,7 +130,7 @@ model Team {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  phase   Phase  @relation(fields: [phaseId], references: [id])
+  phase   Phase  @relation(fields: [phaseId], references: [id], onDelete: Cascade)
   phaseId String @unique
 
   agents Agent[]
@@ -142,7 +142,7 @@ model Agent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  team   Team   @relation(fields: [teamId], references: [id])
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId String
 
   role   Role   @relation(fields: [roleId], references: [id])

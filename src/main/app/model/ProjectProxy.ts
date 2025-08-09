@@ -118,8 +118,9 @@ export class ProjectProxy extends Proxy {
         description?: string | null;
       } = {};
       if (projectDTO.name) updateData.name = projectDTO.name;
-      if (projectDTO.description !== undefined)
-        updateData.description = projectDTO.description;
+      if ("description" in projectDTO) {
+        updateData.description = projectDTO.description || null;
+      }
 
       // Update the project
       const project = await this.prismaClient.project.update({
