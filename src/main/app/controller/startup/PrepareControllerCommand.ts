@@ -3,6 +3,7 @@ import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { ActionAPICommand } from "../api/ActionAPICommand.js";
 import { ProjectAPICommand } from "../api/ProjectAPICommand";
 import { AgentAPICommand } from "../api/AgentAPICommand";
+import { RoleAPICommand } from "../api/RoleAPICommand";
 import { PhaseAPICommand } from "../api/PhaseAPICommand";
 import { PlanAPICommand } from "../api/PlanAPICommand";
 import { JobAPICommand } from "../api/JobAPICommand";
@@ -17,12 +18,13 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
    */
   public override initializeAsyncMacroCommand(): void {
     this.addSubCommand(() => new PrefsCommand());
-    this.addSubCommand(() => new AgentAPICommand());
     this.addSubCommand(() => new ActionAPICommand());
+    this.addSubCommand(() => new AgentAPICommand());
     this.addSubCommand(() => new JobAPICommand());
     this.addSubCommand(() => new PhaseAPICommand());
     this.addSubCommand(() => new PlanAPICommand());
     this.addSubCommand(() => new ProjectAPICommand());
+    this.addSubCommand(() => new RoleAPICommand());
     this.addSubCommand(() => new DbDemoCommand());
   }
 
