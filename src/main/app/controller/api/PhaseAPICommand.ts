@@ -15,18 +15,18 @@ export class PhaseAPICommand extends AsyncCommand {
     ipcMain.handle(
       PhaseAPIMethods.CREATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
-        return await phaseProxy.createPhase(phaseDTO);
+        return phaseProxy.createPhase(phaseDTO);
       },
     );
 
     // Get a phase by id
     ipcMain.handle(PhaseAPIMethods.GET_PHASE, async (_, id: string) => {
-      return await phaseProxy.getPhase(id);
+      return phaseProxy.getPhase(id);
     });
 
     // Get all phases
     ipcMain.handle(PhaseAPIMethods.GET_PHASES, async () => {
-      return await phaseProxy.getPhases();
+      return phaseProxy.getPhases();
     });
 
     // Update a phase
@@ -34,13 +34,13 @@ export class PhaseAPICommand extends AsyncCommand {
       PhaseAPIMethods.UPDATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
         const { id, ...updateData } = phaseDTO;
-        return await phaseProxy.updatePhase(id, updateData);
+        return phaseProxy.updatePhase(id, updateData);
       },
     );
 
     // Delete a phase
     ipcMain.handle(PhaseAPIMethods.DELETE_PHASE, async (_, id: string) => {
-      return await phaseProxy.deletePhase(id);
+      return phaseProxy.deletePhase(id);
     });
 
     // Signal completion

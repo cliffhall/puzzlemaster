@@ -13,28 +13,28 @@ export class JobAPICommand extends AsyncCommand {
 
     // Create a job and return it
     ipcMain.handle(JobAPIMethods.CREATE_JOB, async (_, jobDTO: JobDTO) => {
-      return await jobProxy.createJob(jobDTO);
+      return jobProxy.createJob(jobDTO);
     });
 
     // Get a job by id
     ipcMain.handle(JobAPIMethods.GET_JOB, async (_, id: string) => {
-      return await jobProxy.getJob(id);
+      return jobProxy.getJob(id);
     });
 
     // Get all jobs
     ipcMain.handle(JobAPIMethods.GET_JOBS, async () => {
-      return await jobProxy.getJobs();
+      return jobProxy.getJobs();
     });
 
     // Update a job
     ipcMain.handle(JobAPIMethods.UPDATE_JOB, async (_, jobDTO: JobDTO) => {
       const { id, ...updateData } = jobDTO;
-      return await jobProxy.updateJob(id, updateData);
+      return jobProxy.updateJob(id, updateData);
     });
 
     // Delete a job
     ipcMain.handle(JobAPIMethods.DELETE_JOB, async (_, id: string) => {
-      return await jobProxy.deleteJob(id);
+      return jobProxy.deleteJob(id);
     });
 
     // Signal completion

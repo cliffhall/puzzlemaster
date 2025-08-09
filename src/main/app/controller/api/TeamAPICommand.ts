@@ -13,28 +13,28 @@ export class TeamAPICommand extends AsyncCommand {
 
     // Create a team and return it
     ipcMain.handle(TeamAPIMethods.CREATE_TEAM, async (_, teamDTO: TeamDTO) => {
-      return await teamProxy.createTeam(teamDTO);
+      return teamProxy.createTeam(teamDTO);
     });
 
     // Get a team by id
     ipcMain.handle(TeamAPIMethods.GET_TEAM, async (_, id: string) => {
-      return await teamProxy.getTeam(id);
+      return teamProxy.getTeam(id);
     });
 
     // Get all teams
     ipcMain.handle(TeamAPIMethods.GET_TEAMS, async () => {
-      return await teamProxy.getTeams();
+      return teamProxy.getTeams();
     });
 
     // Update a team
     ipcMain.handle(TeamAPIMethods.UPDATE_TEAM, async (_, teamDTO: TeamDTO) => {
       const { id, ...updateData } = teamDTO;
-      return await teamProxy.updateTeam(id, updateData);
+      return teamProxy.updateTeam(id, updateData);
     });
 
     // Delete a team
     ipcMain.handle(TeamAPIMethods.DELETE_TEAM, async (_, id: string) => {
-      return await teamProxy.deleteTeam(id);
+      return teamProxy.deleteTeam(id);
     });
 
     // Signal completion

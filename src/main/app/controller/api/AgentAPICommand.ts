@@ -15,18 +15,18 @@ export class AgentAPICommand extends AsyncCommand {
     ipcMain.handle(
       AgentAPIMethods.CREATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
-        return await agentProxy.createAgent(agentDTO);
+        return agentProxy.createAgent(agentDTO);
       },
     );
 
     // Get an agent by id
     ipcMain.handle(AgentAPIMethods.GET_AGENT, async (_, id: string) => {
-      return await agentProxy.getAgent(id);
+      return agentProxy.getAgent(id);
     });
 
     // Get all agents
     ipcMain.handle(AgentAPIMethods.GET_AGENTS, async () => {
-      return await agentProxy.getAgents();
+      return agentProxy.getAgents();
     });
 
     // Update an agent
@@ -34,13 +34,13 @@ export class AgentAPICommand extends AsyncCommand {
       AgentAPIMethods.UPDATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
         const { id, ...updateData } = agentDTO;
-        return await agentProxy.updateAgent(id, updateData);
+        return agentProxy.updateAgent(id, updateData);
       },
     );
 
     // Delete an agent
     ipcMain.handle(AgentAPIMethods.DELETE_AGENT, async (_, id: string) => {
-      return await agentProxy.deleteAgent(id);
+      return agentProxy.deleteAgent(id);
     });
 
     // Signal completion

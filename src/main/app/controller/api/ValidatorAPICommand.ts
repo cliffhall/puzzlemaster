@@ -1,7 +1,7 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { ValidatorProxy } from "../../model";
 import { ValidatorDTO, ValidatorAPIMethods } from "../../../../types/domain";
+import { ValidatorProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";
 
@@ -17,18 +17,18 @@ export class ValidatorAPICommand extends AsyncCommand {
     ipcMain.handle(
       ValidatorAPIMethods.CREATE_VALIDATOR,
       async (_, validatorDTO: ValidatorDTO) => {
-        return await validatorProxy.createValidator(validatorDTO);
+        return validatorProxy.createValidator(validatorDTO);
       },
     );
 
     // Get a validator by id
     ipcMain.handle(ValidatorAPIMethods.GET_VALIDATOR, async (_, id: string) => {
-      return await validatorProxy.getValidator(id);
+      return validatorProxy.getValidator(id);
     });
 
     // Get all validators
     ipcMain.handle(ValidatorAPIMethods.GET_VALIDATORS, async () => {
-      return await validatorProxy.getValidators();
+      return validatorProxy.getValidators();
     });
 
     // Update a validator
@@ -36,7 +36,7 @@ export class ValidatorAPICommand extends AsyncCommand {
       ValidatorAPIMethods.UPDATE_VALIDATOR,
       async (_, validatorDTO: ValidatorDTO) => {
         const { id, ...updateData } = validatorDTO;
-        return await validatorProxy.updateValidator(id, updateData);
+        return validatorProxy.updateValidator(id, updateData);
       },
     );
 
@@ -44,7 +44,7 @@ export class ValidatorAPICommand extends AsyncCommand {
     ipcMain.handle(
       ValidatorAPIMethods.DELETE_VALIDATOR,
       async (_, id: string) => {
-        return await validatorProxy.deleteValidator(id);
+        return validatorProxy.deleteValidator(id);
       },
     );
 

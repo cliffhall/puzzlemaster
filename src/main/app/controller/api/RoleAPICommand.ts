@@ -13,28 +13,28 @@ export class RoleAPICommand extends AsyncCommand {
 
     // Create a role and return it
     ipcMain.handle(RoleAPIMethods.CREATE_ROLE, async (_, roleDTO: RoleDTO) => {
-      return await roleProxy.createRole(roleDTO);
+      return roleProxy.createRole(roleDTO);
     });
 
     // Get a role by id
     ipcMain.handle(RoleAPIMethods.GET_ROLE, async (_, id: string) => {
-      return await roleProxy.getRole(id);
+      return roleProxy.getRole(id);
     });
 
     // Get all roles
     ipcMain.handle(RoleAPIMethods.GET_ROLES, async () => {
-      return await roleProxy.getRoles();
+      return roleProxy.getRoles();
     });
 
     // Update a role
     ipcMain.handle(RoleAPIMethods.UPDATE_ROLE, async (_, roleDTO: RoleDTO) => {
       const { id, ...updateData } = roleDTO;
-      return await roleProxy.updateRole(id, updateData);
+      return roleProxy.updateRole(id, updateData);
     });
 
     // Delete a role
     ipcMain.handle(RoleAPIMethods.DELETE_ROLE, async (_, id: string) => {
-      return await roleProxy.deleteRole(id);
+      return roleProxy.deleteRole(id);
     });
 
     // Signal completion

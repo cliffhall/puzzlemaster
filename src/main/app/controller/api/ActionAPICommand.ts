@@ -15,25 +15,25 @@ export class ActionAPICommand extends AsyncCommand {
     ipcMain.handle(
       ActionAPIMethods.CREATE_ACTION,
       async (_, actionDTO: ActionDTO) => {
-        return await actionProxy.createAction(actionDTO);
+        return actionProxy.createAction(actionDTO);
       },
     );
 
     // Get an action by id
     ipcMain.handle(ActionAPIMethods.GET_ACTION, async (_, id: string) => {
-      return await actionProxy.getAction(id);
+      return actionProxy.getAction(id);
     });
 
     // Get all actions
     ipcMain.handle(ActionAPIMethods.GET_ACTIONS, async () => {
-      return await actionProxy.getActions();
+      return actionProxy.getActions();
     });
 
     // Get actions by phase id
     ipcMain.handle(
       ActionAPIMethods.GET_ACTIONS_BY_PHASE,
       async (_, phaseId: string) => {
-        return await actionProxy.getActionsByPhase(phaseId);
+        return actionProxy.getActionsByPhase(phaseId);
       },
     );
 
@@ -42,13 +42,13 @@ export class ActionAPICommand extends AsyncCommand {
       ActionAPIMethods.UPDATE_ACTION,
       async (_, actionDTO: ActionDTO) => {
         const { id, ...updateData } = actionDTO;
-        return await actionProxy.updateAction(id, updateData);
+        return actionProxy.updateAction(id, updateData);
       },
     );
 
     // Delete an action
     ipcMain.handle(ActionAPIMethods.DELETE_ACTION, async (_, id: string) => {
-      return await actionProxy.deleteAction(id);
+      return actionProxy.deleteAction(id);
     });
 
     // Signal completion

@@ -13,28 +13,28 @@ export class PlanAPICommand extends AsyncCommand {
 
     // Create a plan and return it
     ipcMain.handle(PlanAPIMethods.CREATE_PLAN, async (_, planDTO: PlanDTO) => {
-      return await planProxy.createPlan(planDTO);
+      return planProxy.createPlan(planDTO);
     });
 
     // Get a plan by id
     ipcMain.handle(PlanAPIMethods.GET_PLAN, async (_, id: string) => {
-      return await planProxy.getPlan(id);
+      return planProxy.getPlan(id);
     });
 
     // Get all plans
     ipcMain.handle(PlanAPIMethods.GET_PLANS, async () => {
-      return await planProxy.getPlans();
+      return planProxy.getPlans();
     });
 
     // Update a plan
     ipcMain.handle(PlanAPIMethods.UPDATE_PLAN, async (_, planDTO: PlanDTO) => {
       const { id, ...updateData } = planDTO;
-      return await planProxy.updatePlan(id, updateData);
+      return planProxy.updatePlan(id, updateData);
     });
 
     // Delete a plan
     ipcMain.handle(PlanAPIMethods.DELETE_PLAN, async (_, id: string) => {
-      return await planProxy.deletePlan(id);
+      return planProxy.deletePlan(id);
     });
 
     // Signal completion

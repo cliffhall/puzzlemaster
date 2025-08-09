@@ -15,18 +15,18 @@ export class ProjectAPICommand extends AsyncCommand {
     ipcMain.handle(
       ProjectAPIMethods.CREATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
-        return await projectProxy.createProject(projectDTO);
+        return projectProxy.createProject(projectDTO);
       },
     );
 
     // Get a project by id
     ipcMain.handle(ProjectAPIMethods.GET_PROJECT, async (_, id: string) => {
-      return await projectProxy.getProject(id);
+      return projectProxy.getProject(id);
     });
 
     // Get all projects
     ipcMain.handle(ProjectAPIMethods.GET_PROJECTS, async () => {
-      return await projectProxy.getProjects();
+      return projectProxy.getProjects();
     });
 
     // Update a project
@@ -34,13 +34,13 @@ export class ProjectAPICommand extends AsyncCommand {
       ProjectAPIMethods.UPDATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
         const { id, ...updateData } = projectDTO;
-        return await projectProxy.updateProject(id, updateData);
+        return projectProxy.updateProject(id, updateData);
       },
     );
 
     // Delete a project
     ipcMain.handle(ProjectAPIMethods.DELETE_PROJECT, async (_, id: string) => {
-      return await projectProxy.deleteProject(id);
+      return projectProxy.deleteProject(id);
     });
 
     // Signal completion

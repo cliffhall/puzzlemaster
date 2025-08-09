@@ -13,28 +13,28 @@ export class TaskAPICommand extends AsyncCommand {
 
     // Create a task and return it
     ipcMain.handle(TaskAPIMethods.CREATE_TASK, async (_, taskDTO: TaskDTO) => {
-      return await taskProxy.createTask(taskDTO);
+      return taskProxy.createTask(taskDTO);
     });
 
     // Get a task by id
     ipcMain.handle(TaskAPIMethods.GET_TASK, async (_, id: string) => {
-      return await taskProxy.getTask(id);
+      return taskProxy.getTask(id);
     });
 
     // Get all tasks
     ipcMain.handle(TaskAPIMethods.GET_TASKS, async () => {
-      return await taskProxy.getTasks();
+      return taskProxy.getTasks();
     });
 
     // Update a task
     ipcMain.handle(TaskAPIMethods.UPDATE_TASK, async (_, taskDTO: TaskDTO) => {
       const { id, ...updateData } = taskDTO;
-      return await taskProxy.updateTask(id, updateData);
+      return taskProxy.updateTask(id, updateData);
     });
 
     // Delete a task
     ipcMain.handle(TaskAPIMethods.DELETE_TASK, async (_, id: string) => {
-      return await taskProxy.deleteTask(id);
+      return taskProxy.deleteTask(id);
     });
 
     // Signal completion
