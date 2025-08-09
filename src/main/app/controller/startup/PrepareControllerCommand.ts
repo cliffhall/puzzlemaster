@@ -2,6 +2,7 @@ import { AsyncMacroCommand } from "@puremvc/puremvc-typescript-util-async-comman
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AgentAPICommand } from "../api/AgentAPICommand";
 import { ActionAPICommand } from "../api/ActionAPICommand.js";
+import { JobAPICommand } from "../api/JobAPICommand";
 import { DbDemoCommand } from "../api/DbDemoCommand";
 import { PrefsCommand } from "../api/PrefsCommand";
 import { IAppFacade } from "../../AppFacade";
@@ -15,6 +16,7 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
     this.addSubCommand(() => new PrefsCommand());
     this.addSubCommand(() => new AgentAPICommand());
     this.addSubCommand(() => new ActionAPICommand());
+    this.addSubCommand(() => new JobAPICommand());
     this.addSubCommand(() => new DbDemoCommand());
   }
 
