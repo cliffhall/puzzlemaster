@@ -30,11 +30,16 @@ describe("Action", () => {
       expect(action.name).toBe(validDTO.name);
     });
 
-    // Refactored for conciseness
-    it.each(["id", "phaseId", "targetPhaseId", "validatorId"])(
-      "should return a DomainError if %s is not a valid UUID",
-      (field) => {
-        const invalidDTO = { ...validDTO, [field]: "not-a-uuid" };
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "phaseId", value: "not-a-uuid" },
+      { field: "targetPhaseId", value: "not-a-uuid" },
+      { field: "validatorId", value: "not-a-uuid" },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const invalidDTO = { ...validDTO, [field]: value };
         const result = Action.create(invalidDTO as ActionDTO);
 
         expect(result.isErr()).toBe(true);
@@ -43,16 +48,6 @@ describe("Action", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: ActionDTO = { ...validDTO, name: "" };
-      const result = Action.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
-    });
 
     // Refactored for conciseness
     it.each(["id", "phaseId", "targetPhaseId", "validatorId", "name"] as const)(

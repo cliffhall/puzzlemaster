@@ -26,25 +26,22 @@ describe("Validator", () => {
       expect(validator.resource).toBe(validDTO.resource);
     });
 
-    it("should return a DomainError if id is not a valid UUID", () => {
-      const invalidDTO: ValidatorDTO = { ...validDTO, id: "not-a-uuid" };
-      const result = Validator.create(invalidDTO);
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "template", value: "" },
+      { field: "resource", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as ValidatorDTO;
+        const result = Validator.create(dto);
 
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("id");
-    });
-
-    it("should return a DomainError if template is empty", () => {
-      const invalidDTO: ValidatorDTO = { ...validDTO, template: "" };
-      const result = Validator.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("template");
-    });
+        expect(result.isErr()).toBe(true);
+        const error = result._unsafeUnwrapErr();
+        expect(error).toBeInstanceOf(DomainError);
+        expect(error.message).toContain(field);
+      },
+    );
 
     it.each(["id", "resource", "template"] as const)(
       "should return a DomainError if %s is missing",
@@ -58,15 +55,5 @@ describe("Validator", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if resource is empty", () => {
-      const invalidDTO: ValidatorDTO = { ...validDTO, resource: "" };
-      const result = Validator.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("resource");
-    });
   });
 });

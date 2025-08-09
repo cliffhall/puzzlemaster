@@ -28,10 +28,13 @@ describe("Project", () => {
       expect(project.description).toBe(validDTO.description);
     });
 
-    it.each(["id"])(
-      "should return a DomainError if %s is not a valid UUID",
-      (field) => {
-        const dto = { ...validDTO, [field]: "not-a-uuid" } as ProjectDTO;
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as ProjectDTO;
         const result = Project.create(dto);
 
         expect(result.isErr()).toBe(true);
@@ -40,16 +43,6 @@ describe("Project", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: ProjectDTO = { ...validDTO, name: "" };
-      const result = Project.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
-    });
 
     it("should create a Project without a description", () => {
       const { description: _omit, ...dto } = validDTO;
