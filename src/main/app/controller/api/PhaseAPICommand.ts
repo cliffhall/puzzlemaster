@@ -1,7 +1,7 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { PhaseDTO } from "../../../../types/domain";
-import { PhaseProxy } from "../../model/PhaseProxy";
+import { PhaseProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";
 

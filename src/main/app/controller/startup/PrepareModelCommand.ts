@@ -1,17 +1,19 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { IAppFacade } from "../../AppFacade";
-import { EnvProxy } from "../../model/EnvProxy";
-import { ActionProxy } from "../../model/ActionProxy";
-import { AgentProxy } from "../../model/AgentProxy";
-import { RoleProxy } from "../../model/RoleProxy";
-import { TaskProxy } from "../../model/TaskProxy";
-import { DbDemoProxy } from "../../model/DbDemoProxy";
-import { JobProxy } from "../../model/JobProxy";
-import { PlanProxy } from "../../model/PlanProxy";
-import { ProjectProxy } from "../../model/ProjectProxy";
-import { TeamProxy } from "../../model/TeamProxy";
-import { ValidatorProxy } from "../../model/ValidatorProxy";
+import {
+  EnvProxy,
+  ActionProxy,
+  AgentProxy,
+  JobProxy,
+  PlanProxy,
+  ProjectProxy,
+  RoleProxy,
+  TaskProxy,
+  TeamProxy,
+  ValidatorProxy,
+  DbDemoProxy,
+} from "../../model";
 
 export class PrepareModelCommand extends AsyncCommand {
   /**

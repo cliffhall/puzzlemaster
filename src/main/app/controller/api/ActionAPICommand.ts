@@ -1,8 +1,8 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { ActionDTO } from "../../../../types/domain";
-import { ActionProxy } from "../../model/ActionProxy";
 import { IAppFacade } from "../../AppFacade";
+import { ActionProxy } from "../../model";
 import { ipcMain } from "electron";
 
 export class ActionAPICommand extends AsyncCommand {

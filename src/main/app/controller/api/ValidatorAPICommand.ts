@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { ValidatorProxy } from "../../model/ValidatorProxy";
+import { ValidatorProxy } from "../../model";
 import { ValidatorDTO } from "../../../../types/domain";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";
