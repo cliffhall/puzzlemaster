@@ -1,6 +1,6 @@
 import { createTestTaskProxy } from "../../../../test/task-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { TaskDTO } from "../../../../types/domain/Task";
+import { TaskDTO } from "../../../../types/domain";
 import { TaskProxy } from "../TaskProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

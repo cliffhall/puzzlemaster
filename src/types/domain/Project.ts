@@ -15,6 +15,14 @@ export const ProjectSchema = z.object({
 
 export type ProjectDTO = z.infer<typeof ProjectSchema>;
 
+export enum ProjectAPIMethods {
+  CREATE_PROJECT = "create-project",
+  GET_PROJECT = "get-project",
+  GET_PROJECTS = "get-projects",
+  UPDATE_PROJECT = "update-project",
+  DELETE_PROJECT = "delete-project",
+}
+
 export class Project {
   private constructor(
     public readonly id: string,

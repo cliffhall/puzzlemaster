@@ -1,8 +1,8 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { ActionDTO } from "../../../../types/domain/Action";
-import { ActionProxy } from "../../model/ActionProxy.js";
+import { ActionDTO, ActionAPIMethods } from "../../../../types/domain";
 import { IAppFacade } from "../../AppFacade";
+import { ActionProxy } from "../../model";
 import { ipcMain } from "electron";
 
 export class ActionAPICommand extends AsyncCommand {
@@ -12,34 +12,43 @@ export class ActionAPICommand extends AsyncCommand {
     const actionProxy = f.retrieveProxy(ActionProxy.NAME) as ActionProxy;
 
     // Create an action and return it
-    ipcMain.handle("create-action", async (_, actionDTO: ActionDTO) => {
-      return await actionProxy.createAction(actionDTO);
-    });
+    ipcMain.handle(
+      ActionAPIMethods.CREATE_ACTION,
+      async (_, actionDTO: ActionDTO) => {
+        return actionProxy.createAction(actionDTO);
+      },
+    );
 
     // Get an action by id
-    ipcMain.handle("get-action", async (_, id: string) => {
-      return await actionProxy.getAction(id);
+    ipcMain.handle(ActionAPIMethods.GET_ACTION, async (_, id: string) => {
+      return actionProxy.getAction(id);
     });
 
     // Get all actions
-    ipcMain.handle("get-actions", async () => {
-      return await actionProxy.getActions();
+    ipcMain.handle(ActionAPIMethods.GET_ACTIONS, async () => {
+      return actionProxy.getActions();
     });
 
     // Get actions by phase id
-    ipcMain.handle("get-actions-by-phase", async (_, phaseId: string) => {
-      return await actionProxy.getActionsByPhase(phaseId);
-    });
+    ipcMain.handle(
+      ActionAPIMethods.GET_ACTIONS_BY_PHASE,
+      async (_, phaseId: string) => {
+        return actionProxy.getActionsByPhase(phaseId);
+      },
+    );
 
     // Update an action
-    ipcMain.handle("update-action", async (_, actionDTO: ActionDTO) => {
-      const { id, ...updateData } = actionDTO;
-      return await actionProxy.updateAction(id, updateData);
-    });
+    ipcMain.handle(
+      ActionAPIMethods.UPDATE_ACTION,
+      async (_, actionDTO: ActionDTO) => {
+        const { id, ...updateData } = actionDTO;
+        return actionProxy.updateAction(id, updateData);
+      },
+    );
 
     // Delete an action
-    ipcMain.handle("delete-action", async (_, id: string) => {
-      return await actionProxy.deleteAction(id);
+    ipcMain.handle(ActionAPIMethods.DELETE_ACTION, async (_, id: string) => {
+      return actionProxy.deleteAction(id);
     });
 
     // Signal completion

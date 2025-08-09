@@ -1,7 +1,7 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { ValidatorDTO } from "../../../../types/domain/Validator";
-import { ValidatorProxy } from "../../model/ValidatorProxy";
+import { ValidatorDTO, ValidatorAPIMethods } from "../../../../types/domain";
+import { ValidatorProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";
 
@@ -15,35 +15,38 @@ export class ValidatorAPICommand extends AsyncCommand {
 
     // Create a validator and return it
     ipcMain.handle(
-      "create-validator",
+      ValidatorAPIMethods.CREATE_VALIDATOR,
       async (_, validatorDTO: ValidatorDTO) => {
-        return await validatorProxy.createValidator(validatorDTO);
+        return validatorProxy.createValidator(validatorDTO);
       },
     );
 
     // Get a validator by id
-    ipcMain.handle("get-validator", async (_, id: string) => {
-      return await validatorProxy.getValidator(id);
+    ipcMain.handle(ValidatorAPIMethods.GET_VALIDATOR, async (_, id: string) => {
+      return validatorProxy.getValidator(id);
     });
 
     // Get all validators
-    ipcMain.handle("get-validators", async () => {
-      return await validatorProxy.getValidators();
+    ipcMain.handle(ValidatorAPIMethods.GET_VALIDATORS, async () => {
+      return validatorProxy.getValidators();
     });
 
     // Update a validator
     ipcMain.handle(
-      "update-validator",
+      ValidatorAPIMethods.UPDATE_VALIDATOR,
       async (_, validatorDTO: ValidatorDTO) => {
         const { id, ...updateData } = validatorDTO;
-        return await validatorProxy.updateValidator(id, updateData);
+        return validatorProxy.updateValidator(id, updateData);
       },
     );
 
     // Delete a validator
-    ipcMain.handle("delete-validator", async (_, id: string) => {
-      return await validatorProxy.deleteValidator(id);
-    });
+    ipcMain.handle(
+      ValidatorAPIMethods.DELETE_VALIDATOR,
+      async (_, id: string) => {
+        return validatorProxy.deleteValidator(id);
+      },
+    );
 
     // Signal completion
     this.commandComplete();

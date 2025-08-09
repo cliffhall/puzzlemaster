@@ -27,6 +27,14 @@ export const JobSchema = z.object({
 
 export type JobDTO = z.infer<typeof JobSchema>;
 
+export enum JobAPIMethods {
+  CREATE_JOB = "create-job",
+  GET_JOB = "get-job",
+  GET_JOBS = "get-jobs",
+  UPDATE_JOB = "update-job",
+  DELETE_JOB = "delete-job",
+}
+
 export class Job {
   private constructor(
     public readonly id: string,

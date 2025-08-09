@@ -27,6 +27,14 @@ export const TaskSchema = z.object({
 
 export type TaskDTO = z.infer<typeof TaskSchema>;
 
+export enum TaskAPIMethods {
+  CREATE_TASK = "create-task",
+  GET_TASK = "get-task",
+  GET_TASKS = "get-tasks",
+  UPDATE_TASK = "update-task",
+  DELETE_TASK = "delete-task",
+}
+
 export class Task {
   private constructor(
     public readonly id: string,

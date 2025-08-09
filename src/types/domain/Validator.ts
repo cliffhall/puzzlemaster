@@ -15,6 +15,14 @@ export const ValidatorSchema = z.object({
 
 export type ValidatorDTO = z.infer<typeof ValidatorSchema>;
 
+export enum ValidatorAPIMethods {
+  CREATE_VALIDATOR = "create-validator",
+  GET_VALIDATOR = "get-validator",
+  GET_VALIDATORS = "get-validators",
+  UPDATE_VALIDATOR = "update-validator",
+  DELETE_VALIDATOR = "delete-validator",
+}
+
 export class Validator {
   private constructor(
     public readonly id: string,

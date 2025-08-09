@@ -10,8 +10,7 @@ import { JobAPICommand } from "../api/JobAPICommand";
 import { TaskAPICommand } from "../api/TaskAPICommand";
 import { TeamAPICommand } from "../api/TeamAPICommand";
 import { ValidatorAPICommand } from "../api/ValidatorAPICommand";
-import { DbDemoCommand } from "../api/DbDemoCommand";
-import { PrefsCommand } from "../api/PrefsCommand";
+import { DbDemoCommand } from "../demo/DbDemoCommand";
 import { IAppFacade } from "../../AppFacade";
 
 export class PrepareControllerCommand extends AsyncMacroCommand {
@@ -20,7 +19,6 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
    * @override
    */
   public override initializeAsyncMacroCommand(): void {
-    this.addSubCommand(() => new PrefsCommand());
     this.addSubCommand(() => new ActionAPICommand());
     this.addSubCommand(() => new AgentAPICommand());
     this.addSubCommand(() => new JobAPICommand());

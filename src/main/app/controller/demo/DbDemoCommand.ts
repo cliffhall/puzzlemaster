@@ -1,21 +1,18 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
+import { DbDemoProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";
 
-export class PrefsCommand extends AsyncCommand {
+export class DbDemoCommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
-    f.log("⚙️ PrefsCommand - Installing Prefs API Handlers", 2);
+    f.log("⚙️ DbDemoCommand - Installing DbDemo API Handlers", 2);
+    const dbDemoProxy = f.retrieveProxy(DbDemoProxy.NAME) as DbDemoProxy;
 
-    // Load preferences from file/storage
-    ipcMain.handle("load-prefs", () => {
-      return { theme: "dark", language: "en" };
-    });
-
-    // Save preferences to file/storage
-    ipcMain.handle("save-prefs", (_event, prefs) => {
-      console.log("Saving preferences:", prefs);
+    // Create a demo user and return it
+    ipcMain.handle("create-demo-user", async () => {
+      return await dbDemoProxy.createDemoUser();
     });
 
     // Signal completion

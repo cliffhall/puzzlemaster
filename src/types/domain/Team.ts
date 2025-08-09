@@ -16,6 +16,14 @@ export const TeamSchema = z.object({
 
 export type TeamDTO = z.infer<typeof TeamSchema>;
 
+export enum TeamAPIMethods {
+  CREATE_TEAM = "create-team",
+  GET_TEAM = "get-team",
+  GET_TEAMS = "get-teams",
+  UPDATE_TEAM = "update-team",
+  DELETE_TEAM = "delete-team",
+}
+
 export class Team {
   private constructor(
     public readonly id: string,

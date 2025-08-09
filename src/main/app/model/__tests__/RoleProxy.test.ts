@@ -1,6 +1,6 @@
 import { createTestRoleProxy } from "../../../../test/role-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { RoleDTO } from "../../../../types/domain/Role";
+import { RoleDTO } from "../../../../types/domain";
 import { RoleProxy } from "../RoleProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";
