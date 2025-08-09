@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { RoleDTO } from "../../../../types/domain/Role";
+import { RoleDTO } from "../../../../types/domain";
 import { RoleProxy } from "../../model/RoleProxy";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";

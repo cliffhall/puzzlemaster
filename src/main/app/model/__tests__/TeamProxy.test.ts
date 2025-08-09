@@ -1,6 +1,6 @@
 import { createTestTeamProxy } from "../../../../test/team-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { TeamDTO } from "../../../../types/domain/Team";
+import { TeamDTO } from "../../../../types/domain";
 import { TeamProxy } from "../TeamProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

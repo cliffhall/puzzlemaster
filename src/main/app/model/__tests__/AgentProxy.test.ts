@@ -1,6 +1,6 @@
 import { createTestAgentProxy } from "../../../../test/agent-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { AgentDTO } from "../../../../types/domain/Agent";
+import { AgentDTO } from "../../../../types/domain";
 import { AgentProxy } from "../AgentProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

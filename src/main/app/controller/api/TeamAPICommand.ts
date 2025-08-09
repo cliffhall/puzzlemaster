@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { TeamDTO } from "../../../../types/domain/Team";
+import { TeamDTO } from "../../../../types/domain";
 import { TeamProxy } from "../../model/TeamProxy";
 import { IAppFacade } from "../../AppFacade";
 import { ipcMain } from "electron";

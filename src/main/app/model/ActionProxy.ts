@@ -1,6 +1,5 @@
 import { Proxy } from "@puremvc/puremvc-typescript-multicore-framework";
-import { Action, ActionDTO } from "../../../types/domain/Action";
-import { DomainError } from "../../../types/domain/DomainError";
+import { Action, ActionDTO, DomainError } from "../../../types/domain";
 import { Result, ok, err } from "neverthrow";
 import { PrismaClient } from "db";
 

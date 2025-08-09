@@ -1,7 +1,7 @@
 import { contextBridge } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
 import { api } from "./api";
-import { DomainError } from "../types/domain/DomainError";
+import { DomainError } from "../types/domain";
 
 try {
   contextBridge.exposeInMainWorld("electron", electronAPI);

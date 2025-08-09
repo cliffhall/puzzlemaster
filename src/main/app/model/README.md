@@ -27,8 +27,7 @@ Follow these steps to create a new database proxy for a domain entity:
 import { Proxy } from "@puremvc/puremvc-typescript-multicore-framework";
 import { PrismaClient } from "db";
 import { Result, ok, err } from "neverthrow";
-import { DomainError } from "../../../types/domain/DomainError";
-import { YourEntity, YourEntityDTO } from "../../../types/domain/YourEntity";
+import { YourEntity, YourEntityDTO, DomainError } from "../../../types/domain";
 
 // For production code, use a singleton instance
 const prisma = new PrismaClient();

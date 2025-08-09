@@ -1,6 +1,6 @@
 import { createTestJobProxy } from "../../../../test/job-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { JobDTO } from "../../../../types/domain/Job";
+import { JobDTO } from "../../../../types/domain";
 import { JobProxy } from "../JobProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";
