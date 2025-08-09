@@ -34,6 +34,19 @@ export const createTestPrismaClient = async (): Promise<{
 
     const cleanup = async (): Promise<void> => {
       try {
+        // Delete all data from the tables in reverse order of their dependencies
+        await prisma.action.deleteMany({});
+        await prisma.task.deleteMany({});
+        await prisma.job.deleteMany({});
+        await prisma.validator.deleteMany({});
+        await prisma.agent.deleteMany({});
+        await prisma.team.deleteMany({});
+        await prisma.role.deleteMany({});
+        await prisma.phase.deleteMany({});
+        await prisma.plan.deleteMany({});
+        await prisma.project.deleteMany({});
+        await prisma.post.deleteMany({});
+        await prisma.user.deleteMany({});
         await prisma.$disconnect();
 
         // Clean up temporary database file
