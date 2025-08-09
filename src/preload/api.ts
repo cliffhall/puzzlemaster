@@ -24,9 +24,9 @@ import {
 } from "../types/domain";
 
 export const api: API = {
-  // Demo
+  // ------------------------------ DEMO ------------------------------
   createDemoUser: () => ipcRenderer.invoke("create-demo-user"),
-  // Actions
+  // ------------------------------ ACTIONS ------------------------------
   createAction: (actionDTO: ActionDTO) =>
     ipcRenderer.invoke(ActionAPIMethods.CREATE_ACTION, actionDTO),
   getAction: (id: string) =>
@@ -38,7 +38,7 @@ export const api: API = {
     ipcRenderer.invoke(ActionAPIMethods.UPDATE_ACTION, actionDTO),
   deleteAction: (id: string) =>
     ipcRenderer.invoke(ActionAPIMethods.DELETE_ACTION, id),
-  // Agents
+  // ------------------------------ AGENTS ------------------------------
   createAgent: (agentDTO: AgentDTO) =>
     ipcRenderer.invoke(AgentAPIMethods.CREATE_AGENT, agentDTO),
   getAgent: (id: string) => ipcRenderer.invoke(AgentAPIMethods.GET_AGENT, id),
@@ -47,7 +47,7 @@ export const api: API = {
     ipcRenderer.invoke(AgentAPIMethods.UPDATE_AGENT, agentDTO),
   deleteAgent: (id: string) =>
     ipcRenderer.invoke(AgentAPIMethods.DELETE_AGENT, id),
-  // Jobs
+  // ------------------------------ JOBS ------------------------------
   createJob: (jobDTO: JobDTO) =>
     ipcRenderer.invoke(JobAPIMethods.CREATE_JOB, jobDTO),
   getJob: (id: string) => ipcRenderer.invoke(JobAPIMethods.GET_JOB, id),
@@ -55,7 +55,7 @@ export const api: API = {
   updateJob: (jobDTO: JobDTO) =>
     ipcRenderer.invoke(JobAPIMethods.UPDATE_JOB, jobDTO),
   deleteJob: (id: string) => ipcRenderer.invoke(JobAPIMethods.DELETE_JOB, id),
-  // Phases
+  // ------------------------------ PHASES ------------------------------
   createPhase: (phaseDTO: PhaseDTO) =>
     ipcRenderer.invoke(PhaseAPIMethods.CREATE_PHASE, phaseDTO),
   getPhase: (id: string) => ipcRenderer.invoke(PhaseAPIMethods.GET_PHASE, id),
@@ -64,7 +64,7 @@ export const api: API = {
     ipcRenderer.invoke(PhaseAPIMethods.UPDATE_PHASE, phaseDTO),
   deletePhase: (id: string) =>
     ipcRenderer.invoke(PhaseAPIMethods.DELETE_PHASE, id),
-  // Plans
+  // ------------------------------ PLANS ------------------------------
   createPlan: (planDTO: PlanDTO) =>
     ipcRenderer.invoke(PlanAPIMethods.CREATE_PLAN, planDTO),
   getPlan: (id: string) => ipcRenderer.invoke(PlanAPIMethods.GET_PLAN, id),
@@ -73,7 +73,7 @@ export const api: API = {
     ipcRenderer.invoke(PlanAPIMethods.UPDATE_PLAN, planDTO),
   deletePlan: (id: string) =>
     ipcRenderer.invoke(PlanAPIMethods.DELETE_PLAN, id),
-  // Projects
+  // ------------------------------ PROJECTS ------------------------------
   createProject: (projectDTO: ProjectDTO) =>
     ipcRenderer.invoke(ProjectAPIMethods.CREATE_PROJECT, projectDTO),
   getProject: (id: string) =>
@@ -83,7 +83,7 @@ export const api: API = {
     ipcRenderer.invoke(ProjectAPIMethods.UPDATE_PROJECT, projectDTO),
   deleteProject: (id: string) =>
     ipcRenderer.invoke(ProjectAPIMethods.DELETE_PROJECT, id),
-  // Roles
+  // ------------------------------ ROLES ------------------------------
   createRole: (roleDTO: RoleDTO) =>
     ipcRenderer.invoke(RoleAPIMethods.CREATE_ROLE, roleDTO),
   getRole: (id: string) => ipcRenderer.invoke(RoleAPIMethods.GET_ROLE, id),
@@ -92,7 +92,7 @@ export const api: API = {
     ipcRenderer.invoke(RoleAPIMethods.UPDATE_ROLE, roleDTO),
   deleteRole: (id: string) =>
     ipcRenderer.invoke(RoleAPIMethods.DELETE_ROLE, id),
-  // Tasks
+  // ------------------------------ TASKS ------------------------------
   createTask: (taskDTO: TaskDTO) =>
     ipcRenderer.invoke(TaskAPIMethods.CREATE_TASK, taskDTO),
   getTask: (id: string) => ipcRenderer.invoke(TaskAPIMethods.GET_TASK, id),
@@ -101,7 +101,7 @@ export const api: API = {
     ipcRenderer.invoke(TaskAPIMethods.UPDATE_TASK, taskDTO),
   deleteTask: (id: string) =>
     ipcRenderer.invoke(TaskAPIMethods.DELETE_TASK, id),
-  // Teams
+  // ------------------------------ TEAMS ------------------------------
   createTeam: (teamDTO: TeamDTO) =>
     ipcRenderer.invoke(TeamAPIMethods.CREATE_TEAM, teamDTO),
   getTeam: (id: string) => ipcRenderer.invoke(TeamAPIMethods.GET_TEAM, id),
@@ -110,7 +110,7 @@ export const api: API = {
     ipcRenderer.invoke(TeamAPIMethods.UPDATE_TEAM, teamDTO),
   deleteTeam: (id: string) =>
     ipcRenderer.invoke(TeamAPIMethods.DELETE_TEAM, id),
-  // Validators
+  // ------------------------------ VALIDATORS ------------------------------
   createValidator: (validatorDTO: ValidatorDTO) =>
     ipcRenderer.invoke(ValidatorAPIMethods.CREATE_VALIDATOR, validatorDTO),
   getValidator: (id: string) =>
