@@ -42,11 +42,9 @@ export class PrepareViewCommand extends AsyncCommand {
 
       if (envProxy.isDev() && url) {
         mainWindow.loadURL(url);
-        console.log(url);
         mainWindow.webContents.openDevTools({ mode: "detach" });
       } else {
         const path = join(__dirname, "../renderer/index.html");
-        console.log(path);
         mainWindow.loadFile(path);
       }
     }

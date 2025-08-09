@@ -1,7 +1,7 @@
 import { AsyncMacroCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AgentAPICommand } from "../api/AgentAPICommand";
-import { ActionAPICommand } from "../api/ActionAPICommand";
+import { ActionAPICommand } from "../api/ActionAPICommand.js";
 import { DbDemoCommand } from "../api/DbDemoCommand";
 import { PrefsCommand } from "../api/PrefsCommand";
 import { IAppFacade } from "../../AppFacade";

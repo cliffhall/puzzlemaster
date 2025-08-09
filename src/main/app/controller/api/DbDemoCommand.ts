@@ -8,10 +8,10 @@ export class DbDemoCommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
     f.log("⚙️ DbDemoCommand - Installing DbDemo API Handlers", 2);
+    const dbDemoProxy = f.retrieveProxy(DbDemoProxy.NAME) as DbDemoProxy;
 
     // Create a demo user and return it
     ipcMain.handle("create-demo-user", async () => {
-      const dbDemoProxy = f.retrieveProxy(DbDemoProxy.NAME) as DbDemoProxy;
       return await dbDemoProxy.createDemoUser();
     });
 
