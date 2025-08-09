@@ -1,14 +1,12 @@
-import { join } from "path";
-import { IAppFacade } from "../../AppFacade";
-import { app, shell, BrowserWindow } from "electron";
+import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
+import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import {
-  INotification,
-  SimpleCommand,
-} from "@puremvc/puremvc-typescript-multicore-framework";
+import { app, shell, BrowserWindow } from "electron";
 import { EnvProxy } from "../../model/EnvProxy";
+import { IAppFacade } from "../../AppFacade";
+import { join } from "path";
 
-export class PrepareViewCommand extends SimpleCommand {
+export class PrepareViewCommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
     f.log("⚙️ PrepareViewCommand - Creating Main App Window", 2);
@@ -47,7 +45,6 @@ export class PrepareViewCommand extends SimpleCommand {
         mainWindow.webContents.openDevTools({ mode: "detach" });
       } else {
         const path = join(__dirname, "../renderer/index.html");
-        console.log(path);
         mainWindow.loadFile(path);
       }
     }
@@ -78,9 +75,12 @@ export class PrepareViewCommand extends SimpleCommand {
       app.on("activate", function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
       });
+
+      // Create window
+      createWindow();
     });
 
-    // Create window
-    createWindow();
+    // Signal completion
+    this.commandComplete();
   }
 }

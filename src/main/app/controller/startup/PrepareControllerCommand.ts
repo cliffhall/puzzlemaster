@@ -1,7 +1,18 @@
 import { AsyncMacroCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
-import { IAppFacade } from "../../AppFacade";
+import { ActionAPICommand } from "../api/ActionAPICommand.js";
+import { ProjectAPICommand } from "../api/ProjectAPICommand";
+import { AgentAPICommand } from "../api/AgentAPICommand";
+import { RoleAPICommand } from "../api/RoleAPICommand";
+import { PhaseAPICommand } from "../api/PhaseAPICommand";
+import { PlanAPICommand } from "../api/PlanAPICommand";
+import { JobAPICommand } from "../api/JobAPICommand";
+import { TaskAPICommand } from "../api/TaskAPICommand";
+import { TeamAPICommand } from "../api/TeamAPICommand";
+import { ValidatorAPICommand } from "../api/ValidatorAPICommand";
+import { DbDemoCommand } from "../api/DbDemoCommand";
 import { PrefsCommand } from "../api/PrefsCommand";
+import { IAppFacade } from "../../AppFacade";
 
 export class PrepareControllerCommand extends AsyncMacroCommand {
   /**
@@ -10,6 +21,17 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
    */
   public override initializeAsyncMacroCommand(): void {
     this.addSubCommand(() => new PrefsCommand());
+    this.addSubCommand(() => new ActionAPICommand());
+    this.addSubCommand(() => new AgentAPICommand());
+    this.addSubCommand(() => new JobAPICommand());
+    this.addSubCommand(() => new PhaseAPICommand());
+    this.addSubCommand(() => new PlanAPICommand());
+    this.addSubCommand(() => new ProjectAPICommand());
+    this.addSubCommand(() => new RoleAPICommand());
+    this.addSubCommand(() => new TaskAPICommand());
+    this.addSubCommand(() => new TeamAPICommand());
+    this.addSubCommand(() => new ValidatorAPICommand());
+    this.addSubCommand(() => new DbDemoCommand());
   }
 
   /**

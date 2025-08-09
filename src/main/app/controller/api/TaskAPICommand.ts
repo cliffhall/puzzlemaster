@@ -1,0 +1,43 @@
+import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
+import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
+import { TaskDTO } from "../../../../types/domain/Task";
+import { TaskProxy } from "../../model/TaskProxy";
+import { IAppFacade } from "../../AppFacade";
+import { ipcMain } from "electron";
+
+export class TaskAPICommand extends AsyncCommand {
+  public override execute(_note: INotification): void {
+    const f: IAppFacade = this.facade as IAppFacade;
+    f.log("⚙️ TaskAPICommand - Installing Task API Handlers", 2);
+    const taskProxy = f.retrieveProxy(TaskProxy.NAME) as TaskProxy;
+
+    // Create a task and return it
+    ipcMain.handle("create-task", async (_, taskDTO: TaskDTO) => {
+      return await taskProxy.createTask(taskDTO);
+    });
+
+    // Get a task by id
+    ipcMain.handle("get-task", async (_, id: string) => {
+      return await taskProxy.getTask(id);
+    });
+
+    // Get all tasks
+    ipcMain.handle("get-tasks", async () => {
+      return await taskProxy.getTasks();
+    });
+
+    // Update a task
+    ipcMain.handle("update-task", async (_, taskDTO: TaskDTO) => {
+      const { id, ...updateData } = taskDTO;
+      return await taskProxy.updateTask(id, updateData);
+    });
+
+    // Delete a task
+    ipcMain.handle("delete-task", async (_, id: string) => {
+      return await taskProxy.deleteTask(id);
+    });
+
+    // Signal completion
+    this.commandComplete();
+  }
+}

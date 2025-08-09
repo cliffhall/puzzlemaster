@@ -13,6 +13,7 @@ describe("Job", () => {
         phaseId: randomUUID(),
         name: "Job Name",
         description: "desc",
+        status: "PENDING", // Added status
         tasks: [randomUUID()],
       };
     });
@@ -27,13 +28,29 @@ describe("Job", () => {
       expect(job.phaseId).toBe(validDTO.phaseId);
       expect(job.name).toBe(validDTO.name);
       expect(job.description).toBe(validDTO.description);
+      expect(job.status).toBe("PENDING"); // Added assertion
       expect(job.tasks).toEqual(validDTO.tasks);
     });
 
-    it.each(["id", "phaseId"])(
-      "should return a DomainError if %s is not a valid UUID",
-      (field) => {
-        const dto = { ...validDTO, [field]: "not-a-uuid" } as JobDTO;
+    it("should default status to PENDING if not provided", () => {
+      const { status, ...dto } = validDTO;
+      // The type assertion `as JobDTO` tells TypeScript that this is a valid
+      // input for the create method at runtime, as Zod\'s .default() will handle it.
+      const result = Job.create(dto as JobDTO);
+      expect(result.isOk()).toBe(true);
+      const job = result._unsafeUnwrap();
+      expect(job.status).toBe("PENDING");
+    });
+
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "phaseId", value: "not-a-uuid" },
+      { field: "tasks", value: ["not-a-uuid"] },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as JobDTO;
         const result = Job.create(dto);
 
         expect(result.isErr()).toBe(true);
@@ -42,16 +59,6 @@ describe("Job", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if tasks contain invalid UUIDs", () => {
-      const invalidDTO: JobDTO = { ...validDTO, tasks: ["not-a-uuid"] };
-      const result = Job.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("tasks");
-    });
 
     it.each(["id", "phaseId", "name", "tasks"] as const)(
       "should return a DomainError if %s is missing",
@@ -65,16 +72,6 @@ describe("Job", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: JobDTO = { ...validDTO, name: "" };
-      const result = Job.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
-    });
 
     it("should create a Job when tasks array is empty", () => {
       const dto: JobDTO = { ...validDTO, tasks: [] };

@@ -30,10 +30,16 @@ describe("Agent", () => {
       expect(agent.tasks).toEqual(validDTO.tasks);
     });
 
-    it.each(["id", "teamId", "roleId"])(
-      "should return a DomainError if %s is not a valid UUID",
-      (field) => {
-        const dto = { ...validDTO, [field]: "not-a-uuid" } as AgentDTO;
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "teamId", value: "not-a-uuid" },
+      { field: "roleId", value: "not-a-uuid" },
+      { field: "tasks", value: ["not-a-uuid"] },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as AgentDTO;
         const result = Agent.create(dto);
 
         expect(result.isErr()).toBe(true);
@@ -43,16 +49,6 @@ describe("Agent", () => {
       },
     );
 
-    it("should return a DomainError if tasks contain invalid UUIDs", () => {
-      const invalidDTO: AgentDTO = { ...validDTO, tasks: ["not-a-uuid"] };
-      const result = Agent.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("tasks");
-    });
-
     it("should create an Agent when tasks array is empty", () => {
       const dto: AgentDTO = { ...validDTO, tasks: [] };
       const result = Agent.create(dto);
@@ -60,16 +56,6 @@ describe("Agent", () => {
       expect(result.isOk()).toBe(true);
       const agent = result._unsafeUnwrap();
       expect(agent.tasks).toEqual([]);
-    });
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: AgentDTO = { ...validDTO, name: "" };
-      const result = Agent.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
     });
 
     it.each(["id", "teamId", "roleId", "name", "tasks"] as const)(

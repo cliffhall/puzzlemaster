@@ -28,10 +28,14 @@ describe("Plan", () => {
       expect(plan.description).toBe(validDTO.description);
     });
 
-    it.each(["id", "projectId"])(
-      "should return a DomainError if %s is not a valid UUID",
-      (field) => {
-        const dto = { ...validDTO, [field]: "not-a-uuid" } as PlanDTO;
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "projectId", value: "not-a-uuid" },
+      { field: "phases", value: ["not-a-uuid"] },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as PlanDTO;
         const result = Plan.create(dto);
 
         expect(result.isErr()).toBe(true);
@@ -40,16 +44,6 @@ describe("Plan", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if phases contain invalid UUIDs", () => {
-      const invalidDTO: PlanDTO = { ...validDTO, phases: ["not-a-uuid"] };
-      const result = Plan.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("phases");
-    });
 
     it("should create a Plan when phases array is empty", () => {
       const dto: PlanDTO = { ...validDTO, phases: [] };

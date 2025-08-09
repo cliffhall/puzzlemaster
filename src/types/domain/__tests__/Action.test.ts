@@ -10,6 +10,7 @@ describe("Action", () => {
     beforeEach(() => {
       validDTO = {
         id: randomUUID(),
+        phaseId: randomUUID(), // Added required field
         targetPhaseId: randomUUID(),
         validatorId: randomUUID(),
         name: "Valid Action Name",
@@ -23,84 +24,43 @@ describe("Action", () => {
       const action = result._unsafeUnwrap();
       expect(action).toBeInstanceOf(Action);
       expect(action.id).toBe(validDTO.id);
+      expect(action.phaseId).toBe(validDTO.phaseId); // Added assertion
       expect(action.targetPhaseId).toBe(validDTO.targetPhaseId);
       expect(action.validatorId).toBe(validDTO.validatorId);
       expect(action.name).toBe(validDTO.name);
     });
 
-    it("should return a DomainError if id is not a valid UUID", () => {
-      const invalidDTO: ActionDTO = { ...validDTO, id: "not-a-uuid" };
-      const result = Action.create(invalidDTO);
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "phaseId", value: "not-a-uuid" },
+      { field: "targetPhaseId", value: "not-a-uuid" },
+      { field: "validatorId", value: "not-a-uuid" },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const invalidDTO = { ...validDTO, [field]: value };
+        const result = Action.create(invalidDTO as ActionDTO);
 
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("id");
-    });
+        expect(result.isErr()).toBe(true);
+        const error = result._unsafeUnwrapErr();
+        expect(error).toBeInstanceOf(DomainError);
+        expect(error.message).toContain(field);
+      },
+    );
 
-    it("should return a DomainError if targetPhaseId is not a valid UUID", () => {
-      const invalidDTO: ActionDTO = {
-        ...validDTO,
-        targetPhaseId: "not-a-uuid",
-      };
-      const result = Action.create(invalidDTO);
+    // Refactored for conciseness
+    it.each(["id", "phaseId", "targetPhaseId", "validatorId", "name"] as const)(
+      "should return a DomainError if %s is missing",
+      (field) => {
+        const { [field]: _omit, ...dto } = validDTO;
+        const result = Action.create(dto as ActionDTO);
 
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("targetPhaseId");
-    });
-
-    it("should return a DomainError if validatorId is not a valid UUID", () => {
-      const invalidDTO: ActionDTO = { ...validDTO, validatorId: "not-a-uuid" };
-      const result = Action.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("validatorId");
-    });
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: ActionDTO = { ...validDTO, name: "" };
-      const result = Action.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
-    });
-
-    it("should return a DomainError if name is missing", () => {
-      // Create a new object that omits the 'name' property
-      const { name: _name, ...dtoWithoutName } = validDTO;
-
-      // We cast to ActionDTO because Action.create expects it,
-      // but we are intentionally testing an invalid structure.
-      const result = Action.create(dtoWithoutName as ActionDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name"); // Zod will report 'name' as required
-    });
-
-    it("should return a DomainError if id is missing", () => {
-      const dtoMissingId = {
-        // 'id' property is intentionally missing
-        targetPhaseId: randomUUID(),
-        validatorId: randomUUID(),
-        name: "Test Action",
-      };
-
-      // We cast to ActionDTO because Action.create expects it,
-      // and we are testing its behavior with an object we know is missing 'id'.
-      const result = Action.create(dtoMissingId as ActionDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("id");
-    });
+        expect(result.isErr()).toBe(true);
+        const error = result._unsafeUnwrapErr();
+        expect(error).toBeInstanceOf(DomainError);
+        expect(error.message).toContain(field);
+      },
+    );
   });
 });

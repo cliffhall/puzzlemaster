@@ -19,9 +19,13 @@ import {
   DashboardIcon,
 } from "@radix-ui/react-icons";
 import classes from "./Landing.module.css";
-import { ReactElement } from "react";
+import { useState, ReactElement } from "react";
+import { createDemoUser } from "../../api";
+import { DemoUser } from "../../../../types/api";
 
 const Landing = (): ReactElement => {
+  const [demoUser, setDemoUser] = useState<DemoUser>();
+
   const features = [
     { icon: <LightningBoltIcon />, label: "Agentic Coordination" },
     { icon: <StarIcon />, label: "Production Ready" },
@@ -61,8 +65,15 @@ const Landing = (): ReactElement => {
               </Text>
 
               <Group mt="xl">
-                <Button size="lg" leftSection={<RocketIcon />}>
-                  Get Started
+                <Button
+                  size="lg"
+                  leftSection={<RocketIcon />}
+                  onClick={async () => {
+                    const user: DemoUser = await createDemoUser();
+                    setDemoUser(user);
+                  }}
+                >
+                  Create Demo User
                 </Button>
                 <Button
                   size="lg"
@@ -73,28 +84,42 @@ const Landing = (): ReactElement => {
                 </Button>
               </Group>
 
-              <Group mt={30} gap="xl">
-                {features.map((feature, index) => (
-                  <Group key={index} gap="xs">
-                    <ThemeIcon
-                      size="md"
-                      variant="light"
-                      color="blue"
-                      style={{
-                        background: rgba(
-                          "var(--mantine-primary-color-filled)",
-                          0.07,
-                        ),
-                      }}
-                    >
-                      {feature.icon}
-                    </ThemeIcon>
-                    <Text size="sm" c="dimmed">
-                      {feature.label}
-                    </Text>
-                  </Group>
-                ))}
-              </Group>
+              {demoUser ? (
+                <ul className="versions">
+                  <li>
+                    <b>Id</b> {demoUser?.id}
+                  </li>
+                  <li>
+                    <b>Name</b> {demoUser?.name}
+                  </li>
+                  <li>
+                    <b>Email</b> {demoUser?.email}
+                  </li>
+                </ul>
+              ) : (
+                <Group mt={30} gap="xl">
+                  {features.map((feature, index) => (
+                    <Group key={index} gap="xs">
+                      <ThemeIcon
+                        size="md"
+                        variant="light"
+                        color="blue"
+                        style={{
+                          background: rgba(
+                            "var(--mantine-primary-color-filled)",
+                            0.07,
+                          ),
+                        }}
+                      >
+                        {feature.icon}
+                      </ThemeIcon>
+                      <Text size="sm" c="dimmed">
+                        {feature.label}
+                      </Text>
+                    </Group>
+                  ))}
+                </Group>
+              )}
             </Stack>
           </Grid.Col>
 

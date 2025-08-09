@@ -1,9 +1,12 @@
 export type Settings = { theme: string; language: string };
+export type DemoUser = { id: number; name: string | null; email: string };
 
-export type loadPreferencesResult = Promise<Settings>;
-export type savePreferencesResult = Promise<void>;
+export type LoadPreferencesResult = Promise<Settings>;
+export type SavePreferencesResult = Promise<void>;
+export type CreateDemoUserResult = Promise<DemoUser>;
 
 export interface API {
-  loadPreferences: () => loadPreferencesResult;
-  savePreferences: (prefs: Settings) => savePreferencesResult;
+  loadPreferences: () => LoadPreferencesResult;
+  savePreferences: (prefs: Settings) => SavePreferencesResult;
+  createDemoUser: () => CreateDemoUserResult;
 }

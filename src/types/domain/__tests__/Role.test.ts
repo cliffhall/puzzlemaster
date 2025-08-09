@@ -26,25 +26,21 @@ describe("Role", () => {
       expect(role.description).toBe(validDTO.description);
     });
 
-    it("should return a DomainError if id is not a valid UUID", () => {
-      const invalidDTO: RoleDTO = { ...validDTO, id: "not-a-uuid" };
-      const result = Role.create(invalidDTO);
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as RoleDTO;
+        const result = Role.create(dto);
 
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("id");
-    });
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: RoleDTO = { ...validDTO, name: "" };
-      const result = Role.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
-    });
+        expect(result.isErr()).toBe(true);
+        const error = result._unsafeUnwrapErr();
+        expect(error).toBeInstanceOf(DomainError);
+        expect(error.message).toContain(field);
+      },
+    );
 
     it("should create a Role without a description", () => {
       const { description: _omit, ...dto } = validDTO;

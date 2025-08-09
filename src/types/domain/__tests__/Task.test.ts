@@ -15,6 +15,7 @@ describe("Task", () => {
         validatorId: randomUUID(),
         name: "Test Task",
         description: "Task description",
+        status: "PENDING",
       };
     });
 
@@ -30,6 +31,15 @@ describe("Task", () => {
       expect(task.validatorId).toBe(validDTO.validatorId);
       expect(task.name).toBe(validDTO.name);
       expect(task.description).toBe(validDTO.description);
+      expect(task.status).toBe("PENDING"); // Added assertion
+    });
+
+    it("should default status to PENDING if not provided", () => {
+      const { status, ...dto } = validDTO;
+      const result = Task.create(dto as TaskDTO);
+      expect(result.isOk()).toBe(true);
+      const task = result._unsafeUnwrap();
+      expect(task.status).toBe("PENDING");
     });
 
     it.each(["id", "jobId", "agentId", "validatorId"])(

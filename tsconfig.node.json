@@ -4,10 +4,11 @@
     "electron.vite.config.*",
     "src/main/**/*",
     "src/preload/**/*",
-    "src/types/**/*"
+    "src/types/**/*",
+    "src/test/**/*"
   ],
   "compilerOptions": {
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "composite": true,
     "types": ["electron-vite/node", "@testing-library/jest-dom", "vitest/globals", "@puremvc/puremvc-typescript-multicore-framework"]
   }

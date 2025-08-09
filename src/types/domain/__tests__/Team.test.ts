@@ -28,10 +28,15 @@ describe("Team", () => {
       expect(team.agents).toEqual(validDTO.agents);
     });
 
-    it.each(["id", "phaseId"])(
-      "should return a DomainError if %s is not a valid UUID",
-      (field) => {
-        const dto = { ...validDTO, [field]: "not-a-uuid" } as TeamDTO;
+    it.each([
+      { field: "id", value: "not-a-uuid" },
+      { field: "phaseId", value: "not-a-uuid" },
+      { field: "agents", value: ["not-a-uuid"] },
+      { field: "name", value: "" },
+    ])(
+      "should return a DomainError if $field is invalid",
+      ({ field, value }) => {
+        const dto = { ...validDTO, [field]: value } as TeamDTO;
         const result = Team.create(dto);
 
         expect(result.isErr()).toBe(true);
@@ -40,16 +45,6 @@ describe("Team", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if agents contain invalid UUIDs", () => {
-      const invalidDTO: TeamDTO = { ...validDTO, agents: ["not-a-uuid"] };
-      const result = Team.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("agents");
-    });
 
     it("should create a Team when agents array is empty", () => {
       const dto: TeamDTO = { ...validDTO, agents: [] };
@@ -72,15 +67,5 @@ describe("Team", () => {
         expect(error.message).toContain(field);
       },
     );
-
-    it("should return a DomainError if name is empty", () => {
-      const invalidDTO: TeamDTO = { ...validDTO, name: "" };
-      const result = Team.create(invalidDTO);
-
-      expect(result.isErr()).toBe(true);
-      const error = result._unsafeUnwrapErr();
-      expect(error).toBeInstanceOf(DomainError);
-      expect(error.message).toContain("name");
-    });
   });
 });
