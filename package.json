@@ -1,10 +1,11 @@
 {
   "name": "puzzlemaster",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "An MCP client that allows teams of agents to complete long-horizon tasks.",
   "main": "./out/main/index.js",
-  "author": "futurescale.com",
-  "homepage": "https://electron-vite.org",
+  "author": "Cliff Hall <cliff@futurescale.com>",
+  "license": "BSD-3-Clause",
+  "homepage": "https://futurescale.com",
   "scripts": {
     "dev": "electron-vite dev",
     "start": "electron-vite preview",
@@ -21,7 +22,7 @@
     "vitest": "NODE_OPTIONS=--experimental-vm-modules vitest run",
     "vitest:watch": "NODE_OPTIONS=--experimental-vm-modules vitest",
     "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
+    "build:dir": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
