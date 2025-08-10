@@ -45,6 +45,12 @@ $ npm install
 $ npm run create:db
 ```
 
+### Run Unit Tests
+
+```bash
+$ npm run test
+```
+
 ### Run App
 
 ```bash
@@ -56,12 +62,6 @@ OR
 # Launch built app with Electron
 $ npm run start
 
-```
-
-### Run Unit Tests
-
-```bash
-$ npm run test
 ```
 
 ### Build Runtime
