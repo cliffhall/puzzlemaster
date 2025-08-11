@@ -15,25 +15,33 @@ export class ActionAPICommand extends AsyncCommand {
     ipcMain.handle(
       ActionAPIMethods.CREATE_ACTION,
       async (_, actionDTO: ActionDTO) => {
-        return actionProxy.createAction(actionDTO);
+        const result = await actionProxy.createAction(actionDTO);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Get an action by id
     ipcMain.handle(ActionAPIMethods.GET_ACTION, async (_, id: string) => {
-      return actionProxy.getAction(id);
+      const result = await actionProxy.getAction(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all actions
     ipcMain.handle(ActionAPIMethods.GET_ACTIONS, async () => {
-      return actionProxy.getActions();
+      const result = await actionProxy.getActions();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get actions by phase id
     ipcMain.handle(
       ActionAPIMethods.GET_ACTIONS_BY_PHASE,
       async (_, phaseId: string) => {
-        return actionProxy.getActionsByPhase(phaseId);
+        const result = await actionProxy.getActionsByPhase(phaseId);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
@@ -42,13 +50,17 @@ export class ActionAPICommand extends AsyncCommand {
       ActionAPIMethods.UPDATE_ACTION,
       async (_, actionDTO: ActionDTO) => {
         const { id, ...updateData } = actionDTO;
-        return actionProxy.updateAction(id, updateData);
+        const result = await actionProxy.updateAction(id, updateData);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Delete an action
     ipcMain.handle(ActionAPIMethods.DELETE_ACTION, async (_, id: string) => {
-      return actionProxy.deleteAction(id);
+      const result = await actionProxy.deleteAction(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

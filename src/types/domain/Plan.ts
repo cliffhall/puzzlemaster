@@ -16,6 +16,14 @@ export const PlanSchema = z.object({
 
 export type PlanDTO = z.infer<typeof PlanSchema>;
 
+export type PlanResult =
+  | { success: true; data: Plan }
+  | { success: false; error: string };
+
+export type PlanListResult =
+  | { success: true; data: Plan[] }
+  | { success: false; error: string };
+
 export enum PlanAPIMethods {
   CREATE_PLAN = "create-plan",
   GET_PLAN = "get-plan",

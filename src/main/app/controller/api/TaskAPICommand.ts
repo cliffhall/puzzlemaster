@@ -13,28 +13,38 @@ export class TaskAPICommand extends AsyncCommand {
 
     // Create a task and return it
     ipcMain.handle(TaskAPIMethods.CREATE_TASK, async (_, taskDTO: TaskDTO) => {
-      return taskProxy.createTask(taskDTO);
+      const result = await taskProxy.createTask(taskDTO);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get a task by id
     ipcMain.handle(TaskAPIMethods.GET_TASK, async (_, id: string) => {
-      return taskProxy.getTask(id);
+      const result = await taskProxy.getTask(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all tasks
     ipcMain.handle(TaskAPIMethods.GET_TASKS, async () => {
-      return taskProxy.getTasks();
+      const result = await taskProxy.getTasks();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update a task
     ipcMain.handle(TaskAPIMethods.UPDATE_TASK, async (_, taskDTO: TaskDTO) => {
       const { id, ...updateData } = taskDTO;
-      return taskProxy.updateTask(id, updateData);
+      const result = await taskProxy.updateTask(id, updateData);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Delete a task
     ipcMain.handle(TaskAPIMethods.DELETE_TASK, async (_, id: string) => {
-      return taskProxy.deleteTask(id);
+      const result = await taskProxy.deleteTask(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

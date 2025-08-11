@@ -13,28 +13,38 @@ export class TeamAPICommand extends AsyncCommand {
 
     // Create a team and return it
     ipcMain.handle(TeamAPIMethods.CREATE_TEAM, async (_, teamDTO: TeamDTO) => {
-      return teamProxy.createTeam(teamDTO);
+      const result = await teamProxy.createTeam(teamDTO);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get a team by id
     ipcMain.handle(TeamAPIMethods.GET_TEAM, async (_, id: string) => {
-      return teamProxy.getTeam(id);
+      const result = await teamProxy.getTeam(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all teams
     ipcMain.handle(TeamAPIMethods.GET_TEAMS, async () => {
-      return teamProxy.getTeams();
+      const result = await teamProxy.getTeams();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update a team
     ipcMain.handle(TeamAPIMethods.UPDATE_TEAM, async (_, teamDTO: TeamDTO) => {
       const { id, ...updateData } = teamDTO;
-      return teamProxy.updateTeam(id, updateData);
+      const result = await teamProxy.updateTeam(id, updateData);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Delete a team
     ipcMain.handle(TeamAPIMethods.DELETE_TEAM, async (_, id: string) => {
-      return teamProxy.deleteTeam(id);
+      const result = await teamProxy.deleteTeam(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

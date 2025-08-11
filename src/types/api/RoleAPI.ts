@@ -1,9 +1,4 @@
-import {
-  RoleDTO,
-  RoleResult,
-  RoleListResult,
-  DeleteResult,
-} from "../domain";
+import { RoleDTO, RoleResult, RoleListResult, DeleteResult } from "../domain";
 
 export interface RoleAPI {
   createRole: (roleDTO: RoleDTO) => Promise<RoleResult>;

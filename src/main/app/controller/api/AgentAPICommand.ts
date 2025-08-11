@@ -15,18 +15,24 @@ export class AgentAPICommand extends AsyncCommand {
     ipcMain.handle(
       AgentAPIMethods.CREATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
-        return agentProxy.createAgent(agentDTO);
+        const result = await agentProxy.createAgent(agentDTO);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Get an agent by id
     ipcMain.handle(AgentAPIMethods.GET_AGENT, async (_, id: string) => {
-      return agentProxy.getAgent(id);
+      const result = await agentProxy.getAgent(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all agents
     ipcMain.handle(AgentAPIMethods.GET_AGENTS, async () => {
-      return agentProxy.getAgents();
+      const result = await agentProxy.getAgents();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update an agent
@@ -34,13 +40,17 @@ export class AgentAPICommand extends AsyncCommand {
       AgentAPIMethods.UPDATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
         const { id, ...updateData } = agentDTO;
-        return agentProxy.updateAgent(id, updateData);
+        const result = await agentProxy.updateAgent(id, updateData);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Delete an agent
     ipcMain.handle(AgentAPIMethods.DELETE_AGENT, async (_, id: string) => {
-      return agentProxy.deleteAgent(id);
+      const result = await agentProxy.deleteAgent(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

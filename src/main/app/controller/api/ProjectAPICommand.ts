@@ -15,18 +15,24 @@ export class ProjectAPICommand extends AsyncCommand {
     ipcMain.handle(
       ProjectAPIMethods.CREATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
-        return projectProxy.createProject(projectDTO);
+        const result = await projectProxy.createProject(projectDTO);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Get a project by id
     ipcMain.handle(ProjectAPIMethods.GET_PROJECT, async (_, id: string) => {
-      return projectProxy.getProject(id);
+      const result = await projectProxy.getProject(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all projects
     ipcMain.handle(ProjectAPIMethods.GET_PROJECTS, async () => {
-      return projectProxy.getProjects();
+      const result = await projectProxy.getProjects();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update a project
@@ -34,13 +40,17 @@ export class ProjectAPICommand extends AsyncCommand {
       ProjectAPIMethods.UPDATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
         const { id, ...updateData } = projectDTO;
-        return projectProxy.updateProject(id, updateData);
+        const result = await projectProxy.updateProject(id, updateData);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Delete a project
     ipcMain.handle(ProjectAPIMethods.DELETE_PROJECT, async (_, id: string) => {
-      return projectProxy.deleteProject(id);
+      const result = await projectProxy.deleteProject(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

@@ -17,18 +17,24 @@ export class ValidatorAPICommand extends AsyncCommand {
     ipcMain.handle(
       ValidatorAPIMethods.CREATE_VALIDATOR,
       async (_, validatorDTO: ValidatorDTO) => {
-        return validatorProxy.createValidator(validatorDTO);
+        const result = await validatorProxy.createValidator(validatorDTO);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Get a validator by id
     ipcMain.handle(ValidatorAPIMethods.GET_VALIDATOR, async (_, id: string) => {
-      return validatorProxy.getValidator(id);
+      const result = await validatorProxy.getValidator(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all validators
     ipcMain.handle(ValidatorAPIMethods.GET_VALIDATORS, async () => {
-      return validatorProxy.getValidators();
+      const result = await validatorProxy.getValidators();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update a validator
@@ -36,7 +42,9 @@ export class ValidatorAPICommand extends AsyncCommand {
       ValidatorAPIMethods.UPDATE_VALIDATOR,
       async (_, validatorDTO: ValidatorDTO) => {
         const { id, ...updateData } = validatorDTO;
-        return validatorProxy.updateValidator(id, updateData);
+        const result = await validatorProxy.updateValidator(id, updateData);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
@@ -44,7 +52,9 @@ export class ValidatorAPICommand extends AsyncCommand {
     ipcMain.handle(
       ValidatorAPIMethods.DELETE_VALIDATOR,
       async (_, id: string) => {
-        return validatorProxy.deleteValidator(id);
+        const result = await validatorProxy.deleteValidator(id);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 

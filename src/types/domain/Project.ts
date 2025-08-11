@@ -15,6 +15,14 @@ export const ProjectSchema = z.object({
 
 export type ProjectDTO = z.infer<typeof ProjectSchema>;
 
+export type ProjectResult =
+  | { success: true; data: Project }
+  | { success: false; error: string };
+
+export type ProjectListResult =
+  | { success: true; data: Project[] }
+  | { success: false; error: string };
+
 export enum ProjectAPIMethods {
   CREATE_PROJECT = "create-project",
   GET_PROJECT = "get-project",

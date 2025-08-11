@@ -13,28 +13,38 @@ export class PlanAPICommand extends AsyncCommand {
 
     // Create a plan and return it
     ipcMain.handle(PlanAPIMethods.CREATE_PLAN, async (_, planDTO: PlanDTO) => {
-      return planProxy.createPlan(planDTO);
+      const result = await planProxy.createPlan(planDTO);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get a plan by id
     ipcMain.handle(PlanAPIMethods.GET_PLAN, async (_, id: string) => {
-      return planProxy.getPlan(id);
+      const result = await planProxy.getPlan(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all plans
     ipcMain.handle(PlanAPIMethods.GET_PLANS, async () => {
-      return planProxy.getPlans();
+      const result = await planProxy.getPlans();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update a plan
     ipcMain.handle(PlanAPIMethods.UPDATE_PLAN, async (_, planDTO: PlanDTO) => {
       const { id, ...updateData } = planDTO;
-      return planProxy.updatePlan(id, updateData);
+      const result = await planProxy.updatePlan(id, updateData);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Delete a plan
     ipcMain.handle(PlanAPIMethods.DELETE_PLAN, async (_, id: string) => {
-      return planProxy.deletePlan(id);
+      const result = await planProxy.deletePlan(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

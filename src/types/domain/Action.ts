@@ -17,6 +17,14 @@ export const ActionSchema = z.object({
 
 export type ActionDTO = z.infer<typeof ActionSchema>;
 
+export type ActionResult =
+  | { success: true; data: Action }
+  | { success: false; error: string };
+
+export type ActionListResult =
+  | { success: true; data: Action[] }
+  | { success: false; error: string };
+
 export enum ActionAPIMethods {
   CREATE_ACTION = "create-action",
   GET_ACTION = "get-action",

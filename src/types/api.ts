@@ -1,73 +1,43 @@
-import {
-  ActionDTO,
-  AgentDTO,
-  JobDTO,
-  PhaseDTO,
-  PlanDTO,
-  ProjectDTO,
-  TaskDTO,
-  TeamDTO,
-  ValidatorDTO,
-} from "./domain";
-
 import { RoleAPI } from "./api/RoleAPI";
+import { ActionAPI } from "./api/ActionAPI";
+import { AgentAPI } from "./api/AgentAPI";
+import { JobAPI } from "./api/JobAPI";
+import { PhaseAPI } from "./api/PhaseAPI";
+import { PlanAPI } from "./api/PlanAPI";
+import { ProjectAPI } from "./api/ProjectAPI";
+import { TaskAPI } from "./api/TaskAPI";
+import { TeamAPI } from "./api/TeamAPI";
+import { ValidatorAPI } from "./api/ValidatorAPI";
 
-export interface API extends RoleAPI {
+export interface API
+  extends RoleAPI,
+    ActionAPI,
+    AgentAPI,
+    JobAPI,
+    PhaseAPI,
+    PlanAPI,
+    ProjectAPI,
+    TaskAPI,
+    TeamAPI,
+    ValidatorAPI {
   // ------------------------------ ACTIONS ------------------------------
-  createAction: (actionDTO: ActionDTO) => Promise<ActionDTO>;
-  getAction: (id: string) => Promise<ActionDTO | null>;
-  getActions: () => Promise<ActionDTO[]>;
-  getActionsByPhase: (phaseId: string) => Promise<ActionDTO[]>;
-  updateAction: (actionDTO: ActionDTO) => Promise<ActionDTO>;
-  deleteAction: (id: string) => Promise<void>;
+  // Refactor/extracted to ActionAPI
   // ------------------------------ AGENTS ------------------------------
-  createAgent: (agentDTO: AgentDTO) => Promise<AgentDTO>;
-  getAgent: (id: string) => Promise<AgentDTO | null>;
-  getAgents: () => Promise<AgentDTO[]>;
-  updateAgent: (agentDTO: AgentDTO) => Promise<AgentDTO>;
-  deleteAgent: (id: string) => Promise<void>;
+  // Refactor/extracted to AgentAPI
   // ------------------------------ JOBS ------------------------------
-  createJob: (jobDTO: JobDTO) => Promise<JobDTO>;
-  getJob: (id: string) => Promise<JobDTO | null>;
-  getJobs: () => Promise<JobDTO[]>;
-  updateJob: (jobDTO: JobDTO) => Promise<JobDTO>;
-  deleteJob: (id: string) => Promise<void>;
+  // Refactor/extracted to JobAPI
   // ------------------------------ PHASES ------------------------------
-  createPhase: (phaseDTO: PhaseDTO) => Promise<PhaseDTO>;
-  getPhase: (id: string) => Promise<PhaseDTO | null>;
-  getPhases: () => Promise<PhaseDTO[]>;
-  updatePhase: (phaseDTO: PhaseDTO) => Promise<PhaseDTO>;
-  deletePhase: (id: string) => Promise<void>;
+  // Refactor/extracted to PhaseAPI
   // ------------------------------ PLANS ------------------------------
-  createPlan: (planDTO: PlanDTO) => Promise<PlanDTO>;
-  getPlan: (id: string) => Promise<PlanDTO | null>;
-  getPlans: () => Promise<PlanDTO[]>;
-  updatePlan: (planDTO: PlanDTO) => Promise<PlanDTO>;
-  deletePlan: (id: string) => Promise<void>;
+  // Refactor/extracted to PlanAPI
   // ------------------------------ PROJECTS ------------------------------
-  createProject: (projectDTO: ProjectDTO) => Promise<ProjectDTO>;
-  getProject: (id: string) => Promise<ProjectDTO | null>;
-  getProjects: () => Promise<ProjectDTO[]>;
-  updateProject: (projectDTO: ProjectDTO) => Promise<ProjectDTO>;
-  deleteProject: (id: string) => Promise<void>;
+  // Refactor/extracted to ProjectAPI
   // ------------------------------ ROLES ------------------------------
   // Refactor/extracted to RoleAPI
   // ------------------------------ TASKS ------------------------------
-  createTask: (taskDTO: TaskDTO) => Promise<TaskDTO>;
-  getTask: (id: string) => Promise<TaskDTO | null>;
-  getTasks: () => Promise<TaskDTO[]>;
-  updateTask: (taskDTO: TaskDTO) => Promise<TaskDTO>;
-  deleteTask: (id: string) => Promise<void>;
+  // Refactor/extracted to TaskAPI
   // ------------------------------ TEAMS ------------------------------
-  createTeam: (teamDTO: TeamDTO) => Promise<TeamDTO>;
-  getTeam: (id: string) => Promise<TeamDTO | null>;
-  getTeams: () => Promise<TeamDTO[]>;
-  updateTeam: (teamDTO: TeamDTO) => Promise<TeamDTO>;
-  deleteTeam: (id: string) => Promise<void>;
+  // Refactor/extracted to TeamAPI
   // ------------------------------ VALIDATORS ------------------------------
-  createValidator: (validatorDTO: ValidatorDTO) => Promise<ValidatorDTO>;
-  getValidator: (id: string) => Promise<ValidatorDTO | null>;
-  getValidators: () => Promise<ValidatorDTO[]>;
-  updateValidator: (validatorDTO: ValidatorDTO) => Promise<ValidatorDTO>;
-  deleteValidator: (id: string) => Promise<void>;
+  // Refactor/extracted to ValidatorAPI
 }

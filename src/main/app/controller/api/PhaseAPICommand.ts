@@ -15,18 +15,24 @@ export class PhaseAPICommand extends AsyncCommand {
     ipcMain.handle(
       PhaseAPIMethods.CREATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
-        return phaseProxy.createPhase(phaseDTO);
+        const result = await phaseProxy.createPhase(phaseDTO);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Get a phase by id
     ipcMain.handle(PhaseAPIMethods.GET_PHASE, async (_, id: string) => {
-      return phaseProxy.getPhase(id);
+      const result = await phaseProxy.getPhase(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Get all phases
     ipcMain.handle(PhaseAPIMethods.GET_PHASES, async () => {
-      return phaseProxy.getPhases();
+      const result = await phaseProxy.getPhases();
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Update a phase
@@ -34,13 +40,17 @@ export class PhaseAPICommand extends AsyncCommand {
       PhaseAPIMethods.UPDATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
         const { id, ...updateData } = phaseDTO;
-        return phaseProxy.updatePhase(id, updateData);
+        const result = await phaseProxy.updatePhase(id, updateData);
+        if (result.isOk()) return { success: true, data: result.value };
+        return { success: false, error: result.error.message };
       },
     );
 
     // Delete a phase
     ipcMain.handle(PhaseAPIMethods.DELETE_PHASE, async (_, id: string) => {
-      return phaseProxy.deletePhase(id);
+      const result = await phaseProxy.deletePhase(id);
+      if (result.isOk()) return { success: true, data: result.value };
+      return { success: false, error: result.error.message };
     });
 
     // Signal completion

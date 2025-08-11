@@ -15,6 +15,14 @@ export const ValidatorSchema = z.object({
 
 export type ValidatorDTO = z.infer<typeof ValidatorSchema>;
 
+export type ValidatorResult =
+  | { success: true; data: Validator }
+  | { success: false; error: string };
+
+export type ValidatorListResult =
+  | { success: true; data: Validator[] }
+  | { success: false; error: string };
+
 export enum ValidatorAPIMethods {
   CREATE_VALIDATOR = "create-validator",
   GET_VALIDATOR = "get-validator",

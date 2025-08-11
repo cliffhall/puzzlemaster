@@ -16,6 +16,14 @@ export const TeamSchema = z.object({
 
 export type TeamDTO = z.infer<typeof TeamSchema>;
 
+export type TeamResult =
+  | { success: true; data: Team }
+  | { success: false; error: string };
+
+export type TeamListResult =
+  | { success: true; data: Team[] }
+  | { success: false; error: string };
+
 export enum TeamAPIMethods {
   CREATE_TEAM = "create-team",
   GET_TEAM = "get-team",
