@@ -5,19 +5,14 @@ import {
   PhaseDTO,
   PlanDTO,
   ProjectDTO,
-  RoleDTO,
   TaskDTO,
   TeamDTO,
   ValidatorDTO,
 } from "./domain";
 
-export type DemoUser = { id: number; name: string | null; email: string };
+import { RoleAPI } from "./api/RoleAPI";
 
-export type CreateDemoUserResult = Promise<DemoUser>;
-
-export interface API {
-  // ------------------------------ DEMO ------------------------------
-  createDemoUser: () => CreateDemoUserResult;
+export interface API extends RoleAPI {
   // ------------------------------ ACTIONS ------------------------------
   createAction: (actionDTO: ActionDTO) => Promise<ActionDTO>;
   getAction: (id: string) => Promise<ActionDTO | null>;
@@ -56,11 +51,7 @@ export interface API {
   updateProject: (projectDTO: ProjectDTO) => Promise<ProjectDTO>;
   deleteProject: (id: string) => Promise<void>;
   // ------------------------------ ROLES ------------------------------
-  createRole: (roleDTO: RoleDTO) => Promise<RoleDTO>;
-  getRole: (id: string) => Promise<RoleDTO | null>;
-  getRoles: () => Promise<RoleDTO[]>;
-  updateRole: (roleDTO: RoleDTO) => Promise<RoleDTO>;
-  deleteRole: (id: string) => Promise<void>;
+  // Refactor/extracted to RoleAPI
   // ------------------------------ TASKS ------------------------------
   createTask: (taskDTO: TaskDTO) => Promise<TaskDTO>;
   getTask: (id: string) => Promise<TaskDTO | null>;

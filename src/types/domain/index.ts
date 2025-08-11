@@ -9,3 +9,6 @@ export * from "./Task";
 export * from "./Team";
 export * from "./Validator";
 export * from "./DomainError";
+export type DeleteResult =
+  | { success: true; data: boolean }
+  | { success: false; error: string };
