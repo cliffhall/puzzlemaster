@@ -19,25 +19,4 @@ export interface API
     ProjectAPI,
     TaskAPI,
     TeamAPI,
-    ValidatorAPI {
-  // ------------------------------ ACTIONS ------------------------------
-  // Refactor/extracted to ActionAPI
-  // ------------------------------ AGENTS ------------------------------
-  // Refactor/extracted to AgentAPI
-  // ------------------------------ JOBS ------------------------------
-  // Refactor/extracted to JobAPI
-  // ------------------------------ PHASES ------------------------------
-  // Refactor/extracted to PhaseAPI
-  // ------------------------------ PLANS ------------------------------
-  // Refactor/extracted to PlanAPI
-  // ------------------------------ PROJECTS ------------------------------
-  // Refactor/extracted to ProjectAPI
-  // ------------------------------ ROLES ------------------------------
-  // Refactor/extracted to RoleAPI
-  // ------------------------------ TASKS ------------------------------
-  // Refactor/extracted to TaskAPI
-  // ------------------------------ TEAMS ------------------------------
-  // Refactor/extracted to TeamAPI
-  // ------------------------------ VALIDATORS ------------------------------
-  // Refactor/extracted to ValidatorAPI
-}
+    ValidatorAPI {}
