@@ -9,4 +9,3 @@ export * from "./RoleProxy";
 export * from "./TaskProxy";
 export * from "./TeamProxy";
 export * from "./ValidatorProxy";
-export * from "./DbDemoProxy";

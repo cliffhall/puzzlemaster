@@ -12,7 +12,6 @@ import {
   TaskProxy,
   TeamProxy,
   ValidatorProxy,
-  DbDemoProxy,
 } from "../../model";
 
 export class PrepareModelCommand extends AsyncCommand {
@@ -43,7 +42,6 @@ export class PrepareModelCommand extends AsyncCommand {
     f.registerProxy(new TaskProxy());
     f.registerProxy(new TeamProxy());
     f.registerProxy(new ValidatorProxy());
-    f.registerProxy(new DbDemoProxy());
 
     // Signal completion
     this.commandComplete();
