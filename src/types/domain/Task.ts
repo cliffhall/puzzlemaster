@@ -27,6 +27,14 @@ export const TaskSchema = z.object({
 
 export type TaskDTO = z.infer<typeof TaskSchema>;
 
+export type TaskResult =
+  | { success: true; data: Task }
+  | { success: false; error: string };
+
+export type TaskListResult =
+  | { success: true; data: Task[] }
+  | { success: false; error: string };
+
 export enum TaskAPIMethods {
   CREATE_TASK = "create-task",
   GET_TASK = "get-task",

@@ -15,6 +15,14 @@ export const RoleSchema = z.object({
 
 export type RoleDTO = z.infer<typeof RoleSchema>;
 
+export type RoleResult =
+  | { success: true; data: Role }
+  | { success: false; error: string };
+
+export type RoleListResult =
+  | { success: true; data: Role[] }
+  | { success: false; error: string };
+
 export enum RoleAPIMethods {
   CREATE_ROLE = "create-role",
   GET_ROLE = "get-role",

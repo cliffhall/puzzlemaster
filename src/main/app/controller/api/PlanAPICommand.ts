@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { PlanDTO, PlanAPIMethods } from "../../../../types/domain";
 import { PlanProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class PlanAPICommand extends AsyncCommand {
@@ -13,28 +14,33 @@ export class PlanAPICommand extends AsyncCommand {
 
     // Create a plan and return it
     ipcMain.handle(PlanAPIMethods.CREATE_PLAN, async (_, planDTO: PlanDTO) => {
-      return planProxy.createPlan(planDTO);
+      const result = await planProxy.createPlan(planDTO);
+      return flattenResult(result);
     });
 
     // Get a plan by id
     ipcMain.handle(PlanAPIMethods.GET_PLAN, async (_, id: string) => {
-      return planProxy.getPlan(id);
+      const result = await planProxy.getPlan(id);
+      return flattenResult(result);
     });
 
     // Get all plans
     ipcMain.handle(PlanAPIMethods.GET_PLANS, async () => {
-      return planProxy.getPlans();
+      const result = await planProxy.getPlans();
+      return flattenResult(result);
     });
 
     // Update a plan
     ipcMain.handle(PlanAPIMethods.UPDATE_PLAN, async (_, planDTO: PlanDTO) => {
       const { id, ...updateData } = planDTO;
-      return planProxy.updatePlan(id, updateData);
+      const result = await planProxy.updatePlan(id, updateData);
+      return flattenResult(result);
     });
 
     // Delete a plan
     ipcMain.handle(PlanAPIMethods.DELETE_PLAN, async (_, id: string) => {
-      return planProxy.deletePlan(id);
+      const result = await planProxy.deletePlan(id);
+      return flattenResult(result);
     });
 
     // Signal completion

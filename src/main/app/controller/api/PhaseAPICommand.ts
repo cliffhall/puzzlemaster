@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { PhaseDTO, PhaseAPIMethods } from "../../../../types/domain";
 import { PhaseProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class PhaseAPICommand extends AsyncCommand {
@@ -15,18 +16,21 @@ export class PhaseAPICommand extends AsyncCommand {
     ipcMain.handle(
       PhaseAPIMethods.CREATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
-        return phaseProxy.createPhase(phaseDTO);
+        const result = await phaseProxy.createPhase(phaseDTO);
+        return flattenResult(result);
       },
     );
 
     // Get a phase by id
     ipcMain.handle(PhaseAPIMethods.GET_PHASE, async (_, id: string) => {
-      return phaseProxy.getPhase(id);
+      const result = await phaseProxy.getPhase(id);
+      return flattenResult(result);
     });
 
     // Get all phases
     ipcMain.handle(PhaseAPIMethods.GET_PHASES, async () => {
-      return phaseProxy.getPhases();
+      const result = await phaseProxy.getPhases();
+      return flattenResult(result);
     });
 
     // Update a phase
@@ -34,13 +38,15 @@ export class PhaseAPICommand extends AsyncCommand {
       PhaseAPIMethods.UPDATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
         const { id, ...updateData } = phaseDTO;
-        return phaseProxy.updatePhase(id, updateData);
+        const result = await phaseProxy.updatePhase(id, updateData);
+        return flattenResult(result);
       },
     );
 
     // Delete a phase
     ipcMain.handle(PhaseAPIMethods.DELETE_PHASE, async (_, id: string) => {
-      return phaseProxy.deletePhase(id);
+      const result = await phaseProxy.deletePhase(id);
+      return flattenResult(result);
     });
 
     // Signal completion

@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { ProjectDTO, ProjectAPIMethods } from "../../../../types/domain";
 import { ProjectProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class ProjectAPICommand extends AsyncCommand {
@@ -15,18 +16,21 @@ export class ProjectAPICommand extends AsyncCommand {
     ipcMain.handle(
       ProjectAPIMethods.CREATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
-        return projectProxy.createProject(projectDTO);
+        const result = await projectProxy.createProject(projectDTO);
+        return flattenResult(result);
       },
     );
 
     // Get a project by id
     ipcMain.handle(ProjectAPIMethods.GET_PROJECT, async (_, id: string) => {
-      return projectProxy.getProject(id);
+      const result = await projectProxy.getProject(id);
+      return flattenResult(result);
     });
 
     // Get all projects
     ipcMain.handle(ProjectAPIMethods.GET_PROJECTS, async () => {
-      return projectProxy.getProjects();
+      const result = await projectProxy.getProjects();
+      return flattenResult(result);
     });
 
     // Update a project
@@ -34,13 +38,15 @@ export class ProjectAPICommand extends AsyncCommand {
       ProjectAPIMethods.UPDATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
         const { id, ...updateData } = projectDTO;
-        return projectProxy.updateProject(id, updateData);
+        const result = await projectProxy.updateProject(id, updateData);
+        return flattenResult(result);
       },
     );
 
     // Delete a project
     ipcMain.handle(ProjectAPIMethods.DELETE_PROJECT, async (_, id: string) => {
-      return projectProxy.deleteProject(id);
+      const result = await projectProxy.deleteProject(id);
+      return flattenResult(result);
     });
 
     // Signal completion

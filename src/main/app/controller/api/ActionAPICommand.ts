@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { ActionDTO, ActionAPIMethods } from "../../../../types/domain";
 import { IAppFacade } from "../../AppFacade";
 import { ActionProxy } from "../../model";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class ActionAPICommand extends AsyncCommand {
@@ -15,25 +16,29 @@ export class ActionAPICommand extends AsyncCommand {
     ipcMain.handle(
       ActionAPIMethods.CREATE_ACTION,
       async (_, actionDTO: ActionDTO) => {
-        return actionProxy.createAction(actionDTO);
+        const result = await actionProxy.createAction(actionDTO);
+        return flattenResult(result);
       },
     );
 
     // Get an action by id
     ipcMain.handle(ActionAPIMethods.GET_ACTION, async (_, id: string) => {
-      return actionProxy.getAction(id);
+      const result = await actionProxy.getAction(id);
+      return flattenResult(result);
     });
 
     // Get all actions
     ipcMain.handle(ActionAPIMethods.GET_ACTIONS, async () => {
-      return actionProxy.getActions();
+      const result = await actionProxy.getActions();
+      return flattenResult(result);
     });
 
     // Get actions by phase id
     ipcMain.handle(
       ActionAPIMethods.GET_ACTIONS_BY_PHASE,
       async (_, phaseId: string) => {
-        return actionProxy.getActionsByPhase(phaseId);
+        const result = await actionProxy.getActionsByPhase(phaseId);
+        return flattenResult(result);
       },
     );
 
@@ -42,13 +47,15 @@ export class ActionAPICommand extends AsyncCommand {
       ActionAPIMethods.UPDATE_ACTION,
       async (_, actionDTO: ActionDTO) => {
         const { id, ...updateData } = actionDTO;
-        return actionProxy.updateAction(id, updateData);
+        const result = await actionProxy.updateAction(id, updateData);
+        return flattenResult(result);
       },
     );
 
     // Delete an action
     ipcMain.handle(ActionAPIMethods.DELETE_ACTION, async (_, id: string) => {
-      return actionProxy.deleteAction(id);
+      const result = await actionProxy.deleteAction(id);
+      return flattenResult(result);
     });
 
     // Signal completion

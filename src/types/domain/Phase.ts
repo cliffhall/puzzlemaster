@@ -17,6 +17,14 @@ export const PhaseSchema = z.object({
 
 export type PhaseDTO = z.infer<typeof PhaseSchema>;
 
+export type PhaseResult =
+  | { success: true; data: Phase }
+  | { success: false; error: string };
+
+export type PhaseListResult =
+  | { success: true; data: Phase[] }
+  | { success: false; error: string };
+
 export enum PhaseAPIMethods {
   CREATE_PHASE = "create-phase",
   GET_PHASE = "get-phase",

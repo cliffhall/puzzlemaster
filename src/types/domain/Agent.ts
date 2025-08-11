@@ -17,6 +17,14 @@ export const AgentSchema = z.object({
 
 export type AgentDTO = z.infer<typeof AgentSchema>;
 
+export type AgentResult =
+  | { success: true; data: Agent }
+  | { success: false; error: string };
+
+export type AgentListResult =
+  | { success: true; data: Agent[] }
+  | { success: false; error: string };
+
 export enum AgentAPIMethods {
   CREATE_AGENT = "create-agent",
   GET_AGENT = "get-agent",

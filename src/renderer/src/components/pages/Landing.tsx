@@ -20,12 +20,11 @@ import {
 } from "@radix-ui/react-icons";
 import classes from "./Landing.module.css";
 import { useState, ReactElement } from "react";
-import { createDemoUser } from "../../api";
-import { DemoUser } from "../../../../types/api";
+import { createRole } from "../../api";
+import { Role } from "../../../../types/domain";
 
 const Landing = (): ReactElement => {
-  const [demoUser, setDemoUser] = useState<DemoUser>();
-
+  const [role, setRole] = useState<Role | undefined>();
   const features = [
     { icon: <LightningBoltIcon />, label: "Agentic Coordination" },
     { icon: <StarIcon />, label: "Production Ready" },
@@ -65,35 +64,31 @@ const Landing = (): ReactElement => {
               </Text>
 
               <Group mt="xl">
-                <Button
-                  size="lg"
-                  leftSection={<RocketIcon />}
-                  onClick={async () => {
-                    const user: DemoUser = await createDemoUser();
-                    setDemoUser(user);
-                  }}
-                >
+                <Button size="lg" leftSection={<RocketIcon />}>
                   Create Demo User
                 </Button>
                 <Button
                   size="lg"
                   variant="default"
+                  onClick={async () => {
+                    const response = await createRole();
+                    setRole(response);
+                  }}
                   leftSection={<GitHubLogoIcon />}
                 >
                   View on GitHub
                 </Button>
               </Group>
-
-              {demoUser ? (
+              {role ? (
                 <ul className="versions">
                   <li>
-                    <b>Id</b> {demoUser?.id}
+                    <b>Id</b> {role?.id}
                   </li>
                   <li>
-                    <b>Name</b> {demoUser?.name}
+                    <b>Name</b> {role?.name}
                   </li>
                   <li>
-                    <b>Email</b> {demoUser?.email}
+                    <b>Description</b> {role?.description}
                   </li>
                 </ul>
               ) : (

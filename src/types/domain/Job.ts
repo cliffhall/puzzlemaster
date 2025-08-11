@@ -27,6 +27,14 @@ export const JobSchema = z.object({
 
 export type JobDTO = z.infer<typeof JobSchema>;
 
+export type JobResult =
+  | { success: true; data: Job }
+  | { success: false; error: string };
+
+export type JobListResult =
+  | { success: true; data: Job[] }
+  | { success: false; error: string };
+
 export enum JobAPIMethods {
   CREATE_JOB = "create-job",
   GET_JOB = "get-job",

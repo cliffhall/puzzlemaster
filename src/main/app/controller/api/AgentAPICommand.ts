@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { AgentDTO, AgentAPIMethods } from "../../../../types/domain";
 import { AgentProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class AgentAPICommand extends AsyncCommand {
@@ -15,18 +16,21 @@ export class AgentAPICommand extends AsyncCommand {
     ipcMain.handle(
       AgentAPIMethods.CREATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
-        return agentProxy.createAgent(agentDTO);
+        const result = await agentProxy.createAgent(agentDTO);
+        return flattenResult(result);
       },
     );
 
     // Get an agent by id
     ipcMain.handle(AgentAPIMethods.GET_AGENT, async (_, id: string) => {
-      return agentProxy.getAgent(id);
+      const result = await agentProxy.getAgent(id);
+      return flattenResult(result);
     });
 
     // Get all agents
     ipcMain.handle(AgentAPIMethods.GET_AGENTS, async () => {
-      return agentProxy.getAgents();
+      const result = await agentProxy.getAgents();
+      return flattenResult(result);
     });
 
     // Update an agent
@@ -34,13 +38,15 @@ export class AgentAPICommand extends AsyncCommand {
       AgentAPIMethods.UPDATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
         const { id, ...updateData } = agentDTO;
-        return agentProxy.updateAgent(id, updateData);
+        const result = await agentProxy.updateAgent(id, updateData);
+        return flattenResult(result);
       },
     );
 
     // Delete an agent
     ipcMain.handle(AgentAPIMethods.DELETE_AGENT, async (_, id: string) => {
-      return agentProxy.deleteAgent(id);
+      const result = await agentProxy.deleteAgent(id);
+      return flattenResult(result);
     });
 
     // Signal completion

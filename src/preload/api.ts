@@ -24,8 +24,6 @@ import {
 } from "../types/domain";
 
 export const api: API = {
-  // ------------------------------ DEMO ------------------------------
-  createDemoUser: () => ipcRenderer.invoke("create-demo-user"),
   // ------------------------------ ACTIONS ------------------------------
   createAction: (actionDTO: ActionDTO) =>
     ipcRenderer.invoke(ActionAPIMethods.CREATE_ACTION, actionDTO),
