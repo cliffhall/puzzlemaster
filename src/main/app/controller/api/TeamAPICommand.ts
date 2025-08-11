@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { TeamDTO, TeamAPIMethods } from "../../../../types/domain";
 import { TeamProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class TeamAPICommand extends AsyncCommand {
@@ -14,37 +15,32 @@ export class TeamAPICommand extends AsyncCommand {
     // Create a team and return it
     ipcMain.handle(TeamAPIMethods.CREATE_TEAM, async (_, teamDTO: TeamDTO) => {
       const result = await teamProxy.createTeam(teamDTO);
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Get a team by id
     ipcMain.handle(TeamAPIMethods.GET_TEAM, async (_, id: string) => {
       const result = await teamProxy.getTeam(id);
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Get all teams
     ipcMain.handle(TeamAPIMethods.GET_TEAMS, async () => {
       const result = await teamProxy.getTeams();
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Update a team
     ipcMain.handle(TeamAPIMethods.UPDATE_TEAM, async (_, teamDTO: TeamDTO) => {
       const { id, ...updateData } = teamDTO;
       const result = await teamProxy.updateTeam(id, updateData);
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Delete a team
     ipcMain.handle(TeamAPIMethods.DELETE_TEAM, async (_, id: string) => {
       const result = await teamProxy.deleteTeam(id);
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Signal completion

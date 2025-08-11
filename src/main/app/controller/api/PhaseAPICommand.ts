@@ -3,6 +3,7 @@ import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { PhaseDTO, PhaseAPIMethods } from "../../../../types/domain";
 import { PhaseProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { flattenResult } from "../../constants/AppConstants";
 import { ipcMain } from "electron";
 
 export class PhaseAPICommand extends AsyncCommand {
@@ -16,23 +17,20 @@ export class PhaseAPICommand extends AsyncCommand {
       PhaseAPIMethods.CREATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
         const result = await phaseProxy.createPhase(phaseDTO);
-        if (result.isOk()) return { success: true, data: result.value };
-        return { success: false, error: result.error.message };
+        return flattenResult(result);
       },
     );
 
     // Get a phase by id
     ipcMain.handle(PhaseAPIMethods.GET_PHASE, async (_, id: string) => {
       const result = await phaseProxy.getPhase(id);
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Get all phases
     ipcMain.handle(PhaseAPIMethods.GET_PHASES, async () => {
       const result = await phaseProxy.getPhases();
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Update a phase
@@ -41,16 +39,14 @@ export class PhaseAPICommand extends AsyncCommand {
       async (_, phaseDTO: PhaseDTO) => {
         const { id, ...updateData } = phaseDTO;
         const result = await phaseProxy.updatePhase(id, updateData);
-        if (result.isOk()) return { success: true, data: result.value };
-        return { success: false, error: result.error.message };
+        return flattenResult(result);
       },
     );
 
     // Delete a phase
     ipcMain.handle(PhaseAPIMethods.DELETE_PHASE, async (_, id: string) => {
       const result = await phaseProxy.deletePhase(id);
-      if (result.isOk()) return { success: true, data: result.value };
-      return { success: false, error: result.error.message };
+      return flattenResult(result);
     });
 
     // Signal completion
