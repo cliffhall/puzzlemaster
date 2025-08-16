@@ -4,14 +4,15 @@ import { ReactElement } from "react";
 import { mantineTheme } from "./theme";
 import "@mantine/core/styles.css";
 
-import Landing from "./components/pages/Landing";
+//import Landing from "./pages/Landing/Landing";
+import { Shell } from "./pages/Shell/Shell";
 
 function App(): ReactElement {
   return (
-    <MantineProvider theme={mantineTheme}>
+    <MantineProvider theme={mantineTheme} defaultColorScheme="light">
       <Router>
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Shell />} />
         </Routes>
       </Router>
     </MantineProvider>

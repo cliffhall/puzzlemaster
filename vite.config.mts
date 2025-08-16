@@ -16,6 +16,14 @@ export default defineConfig({
       ),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Optional: Import global SCSS variables or mixins
+        // additionalData: `@import "./src/_mantine.scss";`,
+      },
+    },
+  },
   test: {
     globals: true,
     environment: "jsdom",
