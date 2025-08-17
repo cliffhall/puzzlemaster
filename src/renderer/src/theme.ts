@@ -29,7 +29,7 @@ const skyBlue: MantineColorsTuple = [
   "#0063ff",
   "#0058e4",
   "#004ecd",
-  "#0043b5"
+  "#0043b5",
 ];
 
 export const mantineTheme: MantineThemeOverride = createTheme({

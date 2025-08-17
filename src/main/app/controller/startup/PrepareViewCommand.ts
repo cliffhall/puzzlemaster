@@ -2,7 +2,7 @@ import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, shell, BrowserWindow } from "electron";
-import { EnvProxy } from "../../model/EnvProxy";
+import { EnvProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { join } from "path";
 
@@ -17,7 +17,13 @@ export class PrepareViewCommand extends AsyncCommand {
       const mainWindow = new BrowserWindow({
         width: 900,
         height: 670,
+        minWidth: 500,
         show: false,
+        titleBarStyle: "hidden",
+        titleBarOverlay: {
+          height: 45,
+        },
+        ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
         autoHideMenuBar: true,
         webPreferences: {
           preload: join(__dirname, "../preload/index.js"),
