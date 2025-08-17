@@ -17,8 +17,9 @@ export class PrepareViewCommand extends AsyncCommand {
       const mainWindow = new BrowserWindow({
         width: 900,
         height: 670,
-        minWidth: 500,
+        minWidth: 769,
         show: false,
+        title: "Puzzlemaster",
         titleBarStyle: "hidden",
         titleBarOverlay: {
           height: 45,

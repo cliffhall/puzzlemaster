@@ -1,5 +1,5 @@
 appId: com.futurescale.puzzlemaster
-productName: puzzlemaster
+productName: Puzzlemaster
 directories:
   buildResources: resources
 files:
