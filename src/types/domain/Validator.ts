@@ -13,7 +13,10 @@ export const ValidatorSchema = z.object({
   resource: z.string().min(1),
 });
 
+export const CreateValidatorSchema = ValidatorSchema.omit({ id: true });
+
 export type ValidatorDTO = z.infer<typeof ValidatorSchema>;
+export type CreateValidatorDTO = z.infer<typeof CreateValidatorSchema>;
 
 export type ValidatorResult =
   | { success: true; data: Validator }

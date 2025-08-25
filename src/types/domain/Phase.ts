@@ -15,7 +15,10 @@ export const PhaseSchema = z.object({
   // teamId and jobId have been removed
 });
 
+export const CreatePhaseSchema = PhaseSchema.omit({ id: true });
+
 export type PhaseDTO = z.infer<typeof PhaseSchema>;
+export type CreatePhaseDTO = z.infer<typeof CreatePhaseSchema>;
 
 export type PhaseResult =
   | { success: true; data: Phase }

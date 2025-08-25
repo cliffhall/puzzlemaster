@@ -1,7 +1,13 @@
-import { JobDTO, JobResult, JobListResult, DeleteResult } from "../domain";
+import {
+  JobDTO,
+  CreateJobDTO,
+  JobResult,
+  JobListResult,
+  DeleteResult,
+} from "../domain";
 
 export interface JobAPI {
-  createJob: (jobDTO: JobDTO) => Promise<JobResult>;
+  createJob: (jobDTO: CreateJobDTO) => Promise<JobResult>;
   getJob: (id: string) => Promise<JobResult>;
   getJobs: () => Promise<JobListResult>;
   updateJob: (jobDTO: JobDTO) => Promise<JobResult>;

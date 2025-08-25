@@ -14,7 +14,10 @@ export const PlanSchema = z.object({
   description: z.string().optional(),
 });
 
+export const CreatePlanSchema = PlanSchema.omit({ id: true });
+
 export type PlanDTO = z.infer<typeof PlanSchema>;
+export type CreatePlanDTO = z.infer<typeof CreatePlanSchema>;
 
 export type PlanResult =
   | { success: true; data: Plan }

@@ -15,7 +15,10 @@ export const AgentSchema = z.object({
   tasks: z.array(z.string().uuid()),
 });
 
+export const CreateAgentSchema = AgentSchema.omit({ id: true });
+
 export type AgentDTO = z.infer<typeof AgentSchema>;
+export type CreateAgentDTO = z.infer<typeof CreateAgentSchema>;
 
 export type AgentResult =
   | { success: true; data: Agent }

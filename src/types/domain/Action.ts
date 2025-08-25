@@ -15,7 +15,10 @@ export const ActionSchema = z.object({
   name: z.string().min(1),
 });
 
+export const CreateActionSchema = ActionSchema.omit({ id: true });
+
 export type ActionDTO = z.infer<typeof ActionSchema>;
+export type CreateActionDTO = z.infer<typeof CreateActionSchema>;
 
 export type ActionResult =
   | { success: true; data: Action }

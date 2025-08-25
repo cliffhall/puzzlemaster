@@ -14,7 +14,10 @@ export const TeamSchema = z.object({
   agents: z.array(z.string().uuid()),
 });
 
+export const CreateTeamSchema = TeamSchema.omit({ id: true });
+
 export type TeamDTO = z.infer<typeof TeamSchema>;
+export type CreateTeamDTO = z.infer<typeof CreateTeamSchema>;
 
 export type TeamResult =
   | { success: true; data: Team }

@@ -25,7 +25,10 @@ export const JobSchema = z.object({
   tasks: z.array(z.string().uuid()),
 });
 
+export const CreateJobSchema = JobSchema.omit({ id: true });
+
 export type JobDTO = z.infer<typeof JobSchema>;
+export type CreateJobDTO = z.infer<typeof CreateJobSchema>;
 
 export type JobResult =
   | { success: true; data: Job }

@@ -25,7 +25,10 @@ export const TaskSchema = z.object({
   status: TaskStatusSchema.default("PENDING"),
 });
 
+export const CreateTaskSchema = TaskSchema.omit({ id: true });
+
 export type TaskDTO = z.infer<typeof TaskSchema>;
+export type CreateTaskDTO = z.infer<typeof CreateTaskSchema>;
 
 export type TaskResult =
   | { success: true; data: Task }

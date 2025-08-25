@@ -1,12 +1,15 @@
 import {
   ValidatorDTO,
+  CreateValidatorDTO,
   ValidatorResult,
   ValidatorListResult,
   DeleteResult,
 } from "../domain";
 
 export interface ValidatorAPI {
-  createValidator: (validatorDTO: ValidatorDTO) => Promise<ValidatorResult>;
+  createValidator: (
+    validatorDTO: CreateValidatorDTO,
+  ) => Promise<ValidatorResult>;
   getValidator: (id: string) => Promise<ValidatorResult>;
   getValidators: () => Promise<ValidatorListResult>;
   updateValidator: (validatorDTO: ValidatorDTO) => Promise<ValidatorResult>;

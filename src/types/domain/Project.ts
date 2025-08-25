@@ -13,7 +13,10 @@ export const ProjectSchema = z.object({
   description: z.string().optional(),
 });
 
+export const CreateProjectSchema = ProjectSchema.omit({ id: true });
+
 export type ProjectDTO = z.infer<typeof ProjectSchema>;
+export type CreateProjectDTO = z.infer<typeof CreateProjectSchema>;
 
 export type ProjectResult =
   | { success: true; data: Project }
