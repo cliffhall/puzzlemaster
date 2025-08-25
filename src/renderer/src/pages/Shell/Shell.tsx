@@ -16,10 +16,13 @@ import { NavToggle } from "../../components/NavToggle";
 import classes from "./Shell.module.css";
 import cx from "clsx";
 import { IconPlus } from "@tabler/icons-react";
+import { useWindowState } from "../../hooks/useWindowState";
 
 export function Shell(): ReactElement {
   const [opened, { toggle }] = useDisclosure(true);
   const [projectName, setProjectName] = useState("");
+  const fullscreen = useWindowState();
+
   return (
     <AppShell
       header={{ height: 45 }}
@@ -28,7 +31,7 @@ export function Shell(): ReactElement {
     >
       <AppShell.Header>
         <Group w="100%" gap="0" h="100%" wrap="nowrap">
-          <Group pl="75px" h="100%" w="170px" gap="10px">
+          <Group pl={fullscreen ? 0 : "75px"} h="100%" w="170px" gap="10px">
             <ThemeToggle />
             <NavToggle toggle={toggle} opened={opened} />
           </Group>

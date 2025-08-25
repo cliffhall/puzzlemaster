@@ -1,0 +1,17 @@
+import { ipcRenderer } from "electron";
+import { ActionAPI } from "../../types/api/ActionAPI";
+import { ActionAPIMethods, ActionDTO } from "../../types/domain";
+
+export const action: ActionAPI = {
+  createAction: (actionDTO: ActionDTO) =>
+    ipcRenderer.invoke(ActionAPIMethods.CREATE_ACTION, actionDTO),
+  getAction: (id: string) =>
+    ipcRenderer.invoke(ActionAPIMethods.GET_ACTION, id),
+  getActions: () => ipcRenderer.invoke(ActionAPIMethods.GET_ACTIONS),
+  getActionsByPhase: (phaseId: string) =>
+    ipcRenderer.invoke(ActionAPIMethods.GET_ACTIONS_BY_PHASE, phaseId),
+  updateAction: (actionDTO: ActionDTO) =>
+    ipcRenderer.invoke(ActionAPIMethods.UPDATE_ACTION, actionDTO),
+  deleteAction: (id: string) =>
+    ipcRenderer.invoke(ActionAPIMethods.DELETE_ACTION, id),
+};

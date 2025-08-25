@@ -1,9 +1,10 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { WindowEvents, WindowStates } from "../../../../types/domain";
 import { app, shell, BrowserWindow } from "electron";
-import { EnvProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
+import { EnvProxy } from "../../model";
 import { join } from "path";
 
 export class PrepareViewCommand extends AsyncCommand {
@@ -40,6 +41,22 @@ export class PrepareViewCommand extends AsyncCommand {
       mainWindow.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url);
         return { action: "deny" };
+      });
+
+      // Listen for maximize events
+      mainWindow.on("maximize", () => {
+        mainWindow.webContents.send(
+          WindowEvents.WINDOW_STATE,
+          WindowStates.MAXIMIZED,
+        );
+      });
+
+      // Listen for unmaximize events
+      mainWindow.on("unmaximize", () => {
+        mainWindow.webContents.send(
+          WindowEvents.WINDOW_STATE,
+          WindowStates.UNMAXIMIZED,
+        );
       });
 
       // HMR for renderer base on electron-vite cli.

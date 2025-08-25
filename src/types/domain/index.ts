@@ -8,6 +8,7 @@ export * from "./Role";
 export * from "./Task";
 export * from "./Team";
 export * from "./Validator";
+export * from "./Window";
 export * from "./DomainError";
 export type DeleteResult =
   | { success: true; data: boolean }

@@ -13,7 +13,10 @@ export const RoleSchema = z.object({
   description: z.string().optional(),
 });
 
+export const CreateRoleSchema = RoleSchema.omit({ id: true });
+
 export type RoleDTO = z.infer<typeof RoleSchema>;
+export type CreateRoleDTO = z.infer<typeof CreateRoleSchema>;
 
 export type RoleResult =
   | { success: true; data: Role }

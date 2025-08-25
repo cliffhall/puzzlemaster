@@ -1,7 +1,7 @@
-import { Role, RoleResult } from "../../types/domain";
+import { Role, RoleResult } from "../../../types/domain";
 
 export async function createRole(): Promise<Role | undefined> {
-  const result: RoleResult = await window.api.createRole({
+  const result: RoleResult = await window.puzzlemaster.role.createRole({
     name: "Coder",
     description: "A typescript coder",
   });
