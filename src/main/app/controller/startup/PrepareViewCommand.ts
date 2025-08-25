@@ -38,27 +38,25 @@ export class PrepareViewCommand extends AsyncCommand {
         mainWindow.show();
       });
 
+      // Listen for maximize events
+      mainWindow.on("resize", () => {
+        if (mainWindow.isFullScreen()) {
+          mainWindow.webContents.send(
+            WindowEvents.WINDOW_STATE,
+            WindowStates.MAXIMIZED,
+          );
+        } else {
+          mainWindow.webContents.send(
+            WindowEvents.WINDOW_STATE,
+            WindowStates.UNMAXIMIZED,
+          );
+        }
+      });
+
       mainWindow.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url);
         return { action: "deny" };
       });
-
-      // Listen for maximize events
-      mainWindow.on("maximize", () => {
-        mainWindow.webContents.send(
-          WindowEvents.WINDOW_STATE,
-          WindowStates.MAXIMIZED,
-        );
-      });
-
-      // Listen for unmaximize events
-      mainWindow.on("unmaximize", () => {
-        mainWindow.webContents.send(
-          WindowEvents.WINDOW_STATE,
-          WindowStates.UNMAXIMIZED,
-        );
-      });
-
       // HMR for renderer base on electron-vite cli.
       // Load the remote URL for development or the local html file for production.
       //const url = envProxy.varByKey('ELECTRON_RENDERER_URL');

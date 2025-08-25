@@ -31,9 +31,14 @@ export function Shell(): ReactElement {
     >
       <AppShell.Header>
         <Group w="100%" gap="0" h="100%" wrap="nowrap">
-          <Group pl={fullscreen ? 0 : "75px"} h="100%" w="170px" gap="10px">
-            <ThemeToggle />
+          <Group
+            pl={fullscreen ? "15px" : "75px"}
+            h="100%"
+            w="170px"
+            gap="10px"
+          >
             <NavToggle toggle={toggle} opened={opened} />
+            <ThemeToggle />
           </Group>
           <Group
             className={cx(classes["header-content"])}
