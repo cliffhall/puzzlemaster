@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
 import { PhaseAPI } from "../../types/api/PhaseAPI";
-import { PhaseAPIMethods, PhaseDTO } from "../../types/domain";
+import { PhaseAPIMethods, PhaseDTO, CreatePhaseDTO } from "../../types/domain";
 
 export const phase: PhaseAPI = {
-  createPhase: (phaseDTO: PhaseDTO) =>
+  createPhase: (phaseDTO: CreatePhaseDTO) =>
     ipcRenderer.invoke(PhaseAPIMethods.CREATE_PHASE, phaseDTO),
   getPhase: (id: string) => ipcRenderer.invoke(PhaseAPIMethods.GET_PHASE, id),
   getPhases: () => ipcRenderer.invoke(PhaseAPIMethods.GET_PHASES),

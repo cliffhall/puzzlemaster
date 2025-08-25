@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
 import { AgentAPI } from "../../types/api/AgentAPI";
-import { AgentAPIMethods, AgentDTO } from "../../types/domain";
+import { AgentAPIMethods, AgentDTO, CreateAgentDTO } from "../../types/domain";
 
 export const agent: AgentAPI = {
-  createAgent: (agentDTO: AgentDTO) =>
+  createAgent: (agentDTO: CreateAgentDTO) =>
     ipcRenderer.invoke(AgentAPIMethods.CREATE_AGENT, agentDTO),
   getAgent: (id: string) => ipcRenderer.invoke(AgentAPIMethods.GET_AGENT, id),
   getAgents: () => ipcRenderer.invoke(AgentAPIMethods.GET_AGENTS),

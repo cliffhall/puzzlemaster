@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
 import { TaskAPI } from "../../types/api/TaskAPI";
-import { TaskAPIMethods, TaskDTO } from "../../types/domain";
+import { TaskAPIMethods, TaskDTO, CreateTaskDTO } from "../../types/domain";
 
 export const task: TaskAPI = {
-  createTask: (taskDTO: TaskDTO) =>
+  createTask: (taskDTO: CreateTaskDTO) =>
     ipcRenderer.invoke(TaskAPIMethods.CREATE_TASK, taskDTO),
   getTask: (id: string) => ipcRenderer.invoke(TaskAPIMethods.GET_TASK, id),
   getTasks: () => ipcRenderer.invoke(TaskAPIMethods.GET_TASKS),

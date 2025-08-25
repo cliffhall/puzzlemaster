@@ -1,9 +1,9 @@
 import { ipcRenderer } from "electron";
 import { ProjectAPI } from "../../types/api/ProjectAPI";
-import { ProjectAPIMethods, ProjectDTO } from "../../types/domain";
+import { ProjectAPIMethods, ProjectDTO, CreateProjectDTO } from "../../types/domain";
 
 export const project: ProjectAPI = {
-  createProject: (projectDTO: ProjectDTO) =>
+  createProject: (projectDTO: CreateProjectDTO) =>
     ipcRenderer.invoke(ProjectAPIMethods.CREATE_PROJECT, projectDTO),
   getProject: (id: string) =>
     ipcRenderer.invoke(ProjectAPIMethods.GET_PROJECT, id),
