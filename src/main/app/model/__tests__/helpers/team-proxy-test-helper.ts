@@ -1,5 +1,5 @@
 import { createTestPrismaClient } from "./test-db-factory";
-import { TeamProxy } from "../main/app/model/TeamProxy";
+import { TeamProxy } from "../../TeamProxy";
 import { PrismaClient } from "db";
 
 /**

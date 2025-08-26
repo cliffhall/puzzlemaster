@@ -4,7 +4,7 @@ This document explains how the test database factory works for the PuzzleMaster 
 
 ## Overview
 
-The test database factory (`src/test/test-db-factory.ts`) provides isolated test databases for each test run. It creates unique SQLite database files with the complete schema from `prisma/schema.prisma`, ensuring that tests run in complete isolation without affecting the production database.
+The test database factory (`src/main/app/model/__tests__/helpers/test-db-factory.ts`) provides isolated test databases for each test run. It creates unique SQLite database files with the complete schema from `prisma/schema.prisma`, ensuring that tests run in complete isolation without affecting the production database.
 
 ## Key Features
 
@@ -110,7 +110,7 @@ describe("YourProxy", () => {
 
 To add tests for a new proxy class:
 
-1. **Create a test helper** (e.g., `src/test/your-proxy-test-helper.ts`):
+1. **Create a test helper** (e.g., `src/main/app/model/__tests__/helpers/your-proxy-test-helper.ts`):
    ```typescript
    import { PrismaClient } from "db";
    import { YourProxy } from "../main/app/model/YourProxy";
@@ -174,9 +174,10 @@ When the `prisma/schema.prisma` file changes:
 ## File Structure
 
 ```
-src/test/
+src/main/app/model/__tests__/helpers/
 ├── test-db-factory.ts           # Main factory for creating test databases
 ├── action-proxy-test-helper.ts  # Helper for ActionProxy tests
 ├── agent-proxy-test-helper.ts   # Helper for AgentProxy tests
+├── ...
 └── README.md                    # This documentation
 ```

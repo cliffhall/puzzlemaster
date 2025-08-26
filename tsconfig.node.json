@@ -6,7 +6,7 @@
     "src/preload/**/*",
     "src/domain/**/*",
     "src/types/**/*",
-    "src/test/**/*"
+    "src/main/app/model/__tests__/helpers/**/*"
   ],
   "compilerOptions": {
     "esModuleInterop": true,

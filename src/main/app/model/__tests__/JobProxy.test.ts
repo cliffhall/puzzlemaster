@@ -1,4 +1,4 @@
-import { createTestJobProxy } from "../../../../test/job-proxy-test-helper";
+import { createTestJobProxy } from "./helpers/job-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { JobDTO } from "../../../../domain";
 import { JobProxy } from "../JobProxy";

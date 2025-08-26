@@ -1,4 +1,4 @@
-import { ActionProxy } from "../main/app/model/ActionProxy";
+import { ActionProxy } from "../../ActionProxy";
 import { createTestPrismaClient } from "./test-db-factory";
 import { PrismaClient } from "db";
 

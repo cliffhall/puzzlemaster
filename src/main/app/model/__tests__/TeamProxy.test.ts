@@ -1,4 +1,4 @@
-import { createTestTeamProxy } from "../../../../test/team-proxy-test-helper";
+import { createTestTeamProxy } from "./helpers/team-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { TeamDTO } from "../../../../domain";
 import { TeamProxy } from "../TeamProxy";

@@ -1,5 +1,5 @@
 import { createTestPrismaClient } from "./test-db-factory";
-import { TaskProxy } from "../main/app/model/TaskProxy";
+import { TaskProxy } from "../../TaskProxy";
 import { PrismaClient } from "db";
 
 /**

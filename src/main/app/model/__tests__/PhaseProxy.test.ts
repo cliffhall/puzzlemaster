@@ -1,4 +1,4 @@
-import { createTestPhaseProxy } from "../../../../test/phase-proxy-test-helper";
+import { createTestPhaseProxy } from "./helpers/phase-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { PhaseDTO } from "../../../../domain";
 import { PhaseProxy } from "../PhaseProxy";

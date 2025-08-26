@@ -1,4 +1,4 @@
-import { createTestValidatorProxy } from "../../../../test/validator-proxy-test-helper";
+import { createTestValidatorProxy } from "./helpers/validator-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { ValidatorDTO } from "../../../../domain";
 import { ValidatorProxy } from "../ValidatorProxy";

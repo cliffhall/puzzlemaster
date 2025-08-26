@@ -1,4 +1,4 @@
-import { createTestProjectProxy } from "../../../../test/project-proxy-test-helper";
+import { createTestProjectProxy } from "./helpers/project-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { ProjectDTO } from "../../../../domain";
 import { ProjectProxy } from "../ProjectProxy";

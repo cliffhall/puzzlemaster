@@ -1,5 +1,5 @@
 import { createTestPrismaClient } from "./test-db-factory";
-import { AgentProxy } from "../main/app/model/AgentProxy";
+import { AgentProxy } from "../../AgentProxy";
 import { PrismaClient } from "db";
 
 /**

@@ -26,10 +26,27 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: "jsdom",
+
+    // Route environments by directory to avoid loading Node code in jsdom
+    environmentMatchGlobs: [
+      ["src/renderer/**", "jsdom"],
+      ["src/main/**", "node"],
+      ["src/test/**", "node"],
+      ["src/domain/**", "node"],
+    ],
+
+    // Important for native modules like better-sqlite3/Prisma in Node tests
+    pool: "forks",
+
     setupFiles: "./vitest.setup.mjs",
     deps: {
       inline: [/@puremvc\/puremvc-typescript-multicore-framework/],
     },
+
+    // Ensure Vitest picks up all test files in __tests__ folders
+    include: [
+      "src/**/__tests__/**/*.test.ts",
+      "src/**/__tests__/**/*.test.tsx",
+    ],
   },
 });

@@ -1,4 +1,4 @@
-import { createTestTaskProxy } from "../../../../test/task-proxy-test-helper";
+import { createTestTaskProxy } from "./helpers/task-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { TaskDTO } from "../../../../domain";
 import { TaskProxy } from "../TaskProxy";

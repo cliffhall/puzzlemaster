@@ -1,4 +1,4 @@
-import { createTestRoleProxy } from "../../../../test/role-proxy-test-helper";
+import { createTestRoleProxy } from "./helpers/role-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { RoleDTO } from "../../../../domain";
 import { RoleProxy } from "../RoleProxy";

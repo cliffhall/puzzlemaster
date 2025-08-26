@@ -1,5 +1,5 @@
 import { createTestPrismaClient } from "./test-db-factory";
-import { RoleProxy } from "../main/app/model/RoleProxy";
+import { RoleProxy } from "../../RoleProxy";
 import { PrismaClient } from "db";
 
 /**

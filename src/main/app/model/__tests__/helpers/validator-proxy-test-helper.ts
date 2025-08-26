@@ -1,5 +1,5 @@
 import { createTestPrismaClient } from "./test-db-factory";
-import { ValidatorProxy } from "../main/app/model/ValidatorProxy";
+import { ValidatorProxy } from "../../ValidatorProxy";
 import { PrismaClient } from "db";
 
 /**

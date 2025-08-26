@@ -1,5 +1,5 @@
 import { createTestPrismaClient } from "./test-db-factory";
-import { JobProxy } from "../main/app/model/JobProxy";
+import { JobProxy } from "../../JobProxy";
 import { PrismaClient } from "db";
 
 /**

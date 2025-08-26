@@ -1,4 +1,4 @@
-import { createTestActionProxy } from "../../../../test/action-proxy-test-helper";
+import { createTestActionProxy } from "./helpers/action-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { ActionDTO } from "../../../../domain";
 import { ActionProxy } from "../ActionProxy";
