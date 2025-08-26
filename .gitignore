@@ -10,3 +10,4 @@ coverage
 .eslintcache
 .stylelintcache
 prisma/generated/
+prisma/database/
