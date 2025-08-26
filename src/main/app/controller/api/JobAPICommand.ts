@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { JobDTO, JobAPIMethods } from "../../../../types/domain";
+import { JobDTO, JobAPIMethods } from "../../../../domain";
 import { JobProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { flattenResult } from "../../constants/AppConstants";

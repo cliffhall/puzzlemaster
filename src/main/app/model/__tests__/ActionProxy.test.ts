@@ -1,6 +1,6 @@
-import { createTestActionProxy } from "../../../../test/action-proxy-test-helper";
+import { createTestActionProxy } from "./helpers/action-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ActionDTO } from "../../../../types/domain";
+import { ActionDTO } from "../../../../domain";
 import { ActionProxy } from "../ActionProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

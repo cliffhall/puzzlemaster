@@ -1,9 +1,10 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { WindowEvents, WindowStates } from "../../../../domain";
 import { app, shell, BrowserWindow } from "electron";
-import { EnvProxy } from "../../model/EnvProxy";
 import { IAppFacade } from "../../AppFacade";
+import { EnvProxy } from "../../model";
 import { join } from "path";
 
 export class PrepareViewCommand extends AsyncCommand {
@@ -17,7 +18,14 @@ export class PrepareViewCommand extends AsyncCommand {
       const mainWindow = new BrowserWindow({
         width: 900,
         height: 670,
+        minWidth: 769,
         show: false,
+        title: "Puzzlemaster",
+        titleBarStyle: "hidden",
+        titleBarOverlay: {
+          height: 45,
+        },
+        ...(process.platform !== "darwin" ? { titleBarOverlay: true } : {}),
         autoHideMenuBar: true,
         webPreferences: {
           preload: join(__dirname, "../preload/index.js"),
@@ -30,11 +38,25 @@ export class PrepareViewCommand extends AsyncCommand {
         mainWindow.show();
       });
 
+      // Listen for maximize events
+      mainWindow.on("resize", () => {
+        if (mainWindow.isFullScreen()) {
+          mainWindow.webContents.send(
+            WindowEvents.WINDOW_STATE,
+            WindowStates.MAXIMIZED,
+          );
+        } else {
+          mainWindow.webContents.send(
+            WindowEvents.WINDOW_STATE,
+            WindowStates.UNMAXIMIZED,
+          );
+        }
+      });
+
       mainWindow.webContents.setWindowOpenHandler((details) => {
         shell.openExternal(details.url);
         return { action: "deny" };
       });
-
       // HMR for renderer base on electron-vite cli.
       // Load the remote URL for development or the local html file for production.
       //const url = envProxy.varByKey('ELECTRON_RENDERER_URL');

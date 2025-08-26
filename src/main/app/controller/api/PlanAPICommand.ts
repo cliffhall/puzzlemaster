@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { PlanDTO, PlanAPIMethods } from "../../../../types/domain";
+import { PlanDTO, PlanAPIMethods } from "../../../../domain";
 import { PlanProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { flattenResult } from "../../constants/AppConstants";

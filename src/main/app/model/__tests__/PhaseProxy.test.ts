@@ -1,6 +1,6 @@
-import { createTestPhaseProxy } from "../../../../test/phase-proxy-test-helper";
+import { createTestPhaseProxy } from "./helpers/phase-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { PhaseDTO } from "../../../../types/domain";
+import { PhaseDTO } from "../../../../domain";
 import { PhaseProxy } from "../PhaseProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

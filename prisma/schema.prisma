@@ -10,22 +10,6 @@ datasource db {
   url      = "file:database/puzzlemaster.db"
 }
 
-// --- Demo Models (to be removed later) ---
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
-}
-
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
-}
 
 // --- Domain Models ---
 

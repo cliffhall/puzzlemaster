@@ -1,6 +1,6 @@
-import { createTestProjectProxy } from "../../../../test/project-proxy-test-helper";
+import { createTestProjectProxy } from "./helpers/project-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ProjectDTO } from "../../../../types/domain";
+import { ProjectDTO } from "../../../../domain";
 import { ProjectProxy } from "../ProjectProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

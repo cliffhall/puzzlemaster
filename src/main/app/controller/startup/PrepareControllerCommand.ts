@@ -10,6 +10,7 @@ import { JobAPICommand } from "../api/JobAPICommand";
 import { TaskAPICommand } from "../api/TaskAPICommand";
 import { TeamAPICommand } from "../api/TeamAPICommand";
 import { ValidatorAPICommand } from "../api/ValidatorAPICommand";
+import { WindowAPICommand } from "../api/WindowAPICommand";
 import { IAppFacade } from "../../AppFacade";
 
 export class PrepareControllerCommand extends AsyncMacroCommand {
@@ -28,6 +29,7 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
     this.addSubCommand(() => new TaskAPICommand());
     this.addSubCommand(() => new TeamAPICommand());
     this.addSubCommand(() => new ValidatorAPICommand());
+    this.addSubCommand(() => new WindowAPICommand());
   }
 
   /**

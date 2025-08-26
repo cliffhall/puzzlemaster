@@ -6,6 +6,7 @@ import {
   rem,
   Select,
   MantineThemeOverride,
+  MantineColorsTuple,
 } from "@mantine/core";
 
 const CONTAINER_SIZES: Record<string, string> = {
@@ -18,8 +19,26 @@ const CONTAINER_SIZES: Record<string, string> = {
   xxl: rem("1600px"),
 };
 
+const skyBlue: MantineColorsTuple = [
+  "#e5f3ff",
+  "#cde2ff",
+  "#9ac2ff",
+  "#64a0ff",
+  "#3884fe",
+  "#1d72fe",
+  "#0063ff",
+  "#0058e4",
+  "#004ecd",
+  "#0043b5",
+];
+
 export const mantineTheme: MantineThemeOverride = createTheme({
   /** Put your mantine theme override here */
+
+  colors: {
+    blue: skyBlue,
+  },
+
   fontSizes: {
     xs: rem("12px"),
     sm: rem("14px"),

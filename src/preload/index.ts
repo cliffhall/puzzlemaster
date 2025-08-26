@@ -1,11 +1,11 @@
 import { contextBridge } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
-import { api } from "./api";
-import { DomainError } from "../types/domain";
+import { puzzleMasterAPI } from "./api";
+import { DomainError } from "../domain";
 
 try {
   contextBridge.exposeInMainWorld("electron", electronAPI);
-  contextBridge.exposeInMainWorld("api", api);
+  contextBridge.exposeInMainWorld("puzzlemaster", puzzleMasterAPI);
 } catch (error) {
   console.error(DomainError.narrowError(error));
 }
