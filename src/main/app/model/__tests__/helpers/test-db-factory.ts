@@ -45,8 +45,6 @@ export const createTestPrismaClient = async (): Promise<{
         await prisma.phase.deleteMany({});
         await prisma.plan.deleteMany({});
         await prisma.project.deleteMany({});
-        await prisma.post.deleteMany({});
-        await prisma.user.deleteMany({});
         await prisma.$disconnect();
 
         // Clean up temporary database file
@@ -121,27 +119,7 @@ const applySchemaToTestDatabase = async (testDbUrl: string): Promise<void> => {
     // Create all tables based on the current Prisma schema
     // This SQL is derived from the prisma/schema.prisma file
 
-    // Demo tables (User, Post) - from schema lines 14-28
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "User" (
-        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        "email" TEXT NOT NULL UNIQUE,
-        "name" TEXT
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Post" (
-        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        "title" TEXT NOT NULL,
-        "content" TEXT,
-        "published" BOOLEAN NOT NULL DEFAULT false,
-        "authorId" INTEGER NOT NULL,
-        CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
-
-    // Domain tables - from schema lines 32-189
+    // Domain tables - from schema lines 14-174
     await tempPrisma.$executeRawUnsafe(`
       CREATE TABLE "Project" (
         "id" TEXT NOT NULL PRIMARY KEY,
@@ -277,8 +255,6 @@ const applySchemaToTestDatabase = async (testDbUrl: string): Promise<void> => {
  */
 const verifySchema = async (prisma: PrismaClient): Promise<void> => {
   const expectedTables = [
-    "User",
-    "Post", // Demo tables
     "Project",
     "Plan",
     "Phase",
@@ -288,7 +264,7 @@ const verifySchema = async (prisma: PrismaClient): Promise<void> => {
     "Team",
     "Agent",
     "Role",
-    "Validator", // Domain tables
+    "Validator",
   ];
 
   try {
