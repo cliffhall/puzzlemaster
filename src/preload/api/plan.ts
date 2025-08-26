@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { PlanAPI } from "../../types/api/PlanAPI";
-import { PlanAPIMethods, PlanDTO, CreatePlanDTO } from "../../types/domain";
+import { PlanAPI } from "../../domain/api/PlanAPI";
+import { PlanAPIMethods, PlanDTO, CreatePlanDTO } from "../../domain";
 
 export const plan: PlanAPI = {
   createPlan: (planDTO: CreatePlanDTO) =>

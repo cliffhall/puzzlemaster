@@ -5,7 +5,7 @@ import {
   DeleteResult,
   PlanDTO,
   CreatePlanDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createPlan(
   planData: CreatePlanDTO,

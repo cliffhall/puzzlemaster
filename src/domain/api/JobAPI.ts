@@ -4,7 +4,7 @@ import {
   JobResult,
   JobListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface JobAPI {
   createJob: (jobDTO: CreateJobDTO) => Promise<JobResult>;

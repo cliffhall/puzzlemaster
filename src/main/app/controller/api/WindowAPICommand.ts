@@ -3,7 +3,7 @@ import {
   SimpleCommand,
 } from "@puremvc/puremvc-typescript-multicore-framework";
 import { ipcMain, BrowserWindow } from "electron";
-import { WindowAPIMethods } from "../../../../types/domain";
+import { WindowAPIMethods } from "../../../../domain";
 import { IAppFacade } from "../../AppFacade";
 
 export class WindowAPICommand extends SimpleCommand {

@@ -4,7 +4,7 @@ import {
   ActionResult,
   ActionListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface ActionAPI {
   createAction: (actionDTO: CreateActionDTO) => Promise<ActionResult>;

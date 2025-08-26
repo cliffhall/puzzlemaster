@@ -4,7 +4,7 @@ import {
   ValidatorResult,
   ValidatorListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface ValidatorAPI {
   createValidator: (

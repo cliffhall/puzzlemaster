@@ -1,6 +1,6 @@
 import { createTestValidatorProxy } from "../../../../test/validator-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ValidatorDTO } from "../../../../types/domain";
+import { ValidatorDTO } from "../../../../domain";
 import { ValidatorProxy } from "../ValidatorProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

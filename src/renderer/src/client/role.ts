@@ -5,7 +5,7 @@ import {
   DeleteResult,
   CreateRoleDTO,
   RoleDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createRole(
   roleData: CreateRoleDTO,

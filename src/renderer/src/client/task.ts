@@ -5,7 +5,7 @@ import {
   DeleteResult,
   TaskDTO,
   CreateTaskDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createTask(
   taskData: CreateTaskDTO,

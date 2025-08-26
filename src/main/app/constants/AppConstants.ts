@@ -1,5 +1,5 @@
 import { Result } from "neverthrow";
-import { DomainError } from "../../../types/domain";
+import { DomainError } from "../../../domain";
 
 // Multiton key
 export const MULTITON_KEY = "Puzzlemaster App";

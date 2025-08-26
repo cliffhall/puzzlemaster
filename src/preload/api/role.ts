@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { RoleAPI } from "../../types/api/RoleAPI";
-import { CreateRoleDTO, RoleAPIMethods, RoleDTO } from "../../types/domain";
+import { RoleAPI } from "../../domain/api/RoleAPI";
+import { CreateRoleDTO, RoleAPIMethods, RoleDTO } from "../../domain";
 
 export const role: RoleAPI = {
   createRole: (roleDTO: CreateRoleDTO) =>

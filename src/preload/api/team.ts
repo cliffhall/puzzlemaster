@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { TeamAPI } from "../../types/api/TeamAPI";
-import { TeamAPIMethods, TeamDTO, CreateTeamDTO } from "../../types/domain";
+import { TeamAPI } from "../../domain/api/TeamAPI";
+import { TeamAPIMethods, TeamDTO, CreateTeamDTO } from "../../domain";
 
 export const team: TeamAPI = {
   createTeam: (teamDTO: CreateTeamDTO) =>

@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { ActionAPI } from "../../types/api/ActionAPI";
-import { ActionAPIMethods, ActionDTO, CreateActionDTO } from "../../types/domain";
+import { ActionAPI } from "../../domain/api/ActionAPI";
+import { ActionAPIMethods, ActionDTO, CreateActionDTO } from "../../domain";
 
 export const action: ActionAPI = {
   createAction: (actionDTO: CreateActionDTO) =>

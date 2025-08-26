@@ -4,7 +4,7 @@ import {
   PlanResult,
   PlanListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface PlanAPI {
   createPlan: (planDTO: CreatePlanDTO) => Promise<PlanResult>;

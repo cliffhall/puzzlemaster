@@ -5,7 +5,7 @@ import {
   DeleteResult,
   JobDTO,
   CreateJobDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createJob(
   jobData: CreateJobDTO,

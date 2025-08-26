@@ -1,10 +1,10 @@
 import { ipcRenderer } from "electron";
-import { ValidatorAPI } from "../../types/api/ValidatorAPI";
+import { ValidatorAPI } from "../../domain/api/ValidatorAPI";
 import {
   ValidatorAPIMethods,
   ValidatorDTO,
   CreateValidatorDTO,
-} from "../../types/domain";
+} from "../../domain";
 
 export const validator: ValidatorAPI = {
   createValidator: (validatorDTO: CreateValidatorDTO) =>

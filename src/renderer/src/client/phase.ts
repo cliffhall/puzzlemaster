@@ -5,7 +5,7 @@ import {
   DeleteResult,
   PhaseDTO,
   CreatePhaseDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createPhase(
   phaseData: CreatePhaseDTO,

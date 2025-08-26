@@ -4,7 +4,7 @@ import {
   TaskResult,
   TaskListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface TaskAPI {
   createTask: (taskDTO: CreateTaskDTO) => Promise<TaskResult>;

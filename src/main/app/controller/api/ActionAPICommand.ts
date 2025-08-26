@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { ActionDTO, ActionAPIMethods } from "../../../../types/domain";
+import { ActionDTO, ActionAPIMethods } from "../../../../domain";
 import { IAppFacade } from "../../AppFacade";
 import { ActionProxy } from "../../model";
 import { flattenResult } from "../../constants/AppConstants";

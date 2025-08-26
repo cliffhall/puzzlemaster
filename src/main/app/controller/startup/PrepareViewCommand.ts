@@ -1,7 +1,7 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { WindowEvents, WindowStates } from "../../../../types/domain";
+import { WindowEvents, WindowStates } from "../../../../domain";
 import { app, shell, BrowserWindow } from "electron";
 import { IAppFacade } from "../../AppFacade";
 import { EnvProxy } from "../../model";

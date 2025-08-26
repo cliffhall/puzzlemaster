@@ -1,6 +1,6 @@
 import { createTestPlanProxy } from "../../../../test/plan-proxy-test-helper";
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { PlanDTO } from "../../../../types/domain";
+import { PlanDTO } from "../../../../domain";
 import { PlanProxy } from "../PlanProxy";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";

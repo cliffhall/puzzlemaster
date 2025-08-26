@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { JobAPI } from "../../types/api/JobAPI";
-import { JobAPIMethods, JobDTO, CreateJobDTO } from "../../types/domain";
+import { JobAPI } from "../../domain/api/JobAPI";
+import { JobAPIMethods, JobDTO, CreateJobDTO } from "../../domain";
 
 export const job: JobAPI = {
   createJob: (jobDTO: CreateJobDTO) =>

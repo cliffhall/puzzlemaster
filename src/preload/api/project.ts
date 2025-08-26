@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { ProjectAPI } from "../../types/api/ProjectAPI";
-import { ProjectAPIMethods, ProjectDTO, CreateProjectDTO } from "../../types/domain";
+import { ProjectAPI } from "../../domain/api/ProjectAPI";
+import { ProjectAPIMethods, ProjectDTO, CreateProjectDTO } from "../../domain";
 
 export const project: ProjectAPI = {
   createProject: (projectDTO: CreateProjectDTO) =>

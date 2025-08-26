@@ -5,7 +5,7 @@ import {
   DeleteResult,
   ActionDTO,
   CreateActionDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createAction(
   actionData: CreateActionDTO,

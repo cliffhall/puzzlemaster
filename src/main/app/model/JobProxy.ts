@@ -1,5 +1,5 @@
 import { Proxy } from "@puremvc/puremvc-typescript-multicore-framework";
-import { Job, JobDTO, DomainError } from "../../../types/domain";
+import { Job, JobDTO, DomainError } from "../../../domain";
 import { Result, ok, err } from "neverthrow";
 import { PrismaClient, JobStatus } from "db";
 

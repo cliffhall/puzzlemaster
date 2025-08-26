@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
-import { AgentAPI } from "../../types/api/AgentAPI";
-import { AgentAPIMethods, AgentDTO, CreateAgentDTO } from "../../types/domain";
+import { AgentAPI } from "../../domain/api/AgentAPI";
+import { AgentAPIMethods, AgentDTO, CreateAgentDTO } from "../../domain";
 
 export const agent: AgentAPI = {
   createAgent: (agentDTO: CreateAgentDTO) =>

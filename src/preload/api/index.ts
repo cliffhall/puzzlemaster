@@ -1,4 +1,4 @@
-import { PuzzleMasterAPI } from "../../types/api";
+import { PuzzleMasterAPI } from "../../domain/api";
 import { action } from "./action";
 import { agent } from "./agent";
 import { job } from "./job";

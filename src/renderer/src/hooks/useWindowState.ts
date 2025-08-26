@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { WindowStates } from "../../../types/domain";
+import { WindowStates } from "../../../domain";
 
 export const useWindowState = (): boolean => {
   const [isMaximized, setIsMaximized] = useState(false);

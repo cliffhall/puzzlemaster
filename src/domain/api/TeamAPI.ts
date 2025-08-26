@@ -4,7 +4,7 @@ import {
   TeamResult,
   TeamListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface TeamAPI {
   createTeam: (teamDTO: CreateTeamDTO) => Promise<TeamResult>;

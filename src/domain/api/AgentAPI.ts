@@ -4,7 +4,7 @@ import {
   AgentResult,
   AgentListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface AgentAPI {
   createAgent: (agentDTO: CreateAgentDTO) => Promise<AgentResult>;

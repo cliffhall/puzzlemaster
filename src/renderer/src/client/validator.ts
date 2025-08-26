@@ -5,7 +5,7 @@ import {
   DeleteResult,
   ValidatorDTO,
   CreateValidatorDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createValidator(
   validatorData: CreateValidatorDTO,

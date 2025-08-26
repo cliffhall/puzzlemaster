@@ -4,7 +4,7 @@ import {
   PhaseResult,
   PhaseListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface PhaseAPI {
   createPhase: (phaseDTO: CreatePhaseDTO) => Promise<PhaseResult>;

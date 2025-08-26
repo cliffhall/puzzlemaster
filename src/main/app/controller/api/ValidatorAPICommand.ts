@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { ValidatorDTO, ValidatorAPIMethods } from "../../../../types/domain";
+import { ValidatorDTO, ValidatorAPIMethods } from "../../../../domain";
 import { ValidatorProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { flattenResult } from "../../constants/AppConstants";

@@ -1,10 +1,6 @@
 import { ipcRenderer } from "electron";
-import { WindowAPI } from "../../types/api/WindowAPI";
-import {
-  WindowAPIMethods,
-  WindowEvents,
-  WindowStates,
-} from "../../types/domain";
+import { WindowAPI } from "../../domain/api/WindowAPI";
+import { WindowAPIMethods, WindowEvents, WindowStates } from "../../domain";
 import IpcRendererEvent = Electron.IpcRendererEvent;
 
 export const window: WindowAPI = {

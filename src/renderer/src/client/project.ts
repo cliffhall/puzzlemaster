@@ -5,7 +5,7 @@ import {
   DeleteResult,
   ProjectDTO,
   CreateProjectDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createProject(
   projectData: CreateProjectDTO,

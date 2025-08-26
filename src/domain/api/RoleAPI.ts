@@ -4,7 +4,7 @@ import {
   RoleResult,
   RoleListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface RoleAPI {
   createRole: (roleDTO: CreateRoleDTO) => Promise<RoleResult>;

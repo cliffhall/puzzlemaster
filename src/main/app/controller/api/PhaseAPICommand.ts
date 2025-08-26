@@ -1,6 +1,6 @@
 import { INotification } from "@puremvc/puremvc-typescript-multicore-framework";
 import { AsyncCommand } from "@puremvc/puremvc-typescript-util-async-command";
-import { PhaseDTO, PhaseAPIMethods } from "../../../../types/domain";
+import { PhaseDTO, PhaseAPIMethods } from "../../../../domain";
 import { PhaseProxy } from "../../model";
 import { IAppFacade } from "../../AppFacade";
 import { flattenResult } from "../../constants/AppConstants";

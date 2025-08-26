@@ -1,4 +1,4 @@
-import { WindowStates } from "../domain";
+import { WindowStates } from "../index";
 
 export interface WindowAPI {
   isMaximized: () => Promise<boolean>;

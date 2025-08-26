@@ -5,7 +5,7 @@ import {
   DeleteResult,
   TeamDTO,
   CreateTeamDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createTeam(
   teamData: CreateTeamDTO,

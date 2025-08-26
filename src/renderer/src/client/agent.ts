@@ -5,7 +5,7 @@ import {
   DeleteResult,
   AgentDTO,
   CreateAgentDTO,
-} from "../../../types/domain";
+} from "../../../domain";
 
 export async function createAgent(
   agentData: CreateAgentDTO,

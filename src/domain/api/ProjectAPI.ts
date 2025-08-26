@@ -4,7 +4,7 @@ import {
   ProjectResult,
   ProjectListResult,
   DeleteResult,
-} from "../domain";
+} from "../index";
 
 export interface ProjectAPI {
   createProject: (projectDTO: CreateProjectDTO) => Promise<ProjectResult>;

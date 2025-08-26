@@ -1,5 +1,5 @@
 import { Proxy } from "@puremvc/puremvc-typescript-multicore-framework";
-import { Validator, ValidatorDTO, DomainError } from "../../../types/domain";
+import { Validator, ValidatorDTO, DomainError } from "../../../domain";
 import { Result, ok, err } from "neverthrow";
 import { PrismaClient } from "db";
 
