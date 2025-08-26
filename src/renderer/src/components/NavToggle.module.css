@@ -2,10 +2,10 @@
   width: 22px;
   height: 22px;
 }
+
 .nav-toggle {
   app-region: no-drag;
 }
-
 
 .show {
   display: block;
