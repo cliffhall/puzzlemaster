@@ -32,7 +32,7 @@ export function Shell(): ReactElement {
       <AppShell.Header>
         <Group w="100%" gap="0" h="100%" wrap="nowrap">
           <Group
-            pl={fullscreen ? "15px" : "75px"}
+            pl={fullscreen ? "15px" : "80px"}
             h="100%"
             w="170px"
             gap="10px"
