@@ -1,7 +1,6 @@
 import { ReactElement, useCallback, useState } from "react";
 import {
   Group,
-  TextInput,
   Textarea,
   Button,
   Stack,
@@ -9,27 +8,26 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { createProject } from "../../client/project";
-import { Project } from "../../../../domain";
+import { createPlan } from "../../client/plan";
+import { Plan } from "../../../../domain";
 
-export type ProjectCreateFormProps = {
-  initialName?: string;
-  onCreated?: (project: Project) => void;
+export type CreatePlanFormProps = {
+  projectId: string;
+  onCreated?: (plan: Plan) => void;
   onCancel?: () => void;
 };
 
 /**
- * ProjectCreateForm
+ * CreatePlanForm
  *
- * A full-screen form in AppShell.Main that collects all fields required by
- * CreateProjectDTO (name, description?) and calls the Project API.
+ * Minimal form to create a Plan associated with a Project. Currently collects
+ * optional description and creates the plan with an empty phases array.
  */
-export function ProjectCreateForm({
-  initialName = "",
+export function CreatePlanForm({
+  projectId,
   onCreated,
   onCancel,
-}: ProjectCreateFormProps): ReactElement {
-  const [name, setName] = useState(initialName);
+}: CreatePlanFormProps): ReactElement {
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,19 +35,19 @@ export function ProjectCreateForm({
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       if (e) e.preventDefault();
-      const trimmed = name.trim();
-      if (!trimmed || submitting) return;
+      if (submitting) return;
       setError(null);
       try {
         setSubmitting(true);
-        const created = await createProject({
-          name: trimmed,
+        const created = await createPlan({
+          projectId,
           description: description || undefined,
+          phases: [],
         });
         if (created) {
           onCreated?.(created);
         } else {
-          setError("Failed to create project.");
+          setError("Failed to create plan.");
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
@@ -57,27 +55,20 @@ export function ProjectCreateForm({
         setSubmitting(false);
       }
     },
-    [name, description, submitting, onCreated],
+    [projectId, description, submitting, onCreated],
   );
 
   return (
     <Paper p="md" withBorder>
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <Title order={3}>Create Project</Title>
-          <TextInput
-            label="Name"
-            required
-            value={name}
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="My new project"
-          />
+          <Title order={4}>Create Plan</Title>
           <Textarea
             label="Description"
-            description="Optional description of the project"
+            description="Optional description of the plan"
             value={description}
             onChange={(e) => setDescription(e.currentTarget.value)}
-            placeholder="Describe your project (optional)"
+            placeholder="Describe your plan (optional)"
             autosize
             minRows={3}
           />
@@ -91,8 +82,8 @@ export function ProjectCreateForm({
             >
               Cancel
             </Button>
-            <Button type="submit" loading={submitting} disabled={!name.trim()}>
-              Create Project
+            <Button type="submit" loading={submitting}>
+              Create Plan
             </Button>
           </Group>
         </Stack>
