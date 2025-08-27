@@ -56,7 +56,7 @@ export function PlanEditForm({
         if (cancelled) return;
         if (found) {
           setPlan(found);
-          setDescription(found.description ?? "");
+          setDescription(found.description);
         } else {
           setPlan(null);
         }
