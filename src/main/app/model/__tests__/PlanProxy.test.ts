@@ -77,7 +77,6 @@ describe("PlanProxy", () => {
       expect(dbPlan).not.toBeNull();
       expect(dbPlan?.description).toBe(planDTO.description);
     });
-
   });
 
   describe("getPlan", () => {

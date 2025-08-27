@@ -75,21 +75,24 @@ export function ProjectEditForm({
   }, [projectId]);
 
   // Check if this project already has a plan
+  // Check if this project already has a plan
   useEffect(() => {
-    let cancelled = false;
+    const abortController = new AbortController();
     (async () => {
       try {
         const plans = await getPlans();
-        if (cancelled) return;
+        if (abortController.signal.aborted) return;
         const has = (plans ?? []).some((p) => p.projectId === projectId);
         setHasPlan(has);
         if (has) setShowCreatePlanForm(false);
-      } catch {
-        // silently ignore plan load errors here; plan presence is optional in edit form
+      } catch (err) {
+        if (abortController.signal.aborted) return;
+        // Log plan load errors, but don't block UI
+        console.error("Failed to check for existing plan:", err);
       }
     })();
     return () => {
-      cancelled = true;
+      abortController.abort();
     };
   }, [projectId]);
 

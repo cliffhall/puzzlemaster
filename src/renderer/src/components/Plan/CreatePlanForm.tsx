@@ -87,7 +87,11 @@ export function CreatePlanForm({
             >
               Cancel
             </Button>
-            <Button type="submit" loading={submitting} disabled={!description.trim()}>
+            <Button
+              type="submit"
+              loading={submitting}
+              disabled={!description.trim()}
+            >
               Create Plan
             </Button>
           </Group>
