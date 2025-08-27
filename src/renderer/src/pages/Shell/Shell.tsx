@@ -13,7 +13,7 @@ import { NavToggle } from "../../components/NavToggle";
 import classes from "./Shell.module.css";
 import cx from "clsx";
 import { useWindowState } from "../../hooks/useWindowState";
-import { AddProjectForm, ProjectCreateForm } from "../Project/Project";
+import { AddProjectForm, ProjectCreateForm, ProjectEditForm } from "../Project/Project";
 import { getProjects } from "../../client/project";
 import type { Project } from "../../../../domain";
 
@@ -21,6 +21,7 @@ export function Shell(): ReactElement {
   const [opened, { toggle }] = useDisclosure(true);
   const fullscreen = useWindowState();
   const [draftProjectName, setDraftProjectName] = useState<string | null>(null);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [projects, setProjects] = useState<Project[] | null>(null);
 
   const loadProjects = async () => {
@@ -77,7 +78,12 @@ export function Shell(): ReactElement {
             <NavLink
               href="#"
               key={project.id}
-              onClick={(event) => event.preventDefault()}
+              active={selectedProjectId === project.id}
+              onClick={(event) => {
+                event.preventDefault();
+                setDraftProjectName(null);
+                setSelectedProjectId(project.id);
+              }}
               label={project.name}
             />
           ))}
@@ -85,22 +91,35 @@ export function Shell(): ReactElement {
         <AppShell.Section p="none">
           <AddProjectForm
             onAdd={async (name) => {
+              setSelectedProjectId(null);
               setDraftProjectName(name);
             }}
           />
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>
-        {draftProjectName && (
+        {draftProjectName ? (
           <ProjectCreateForm
             initialName={draftProjectName}
             onCreated={async () => {
-              // After creation, clear the draft and refresh project list
               setDraftProjectName(null);
               await loadProjects();
             }}
+            onCancel={() => {
+              setDraftProjectName(null);
+            }}
           />
-        )}
+        ) : selectedProjectId ? (
+          <ProjectEditForm
+            projectId={selectedProjectId}
+            onUpdated={async () => {
+              await loadProjects();
+            }}
+            onCancel={() => {
+              setSelectedProjectId(null);
+            }}
+          />
+        ) : null}
       </AppShell.Main>
     </AppShell>
   );
