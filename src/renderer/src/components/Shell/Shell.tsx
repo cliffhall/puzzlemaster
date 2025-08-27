@@ -53,6 +53,13 @@ export function Shell(): ReactElement {
               setDraftProjectName(null);
               setSelectedProjectId(id);
             }}
+            onDeleted={async (id) => {
+              // If the deleted project is currently selected, clear selection
+              if (selectedProjectId === id) {
+                setSelectedProjectId(null);
+              }
+              await loadProjects();
+            }}
           />
         </AppShell.Section>
         <AppShell.Section p="none">
