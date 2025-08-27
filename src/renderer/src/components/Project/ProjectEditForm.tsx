@@ -13,6 +13,7 @@ import {
 import { getProject, updateProject } from "../../client/project";
 import { getPlans } from "../../client/plan";
 import { CreatePlanForm } from "../Plan/CreatePlanForm";
+import { PlanEditForm } from "../Plan/PlanEditForm";
 
 export type ProjectEditFormProps = {
   projectId: string;
@@ -40,6 +41,7 @@ export function ProjectEditForm({
   const [error, setError] = useState<string | null>(null);
   const [hasPlan, setHasPlan] = useState<boolean>(false);
   const [showCreatePlanForm, setShowCreatePlanForm] = useState<boolean>(false);
+  const [editPlanMode, setEditPlanMode] = useState<boolean>(false);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -132,8 +134,10 @@ export function ProjectEditForm({
         ) : (
           <form onSubmit={handleSubmit}>
             <Stack gap="md">
-              <Title order={3}>{!showCreatePlanForm && "Edit "}Project</Title>
-              {showCreatePlanForm ? (
+              <Title order={3}>
+                {!showCreatePlanForm && !editPlanMode && "Edit "}Project
+              </Title>
+              {showCreatePlanForm || editPlanMode ? (
                 <Stack gap="xs">
                   <Text>
                     <b>{name || "(Untitled)"}</b>
@@ -162,7 +166,7 @@ export function ProjectEditForm({
               )}
               {error && <Text c="red">{error}</Text>}
               <Group justify="flex-end">
-                {!showCreatePlanForm && (
+                {!showCreatePlanForm && !editPlanMode && (
                   <>
                     <Button
                       variant="default"
@@ -179,23 +183,49 @@ export function ProjectEditForm({
                     >
                       Save Changes
                     </Button>
-                    {!hasPlan && (
-                      <Button
-                        variant="light"
-                        type="button"
-                        onClick={() => setShowCreatePlanForm(true)}
-                        disabled={showCreatePlanForm}
-                      >
-                        Create Plan
-                      </Button>
-                    )}
                   </>
+                )}
+                {!hasPlan && (
+                  <Button
+                    variant="light"
+                    type="button"
+                    onClick={() => {
+                      setEditPlanMode(false);
+                      setShowCreatePlanForm(true);
+                    }}
+                    disabled={showCreatePlanForm}
+                  >
+                    Create Plan
+                  </Button>
+                )}
+                {hasPlan && !editPlanMode && (
+                  <Button
+                    variant="light"
+                    type="button"
+                    onClick={() => {
+                      setShowCreatePlanForm(false);
+                      setEditPlanMode(true);
+                    }}
+                    disabled={editPlanMode}
+                  >
+                    Edit Plan
+                  </Button>
                 )}
               </Group>
             </Stack>
           </form>
         )}
       </Paper>
+      {hasPlan && (
+        <PlanEditForm
+          projectId={projectId}
+          mode={editPlanMode ? "edit" : "display"}
+          onSaved={() => {
+            setEditPlanMode(false);
+          }}
+          onCancelEdit={() => setEditPlanMode(false)}
+        />
+      )}
       {showCreatePlanForm && !hasPlan && (
         <CreatePlanForm
           projectId={projectId}
