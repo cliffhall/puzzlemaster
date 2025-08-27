@@ -60,7 +60,7 @@ export function CreatePlanForm({
         setSubmitting(false);
       }
     },
-    [projectId, description, submitting, onCreated],
+    [projectId, description, onCreated],
   );
 
   return (
