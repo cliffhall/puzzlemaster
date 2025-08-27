@@ -85,7 +85,7 @@ export function Shell(): ReactElement {
             </Text>
           </Group>
         </AppShell.Section>
-        <AppShell.Section grow my="md" component={ScrollArea} px="md">
+        <AppShell.Section grow my="sm" component={ScrollArea} px="none">
           <ProjectList
             projects={projects}
             selectedProjectId={selectedProjectId}

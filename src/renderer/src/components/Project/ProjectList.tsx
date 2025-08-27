@@ -107,6 +107,7 @@ export function ProjectList({
           leftSection={
             <ActionIcon
               size="sm"
+              p="none"
               variant="subtle"
               aria-label={`Drag ${project.name}`}
               style={{ cursor: "grab" }}
