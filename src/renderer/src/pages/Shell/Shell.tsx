@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import {
   AppShell,
@@ -7,21 +7,30 @@ import {
   NavLink,
   ScrollArea,
   Text,
-  Input,
-  CloseButton,
-  ActionIcon,
 } from "@mantine/core";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import { NavToggle } from "../../components/NavToggle";
 import classes from "./Shell.module.css";
 import cx from "clsx";
-import { IconPlus } from "@tabler/icons-react";
 import { useWindowState } from "../../hooks/useWindowState";
+import { AddProjectForm, ProjectCreateForm } from "../Project/Project";
+import { getProjects } from "../../client/project";
+import type { Project } from "../../../../domain";
 
 export function Shell(): ReactElement {
   const [opened, { toggle }] = useDisclosure(true);
-  const [projectName, setProjectName] = useState("");
   const fullscreen = useWindowState();
+  const [draftProjectName, setDraftProjectName] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[] | null>(null);
+
+  const loadProjects = async () => {
+    const list = await getProjects();
+    setProjects(list ?? []);
+  };
+
+  useEffect(() => {
+    void loadProjects();
+  }, []);
 
   return (
     <AppShell
@@ -58,39 +67,41 @@ export function Shell(): ReactElement {
           </Group>
         </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea} px="md">
-          {Array(60)
-            .fill(0)
-            .map((_, index) => (
-              <NavLink
-                href="#"
-                key={index}
-                onClick={(event) => event.preventDefault()}
-                label={`Project #${index}`}
-              />
-            ))}
+          {projects === null && (
+            <Text c="dimmed">Loading projects…</Text>
+          )}
+          {projects !== null && projects.length === 0 && (
+            <Text c="dimmed">No projects yet</Text>
+          )}
+          {projects?.map((project) => (
+            <NavLink
+              href="#"
+              key={project.id}
+              onClick={(event) => event.preventDefault()}
+              label={project.name}
+            />
+          ))}
         </AppShell.Section>
         <AppShell.Section p="none">
-          <Group wrap="nowrap" w="100%">
-            <Input
-              value={projectName}
-              onChange={(event) => setProjectName(event.currentTarget.value)}
-              placeholder="Project name"
-              rightSectionPointerEvents="all"
-              rightSection={
-                <CloseButton
-                  aria-label="Clear input"
-                  onClick={() => setProjectName("")}
-                  style={{ display: projectName ? undefined : "none" }}
-                />
-              }
-            />
-            <ActionIcon variant="filled" aria-label="Settings">
-              <IconPlus stroke={1.5} />
-            </ActionIcon>
-          </Group>
+          <AddProjectForm
+            onAdd={async (name) => {
+              setDraftProjectName(name);
+            }}
+          />
         </AppShell.Section>
       </AppShell.Navbar>
-      <AppShell.Main />
+      <AppShell.Main>
+        {draftProjectName && (
+          <ProjectCreateForm
+            initialName={draftProjectName}
+            onCreated={async () => {
+              // After creation, clear the draft and refresh project list
+              setDraftProjectName(null);
+              await loadProjects();
+            }}
+          />
+        )}
+      </AppShell.Main>
     </AppShell>
   );
 }
