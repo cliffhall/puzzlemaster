@@ -42,7 +42,8 @@ export function ProjectList({
       centered: true,
       children: (
         <Text size="sm">
-          Are you sure you want to delete the project &quot;{name}&quot;? This action cannot be undone.
+          Are you sure you want to delete the project <b>{name}</b>? This action
+          cannot be undone.
         </Text>
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
