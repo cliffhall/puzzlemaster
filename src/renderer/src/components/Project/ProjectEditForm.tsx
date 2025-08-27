@@ -91,7 +91,9 @@ export function ProjectEditForm({
     [projectId, name, description, submitting, onUpdated],
   );
 
-  const hasChanges = name.trim() !== initialName.trim() || description.trim() !== initialDescription.trim();
+  const hasChanges =
+    name.trim() !== initialName.trim() ||
+    description.trim() !== initialDescription.trim();
 
   return (
     <Paper p="md" withBorder>
