@@ -186,7 +186,7 @@ export function ProjectEditForm({
                         onClick={() => setShowCreatePlanForm(true)}
                         disabled={showCreatePlanForm}
                       >
-                        Add Plan
+                        Create Plan
                       </Button>
                     )}
                   </>
