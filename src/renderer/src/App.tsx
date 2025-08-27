@@ -4,8 +4,7 @@ import { ReactElement } from "react";
 import { mantineTheme } from "./theme";
 import "@mantine/core/styles.css";
 
-//import Landing from "./pages/Landing/Landing";
-import { Shell } from "./pages/Shell/Shell";
+import { Shell } from "./components/Shell/Shell";
 
 function App(): ReactElement {
   return (

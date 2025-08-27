@@ -66,5 +66,3 @@ export function AddProjectForm({
     </form>
   );
 }
-
-export default AddProjectForm;

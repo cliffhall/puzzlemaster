@@ -1,36 +1,26 @@
 import { ReactElement, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  AppShell,
-  Group,
-  Image,
-  NavLink,
-  ScrollArea,
-  Text,
-} from "@mantine/core";
-import { ThemeToggle } from "../../components/ThemeToggle";
-import { NavToggle } from "../../components/NavToggle";
-import classes from "./Shell.module.css";
-import cx from "clsx";
-import { useWindowState } from "../../hooks/useWindowState";
+import { AppShell, Group, Image, ScrollArea, Text } from "@mantine/core";
 import {
   AddProjectForm,
   ProjectCreateForm,
   ProjectEditForm,
+  ProjectList,
 } from "../Project";
+import { TitleBar } from "../TitleBar";
 import { getProjects } from "../../client/project";
 import type { Project } from "../../../../domain";
 
 export function Shell(): ReactElement {
   const [opened, { toggle }] = useDisclosure(true);
-  const fullscreen = useWindowState();
+
+  const [projects, setProjects] = useState<Project[] | null>(null);
   const [draftProjectName, setDraftProjectName] = useState<string | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(
     null,
   );
-  const [projects, setProjects] = useState<Project[] | null>(null);
 
-  const loadProjects = async () => {
+  const loadProjects = async (): Promise<void> => {
     const list = await getProjects();
     setProjects(list ?? []);
   };
@@ -41,29 +31,11 @@ export function Shell(): ReactElement {
 
   return (
     <AppShell
+      padding="md"
       header={{ height: 45 }}
       navbar={{ width: 260, breakpoint: "sm", collapsed: { desktop: !opened } }}
-      padding="md"
     >
-      <AppShell.Header>
-        <Group w="100%" gap="0" h="100%" wrap="nowrap">
-          <Group
-            pl={fullscreen ? "15px" : "80px"}
-            h="100%"
-            w="170px"
-            gap="10px"
-          >
-            <NavToggle toggle={toggle} opened={opened} />
-            <ThemeToggle />
-          </Group>
-          <Group
-            className={cx(classes["header-content"])}
-            justify="flex-end"
-            h="100%"
-            w="100%"
-          />
-        </Group>
-      </AppShell.Header>
+      <TitleBar opened={opened} toggle={toggle} />
       <AppShell.Navbar p="sm">
         <AppShell.Section h="100px">
           <Group w="100%">
@@ -74,23 +46,14 @@ export function Shell(): ReactElement {
           </Group>
         </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea} px="md">
-          {projects === null && <Text c="dimmed">Loading projects…</Text>}
-          {projects !== null && projects.length === 0 && (
-            <Text c="dimmed">No projects yet</Text>
-          )}
-          {projects?.map((project) => (
-            <NavLink
-              href="#"
-              key={project.id}
-              active={selectedProjectId === project.id}
-              onClick={(event) => {
-                event.preventDefault();
-                setDraftProjectName(null);
-                setSelectedProjectId(project.id);
-              }}
-              label={project.name}
-            />
-          ))}
+          <ProjectList
+            projects={projects}
+            selectedProjectId={selectedProjectId}
+            onSelect={(id) => {
+              setDraftProjectName(null);
+              setSelectedProjectId(id);
+            }}
+          />
         </AppShell.Section>
         <AppShell.Section p="none">
           <AddProjectForm
