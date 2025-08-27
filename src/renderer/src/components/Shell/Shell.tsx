@@ -60,6 +60,10 @@ export function Shell(): ReactElement {
               }
               await loadProjects();
             }}
+            onReorder={async (ordered) => {
+              // Update local state order; persistence can be added later if needed
+              setProjects(ordered);
+            }}
           />
         </AppShell.Section>
         <AppShell.Section p="none">

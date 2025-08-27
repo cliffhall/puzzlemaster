@@ -1,7 +1,7 @@
 import { ReactElement, useState } from "react";
 import { ActionIcon, NavLink, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconX } from "@tabler/icons-react";
+import { IconGripVertical, IconX } from "@tabler/icons-react";
 import type { Project } from "../../../../domain";
 import { deleteProject } from "../../client/project";
 
@@ -10,6 +10,7 @@ export type ProjectListProps = {
   selectedProjectId: string | null;
   onSelect: (id: string) => void;
   onDeleted?: (id: string) => void | Promise<void>;
+  onReorder?: (projects: Project[]) => void | Promise<void>;
 };
 
 /**
@@ -24,6 +25,7 @@ export function ProjectList({
   selectedProjectId,
   onSelect,
   onDeleted,
+  onReorder,
 }: ProjectListProps): ReactElement {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -60,6 +62,31 @@ export function ProjectList({
     });
   };
 
+  const handleDragStart = (e: React.DragEvent, draggedId: string): void => {
+    e.dataTransfer.setData("text/plain", draggedId);
+    // Indicate move effect
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent): void => {
+    // Allow drop
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string): void => {
+    e.preventDefault();
+    const draggedId = e.dataTransfer.getData("text/plain");
+    if (!draggedId || draggedId === targetId) return;
+    const fromIndex = projects.findIndex((p) => p.id === draggedId);
+    const toIndex = projects.findIndex((p) => p.id === targetId);
+    if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+    const updated = projects.slice();
+    const [moved] = updated.splice(fromIndex, 1);
+    updated.splice(toIndex, 0, moved);
+    void onReorder?.(updated);
+  };
+
   return (
     <>
       {projects.map((project) => (
@@ -71,7 +98,21 @@ export function ProjectList({
             event.preventDefault();
             onSelect(project.id);
           }}
+          draggable
+          onDragStart={(e) => handleDragStart(e, project.id)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, project.id)}
           label={project.name}
+          leftSection={
+            <ActionIcon
+              size="sm"
+              variant="subtle"
+              aria-label={`Drag ${project.name}`}
+              style={{ cursor: "grab" }}
+            >
+              <IconGripVertical size={14} />
+            </ActionIcon>
+          }
           rightSection={
             <ActionIcon
               size="sm"
