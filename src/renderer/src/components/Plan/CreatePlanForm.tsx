@@ -20,8 +20,8 @@ export type CreatePlanFormProps = {
 /**
  * CreatePlanForm
  *
- * Minimal form to create a Plan associated with a Project. Currently collects
- * optional description and creates the plan with an empty phases array.
+ * Minimal form to create a Plan associated with a Project.
+ * Collects required description and creates the plan with an empty phases array.
  */
 export function CreatePlanForm({
   projectId,
@@ -39,9 +39,14 @@ export function CreatePlanForm({
       setError(null);
       try {
         setSubmitting(true);
+        const trimmed = description.trim();
+        if (!trimmed) {
+          setError("Description is required.");
+          return;
+        }
         const created = await createPlan({
           projectId,
-          description: description || undefined,
+          description: trimmed,
           phases: [],
         });
         if (created) {
@@ -65,10 +70,10 @@ export function CreatePlanForm({
           <Title order={4}>Create Plan</Title>
           <Textarea
             label="Description"
-            description="Optional description of the plan"
+            required
             value={description}
             onChange={(e) => setDescription(e.currentTarget.value)}
-            placeholder="Describe your plan (optional)"
+            placeholder="Describe your plan"
             autosize
             minRows={3}
           />
@@ -82,7 +87,7 @@ export function CreatePlanForm({
             >
               Cancel
             </Button>
-            <Button type="submit" loading={submitting}>
+            <Button type="submit" loading={submitting} disabled={!description.trim()}>
               Create Plan
             </Button>
           </Group>

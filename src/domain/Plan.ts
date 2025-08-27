@@ -11,7 +11,7 @@ export const PlanSchema = z.object({
   id: z.string().uuid(),
   projectId: z.string().uuid(),
   phases: z.array(z.string().uuid()),
-  description: z.string().optional(),
+  description: z.string(),
 });
 
 export const CreatePlanSchema = PlanSchema.omit({ id: true });
@@ -39,7 +39,7 @@ export class Plan {
   private constructor(
     public readonly id: string,
     public readonly projectId: string,
-    public description: string | undefined,
+    public description: string,
     public phases: string[],
   ) {}
 

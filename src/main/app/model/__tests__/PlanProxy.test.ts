@@ -78,24 +78,6 @@ describe("PlanProxy", () => {
       expect(dbPlan?.description).toBe(planDTO.description);
     });
 
-    it("should create a plan without description", async () => {
-      // Set up test data without description
-      const { planDTO } = await createTestData(testSetup.prisma);
-      const planDTOWithoutDesc = { ...planDTO, description: undefined };
-
-      // Call the method under test
-      const result = await testSetup.planProxy.createPlan(planDTOWithoutDesc);
-
-      // Verify the result
-      expect(result.isOk()).toBe(true);
-
-      if (result.isOk()) {
-        const plan = result.value;
-        expect(plan.id).toBe(planDTO.id);
-        expect(plan.projectId).toBe(planDTO.projectId);
-        expect(plan.description).toBeUndefined();
-      }
-    });
   });
 
   describe("getPlan", () => {

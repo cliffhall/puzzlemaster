@@ -73,17 +73,19 @@ export function PlanEditForm({
 
   const canSave = useMemo(() => {
     if (!plan) return false;
-    return (plan.description ?? "") !== description;
+    return description.trim().length > 0 && plan.description !== description;
   }, [plan, description]);
 
   const handleSave = async (): Promise<void> => {
     if (!plan || submitting) return;
     setSubmitting(true);
     try {
+      const trimmed = description.trim();
+      if (!trimmed) return;
       const updated = await updatePlan({
         id: plan.id,
         projectId: plan.projectId,
-        description: description || undefined,
+        description: trimmed,
         phases: plan.phases ?? [],
       });
       if (updated) {
@@ -114,8 +116,9 @@ export function PlanEditForm({
             <>
               <Textarea
                 label="Description"
-                description="Optional description of the plan"
+                description="Detailed description of the plan"
                 value={description}
+                required
                 onChange={(e) => setDescription(e.currentTarget.value)}
                 placeholder="Describe your plan (optional)"
                 autosize

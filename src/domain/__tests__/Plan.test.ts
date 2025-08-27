@@ -54,13 +54,14 @@ describe("Plan", () => {
       expect(plan.phases).toEqual([]);
     });
 
-    it("should create a Plan without a description", () => {
+    it("should return a DomainError if description is missing", () => {
       const { description: _omit, ...dto } = validDTO;
       const result = Plan.create(dto as PlanDTO);
 
-      expect(result.isOk()).toBe(true);
-      const plan = result._unsafeUnwrap();
-      expect(plan.description).toBeUndefined();
+      expect(result.isErr()).toBe(true);
+      const error = result._unsafeUnwrapErr();
+      expect(error).toBeInstanceOf(DomainError);
+      expect(error.message).toContain("description");
     });
 
     it.each(["id", "projectId", "phases"] as const)(
