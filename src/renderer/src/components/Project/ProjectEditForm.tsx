@@ -31,6 +31,8 @@ export function ProjectEditForm({
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [initialName, setInitialName] = useState("");
+  const [initialDescription, setInitialDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +47,8 @@ export function ProjectEditForm({
           if (proj) {
             setName(proj.name);
             setDescription(proj.description ?? "");
+            setInitialName(proj.name);
+            setInitialDescription(proj.description ?? "");
           } else {
             setError("Project not found.");
           }
@@ -87,6 +91,8 @@ export function ProjectEditForm({
     [projectId, name, description, submitting, onUpdated],
   );
 
+  const hasChanges = name.trim() !== initialName.trim() || description.trim() !== initialDescription.trim();
+
   return (
     <Paper p="md" withBorder>
       {loading ? (
@@ -128,7 +134,7 @@ export function ProjectEditForm({
               <Button
                 type="submit"
                 loading={submitting}
-                disabled={!name.trim()}
+                disabled={!name.trim() || !hasChanges}
               >
                 Save Changes
               </Button>
