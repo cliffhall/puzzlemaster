@@ -123,15 +123,19 @@ export function Shell(): ReactElement {
         {draftProjectName ? (
           <ProjectCreateForm
             initialName={draftProjectName}
-            onCreated={async (newId) => {
+            onCreated={(newProject) => {
               // add new project id to the end of the saved order (if not present)
               const order = readOrder();
-              if (!order.includes(newId)) {
-                order.push(newId);
+              if (!order.includes(newProject.id)) {
+                order.push(newProject.id);
                 writeOrder(order);
               }
+              setProjects((currentProjects) => [
+                ...(currentProjects ?? []),
+                newProject,
+              ]);
               setDraftProjectName(null);
-              await loadProjects();
+              setSelectedProjectId(newProject.id);
             }}
             onCancel={() => {
               setDraftProjectName(null);

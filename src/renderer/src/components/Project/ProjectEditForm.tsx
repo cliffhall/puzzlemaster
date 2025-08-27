@@ -8,6 +8,7 @@ import {
   Paper,
   Title,
   Loader,
+  Text,
 } from "@mantine/core";
 import { getProject, updateProject } from "../../client/project";
 
@@ -37,30 +38,33 @@ export function ProjectEditForm({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let mounted = true;
+    const abortController = new AbortController();
     setLoading(true);
     setError(null);
     (async () => {
       try {
         const proj = await getProject(projectId);
-        if (mounted) {
-          if (proj) {
-            setName(proj.name);
-            setDescription(proj.description ?? "");
-            setInitialName(proj.name);
-            setInitialDescription(proj.description ?? "");
-          } else {
-            setError("Project not found.");
-          }
+        if (abortController.signal.aborted) return;
+
+        if (proj) {
+          setName(proj.name);
+          setDescription(proj.description ?? "");
+          setInitialName(proj.name);
+          setInitialDescription(proj.description ?? "");
+        } else {
+          setError("Project not found.");
         }
       } catch (err) {
-        if (mounted) setError(err instanceof Error ? err.message : String(err));
+        if (abortController.signal.aborted) return;
+        setError(err instanceof Error ? err.message : String(err));
       } finally {
-        if (mounted) setLoading(false);
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+        }
       }
     })();
     return () => {
-      mounted = false;
+      abortController.abort();
     };
   }, [projectId]);
 
@@ -121,9 +125,7 @@ export function ProjectEditForm({
               autosize
               minRows={3}
             />
-            {error && (
-              <div style={{ color: "var(--mantine-color-red-6)" }}>{error}</div>
-            )}
+            {error && <Text c="red">{error}</Text>}
             <Group justify="flex-end">
               <Button
                 variant="default"

@@ -7,12 +7,14 @@ import {
   Stack,
   Paper,
   Title,
+  Text,
 } from "@mantine/core";
 import { createProject } from "../../client/project";
+import { Project } from "../../../../domain";
 
 export type ProjectCreateFormProps = {
   initialName?: string;
-  onCreated?: (id: string) => void;
+  onCreated?: (project: Project) => void;
   onCancel?: () => void;
 };
 
@@ -45,7 +47,7 @@ export function ProjectCreateForm({
           description: description || undefined,
         });
         if (created) {
-          onCreated?.(created.id);
+          onCreated?.(created);
         } else {
           setError("Failed to create project.");
         }
@@ -80,7 +82,7 @@ export function ProjectCreateForm({
             minRows={3}
           />
           {error && (
-            <div style={{ color: "var(--mantine-color-red-6)" }}>{error}</div>
+            <Text c="red">{error}</Text>
           )}
           <Group justify="flex-end">
             <Button
