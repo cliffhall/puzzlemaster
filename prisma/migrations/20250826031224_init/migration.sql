@@ -113,10 +113,10 @@ CREATE TABLE "Validator" (
 CREATE UNIQUE INDEX "Plan_projectId_key" ON "Plan"("projectId");
 
 -- CreateIndex
-CREATE INDEX "Job_phaseId_key" ON "Job"("phaseId");
+CREATE UNIQUE INDEX "Job_phaseId_key" ON "Job"("phaseId");
 
 -- CreateIndex
-CREATE INDEX "Team_phaseId_key" ON "Team"("phaseId");
+CREATE UNIQUE INDEX "Team_phaseId_key" ON "Team"("phaseId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");

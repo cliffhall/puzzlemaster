@@ -10,7 +10,6 @@ datasource db {
   url      = "file:database/puzzlemaster.db"
 }
 
-
 // --- Domain Models ---
 
 model Project {
@@ -21,8 +20,6 @@ model Project {
   updatedAt   DateTime @updatedAt
 
   plan Plan?
-
-  // The 'planId' field has been removed.
 }
 
 model Plan {
