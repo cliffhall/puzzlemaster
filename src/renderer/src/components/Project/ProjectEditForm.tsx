@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, memo, useCallback, useEffect, useState } from "react";
 import {
   Group,
   TextInput,
@@ -14,6 +14,7 @@ import { getProject, updateProject } from "../../client/project";
 import { getPlanByProject } from "../../client/plan";
 import { PlanCreateForm } from "../Plan/PlanCreateForm";
 import { PlanEditForm } from "../Plan/PlanEditForm";
+import { Plan } from "../../../../domain";
 
 export type ProjectEditFormProps = {
   projectId: string;
@@ -27,219 +28,218 @@ export type ProjectEditFormProps = {
  * Loads an existing project and allows editing name and description.
  * Calls updateProject on submit.
  */
-export function ProjectEditForm({
-  projectId,
-  onUpdated,
-  onCancel,
-}: ProjectEditFormProps): ReactElement {
-  const [loading, setLoading] = useState(true);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [initialName, setInitialName] = useState("");
-  const [initialDescription, setInitialDescription] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [hasPlan, setHasPlan] = useState<boolean>(false);
-  const [showCreatePlanForm, setShowCreatePlanForm] = useState<boolean>(false);
-  const [editPlanMode, setEditPlanMode] = useState<boolean>(false);
+export const ProjectEditForm = memo(
+  ({
+    projectId,
+    onUpdated,
+    onCancel,
+  }: ProjectEditFormProps): ReactElement => {
+    const [loading, setLoading] = useState(true);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [initialName, setInitialName] = useState("");
+    const [initialDescription, setInitialDescription] = useState("");
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [plan, setPlan] = useState<Plan | null>(null);
+    const [showCreatePlanForm, setShowCreatePlanForm] = useState<boolean>(false);
+    const [editPlanMode, setEditPlanMode] = useState<boolean>(false);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    setLoading(true);
-    setError(null);
-    (async () => {
-      try {
-        const proj = await getProject(projectId);
-        if (abortController.signal.aborted) return;
+    const hasPlan = !!plan;
 
-        if (proj) {
-          setName(proj.name);
-          setDescription(proj.description ?? "");
-          setInitialName(proj.name);
-          setInitialDescription(proj.description ?? "");
-        } else {
-          setError("Project not found.");
-        }
-      } catch (err) {
-        if (abortController.signal.aborted) return;
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        if (!abortController.signal.aborted) {
-          setLoading(false);
-        }
-      }
-    })();
-    return () => {
-      abortController.abort();
-    };
-  }, [projectId]);
-
-  // Check if this project already has a plan
-  // Check if this project already has a plan
-  useEffect(() => {
-    const abortController = new AbortController();
-    (async () => {
-      try {
-        const plan = await getPlanByProject(projectId);
-        if (abortController.signal.aborted) return;
-        const has = !!plan;
-        setHasPlan(has);
-        if (has) setShowCreatePlanForm(false);
-      } catch (err) {
-        if (abortController.signal.aborted) return;
-        // Log plan load errors, but don't block UI
-        console.error("Failed to check for existing plan:", err);
-      }
-    })();
-    return () => {
-      abortController.abort();
-    };
-  }, [projectId]);
-
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      const trimmed = name.trim();
-      if (!trimmed || submitting) return;
+    useEffect(() => {
+      const abortController = new AbortController();
+      setLoading(true);
       setError(null);
-      try {
-        setSubmitting(true);
-        const updated = await updateProject({
-          id: projectId,
-          name: trimmed,
-          description: description || undefined,
-        });
-        if (updated) {
-          onUpdated?.(updated.id);
-        } else {
-          setError("Failed to update project.");
+      (async () => {
+        try {
+          const proj = await getProject(projectId);
+          if (abortController.signal.aborted) return;
+
+          if (proj) {
+            setName(proj.name);
+            setDescription(proj.description ?? "");
+            setInitialName(proj.name);
+            setInitialDescription(proj.description ?? "");
+          } else {
+            setError("Project not found.");
+          }
+
+          // Only check for a plan if the project was found
+          if (proj) {
+            try {
+              const foundPlan = await getPlanByProject(projectId);
+              if (abortController.signal.aborted) return;
+              setPlan(foundPlan ?? null);
+              if (foundPlan) setShowCreatePlanForm(false);
+            } catch (err) {
+              if (abortController.signal.aborted) return;
+              // If plan is not found, API might throw. Assume no plan.
+              setPlan(null);
+              // Log plan load errors, but don't block UI
+              console.error("Failed to check for existing plan:", err);
+            }
+          }
+        } catch (err) {
+          if (abortController.signal.aborted) return;
+          setError(err instanceof Error ? err.message : String(err));
+        } finally {
+          if (!abortController.signal.aborted) {
+            setLoading(false);
+          }
         }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [projectId, name, description, submitting, onUpdated],
-  );
+      })();
+      return () => {
+        abortController.abort();
+      };
+    }, [projectId]);
 
-  const hasChanges =
-    name.trim() !== initialName.trim() ||
-    description.trim() !== initialDescription.trim();
+    const handleSubmit = useCallback(
+      async (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        const trimmed = name.trim();
+        if (!trimmed || submitting) return;
+        setError(null);
+        try {
+          setSubmitting(true);
+          const updated = await updateProject({
+            id: projectId,
+            name: trimmed,
+            description: description || undefined,
+          });
+          if (updated) {
+            onUpdated?.(updated.id);
+          } else {
+            setError("Failed to update project.");
+          }
+        } catch (err) {
+          setError(err instanceof Error ? err.message : String(err));
+        } finally {
+          setSubmitting(false);
+        }
+      },
+      [projectId, name, description, submitting, onUpdated],
+    );
 
-  return (
-    <>
-      <Paper p="md" my="md" withBorder>
-        {loading ? (
-          <Group justify="center" p="md">
-            <Loader size="sm" />
-          </Group>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <Stack gap="md">
-              <Title order={3}>
-                {!showCreatePlanForm && !editPlanMode && "Edit "}Project
-              </Title>
-              {showCreatePlanForm || editPlanMode ? (
-                <Stack gap="xs">
-                  <Text>
-                    <b>{name || "(Untitled)"}</b>
-                  </Text>
-                  <Text>{description || "(No description)"}</Text>
-                </Stack>
-              ) : (
-                <>
-                  <TextInput
-                    label="Name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.currentTarget.value)}
-                    placeholder="Project name"
-                  />
-                  <Textarea
-                    label="Description"
-                    description="Optional description of the project"
-                    value={description}
-                    onChange={(e) => setDescription(e.currentTarget.value)}
-                    placeholder="Update your project description (optional)"
-                    autosize
-                    minRows={3}
-                  />
-                </>
-              )}
-              {error && <Text c="red">{error}</Text>}
-              <Group justify="flex-end">
-                {!showCreatePlanForm && !editPlanMode && (
+    const hasChanges =
+      name.trim() !== initialName.trim() ||
+      description.trim() !== initialDescription.trim();
+
+    return (
+      <>
+        <Paper p="md" my="md" withBorder>
+          {loading ? (
+            <Group justify="center" p="md">
+              <Loader size="sm" />
+            </Group>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <Stack gap="md">
+                <Title order={3}>
+                  {!showCreatePlanForm && !editPlanMode && "Edit "}Project
+                </Title>
+                {showCreatePlanForm || editPlanMode ? (
+                  <Stack gap="xs">
+                    <Text>
+                      <b>{name || "(Untitled)"}</b>
+                    </Text>
+                    <Text>{description || "(No description)"}</Text>
+                  </Stack>
+                ) : (
                   <>
-                    <Button
-                      variant="default"
-                      type="button"
-                      onClick={onCancel}
-                      disabled={submitting}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      loading={submitting}
-                      disabled={!name.trim() || !hasChanges}
-                    >
-                      Save Changes
-                    </Button>
+                    <TextInput
+                      label="Name"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.currentTarget.value)}
+                      placeholder="Project name"
+                    />
+                    <Textarea
+                      label="Description"
+                      description="Optional description of the project"
+                      value={description}
+                      onChange={(e) => setDescription(e.currentTarget.value)}
+                      placeholder="Update your project description (optional)"
+                      autosize
+                      minRows={3}
+                    />
                   </>
                 )}
-                {!hasPlan && !showCreatePlanForm && (
-                  <Button
-                    variant="light"
-                    type="button"
-                    onClick={() => {
-                      setEditPlanMode(false);
-                      setShowCreatePlanForm(true);
-                    }}
-                    disabled={showCreatePlanForm}
-                  >
-                    Create Plan
-                  </Button>
-                )}
-                {hasPlan && !editPlanMode && (
-                  <Button
-                    variant="light"
-                    type="button"
-                    onClick={() => {
-                      setShowCreatePlanForm(false);
-                      setEditPlanMode(true);
-                    }}
-                    disabled={editPlanMode}
-                  >
-                    Edit Plan
-                  </Button>
-                )}
-              </Group>
-            </Stack>
-          </form>
+                {error && <Text c="red">{error}</Text>}
+                <Group justify="flex-end">
+                  {!showCreatePlanForm && !editPlanMode && (
+                    <>
+                      <Button
+                        variant="default"
+                        type="button"
+                        onClick={onCancel}
+                        disabled={submitting}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        loading={submitting}
+                        disabled={!name.trim() || !hasChanges}
+                      >
+                        Save Changes
+                      </Button>
+                    </>
+                  )}
+                  {!hasPlan && !showCreatePlanForm && (
+                    <Button
+                      variant="light"
+                      type="button"
+                      onClick={() => {
+                        setEditPlanMode(false);
+                        setShowCreatePlanForm(true);
+                      }}
+                      disabled={showCreatePlanForm}
+                    >
+                      Create Plan
+                    </Button>
+                  )}
+                  {hasPlan && !editPlanMode && (
+                    <Button
+                      variant="light"
+                      type="button"
+                      onClick={() => {
+                        setShowCreatePlanForm(false);
+                        setEditPlanMode(true);
+                      }}
+                      disabled={editPlanMode}
+                    >
+                      Edit Plan
+                    </Button>
+                  )}
+                </Group>
+              </Stack>
+            </form>
+          )}
+        </Paper>
+        {hasPlan && (
+          <PlanEditForm
+            initialPlan={plan}
+            mode={editPlanMode ? "edit" : "display"}
+            onSaved={(savedPlan) => {
+              setPlan(savedPlan);
+              setEditPlanMode(false);
+            }}
+            onCancelEdit={() => setEditPlanMode(false)}
+          />
         )}
-      </Paper>
-      {hasPlan && (
-        <PlanEditForm
-          projectId={projectId}
-          mode={editPlanMode ? "edit" : "display"}
-          onSaved={() => {
-            setEditPlanMode(false);
-          }}
-          onCancelEdit={() => setEditPlanMode(false)}
-        />
-      )}
-      {showCreatePlanForm && !hasPlan && (
-        <PlanCreateForm
-          projectId={projectId}
-          onCancel={() => setShowCreatePlanForm(false)}
-          onCreated={() => {
-            setShowCreatePlanForm(false);
-            setHasPlan(true);
-            onUpdated?.(projectId);
-          }}
-        />
-      )}
-    </>
-  );
-}
+        {showCreatePlanForm && !hasPlan && (
+          <PlanCreateForm
+            projectId={projectId}
+            onCancel={() => setShowCreatePlanForm(false)}
+            onCreated={(newPlan) => {
+              setPlan(newPlan);
+              setShowCreatePlanForm(false);
+              onUpdated?.(projectId);
+            }}
+          />
+        )}
+      </>
+    );
+  },
+);

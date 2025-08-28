@@ -15,6 +15,7 @@ import { Plan } from "../../../../domain";
 export type PlanEditFormProps = {
   projectId?: string; // if provided, we load plan by projectId (first match)
   planId?: string; // alternatively, direct plan id
+  initialPlan?: Plan | null; // Pass plan data directly to avoid re-fetch
   mode: "display" | "edit";
   onSaved?: (plan: Plan) => void;
   onCancelEdit?: () => void;
@@ -24,25 +25,38 @@ export type PlanEditFormProps = {
  * PlanEditForm
  *
  * Reusable Plan form that supports display-only and editable modes.
- * - In display mode: no inputs, no buttons; title is "Plan".
- * - In edit mode: inputs for description (phases TBD), Save/Cancel buttons; title is "Edit Plan".
  */
 export function PlanEditForm({
   projectId,
   planId,
+  initialPlan,
   mode,
   onSaved,
   onCancelEdit,
 }: PlanEditFormProps): ReactElement {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<Plan | null>(null);
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const isDisplay = mode === "display";
 
-  // load plan either by id or by projectId
+  // load plan either by id or by projectId, or accept it as a prop
   useEffect(() => {
+    // If a plan is passed directly, use it and skip fetching.
+    if (initialPlan) {
+      setPlan(initialPlan);
+      setDescription(initialPlan.description ?? "");
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
+    // Only fetch if we don't have a plan passed via props
+    if (!planId && !projectId) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     (async () => {
       try {
@@ -66,7 +80,15 @@ export function PlanEditForm({
     return () => {
       cancelled = true;
     };
-  }, [projectId, planId]);
+  }, [projectId, planId, initialPlan]);
+
+  // When the plan prop changes, update our state
+  useEffect(() => {
+    if (initialPlan) {
+      setPlan(initialPlan);
+      setDescription(initialPlan.description ?? "");
+    }
+  }, [initialPlan]);
 
   const title = useMemo(() => (isDisplay ? "Plan" : "Edit Plan"), [isDisplay]);
 
@@ -103,7 +125,7 @@ export function PlanEditForm({
           <Loader size="sm" />
         </Group>
       ) : !plan ? (
-        <Text c="dimmed">No plan found.</Text>
+        <Text c="dimmed">No plan found for this project.</Text>
       ) : (
         <Stack gap="md">
           <Title order={4}>{title}</Title>
