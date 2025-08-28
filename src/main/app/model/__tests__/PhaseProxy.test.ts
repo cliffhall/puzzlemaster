@@ -30,7 +30,7 @@ async function createTestData(prisma: PrismaClient): Promise<{
     data: {
       id: planId,
       projectId,
-      description: "Test Plan",
+      description: "Test plan description",
     },
   });
 

@@ -10,6 +10,7 @@ export interface PlanAPI {
   createPlan: (planDTO: CreatePlanDTO) => Promise<PlanResult>;
   getPlan: (id: string) => Promise<PlanResult>;
   getPlans: () => Promise<PlanListResult>;
+  getPlanByProject: (projectId: string) => Promise<PlanResult>;
   updatePlan: (planDTO: PlanDTO) => Promise<PlanResult>;
   deletePlan: (id: string) => Promise<DeleteResult>;
 }

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { AppShell, Group, Image, ScrollArea, Text } from "@mantine/core";
 import {
@@ -11,6 +11,45 @@ import { TitleBar } from "../TitleBar";
 import { getProjects } from "../../client/project";
 import type { Project } from "../../../../domain";
 
+const ORDER_KEY = "projectOrder";
+
+const readOrder = (): string[] => {
+  try {
+    const raw = localStorage.getItem(ORDER_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? (arr as string[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+const writeOrder = (ids: string[]): void => {
+  try {
+    localStorage.setItem(ORDER_KEY, JSON.stringify(ids));
+  } catch {
+    // ignore storage errors
+  }
+};
+
+const sortBySavedOrder = (list: Project[]): Project[] => {
+  const saved = readOrder();
+  // Keep only ids that still exist and maintain their order
+  const existingInSaved = saved.filter((id) => list.some((p) => p.id === id));
+  // Find ids not in saved and append them (stable)
+  const missing = list
+    .map((p) => p.id)
+    .filter((id) => !existingInSaved.includes(id));
+  const finalOrder = [...existingInSaved, ...missing];
+  // Persist cleaned/updated order
+  writeOrder(finalOrder);
+  // Return list sorted to match finalOrder
+  const orderIndex = new Map(finalOrder.map((id, idx) => [id, idx] as const));
+  return [...list].sort(
+    (a, b) => orderIndex.get(a.id)! - orderIndex.get(b.id)!,
+  );
+};
+
 export function Shell(): ReactElement {
   const [opened, { toggle }] = useDisclosure(true);
 
@@ -20,53 +59,22 @@ export function Shell(): ReactElement {
     null,
   );
 
-  const ORDER_KEY = "projectOrder";
-
-  const readOrder = (): string[] => {
-    try {
-      const raw = localStorage.getItem(ORDER_KEY);
-      if (!raw) return [];
-      const arr = JSON.parse(raw);
-      return Array.isArray(arr) ? (arr as string[]) : [];
-    } catch {
-      return [];
-    }
-  };
-
-  const writeOrder = (ids: string[]): void => {
-    try {
-      localStorage.setItem(ORDER_KEY, JSON.stringify(ids));
-    } catch {
-      // ignore storage errors
-    }
-  };
-
-  const sortBySavedOrder = (list: Project[]): Project[] => {
-    const saved = readOrder();
-    // Keep only ids that still exist and maintain their order
-    const existingInSaved = saved.filter((id) => list.some((p) => p.id === id));
-    // Find ids not in saved and append them (stable)
-    const missing = list
-      .map((p) => p.id)
-      .filter((id) => !existingInSaved.includes(id));
-    const finalOrder = [...existingInSaved, ...missing];
-    // Persist cleaned/updated order
-    writeOrder(finalOrder);
-    // Return list sorted to match finalOrder
-    const orderIndex = new Map(finalOrder.map((id, idx) => [id, idx] as const));
-    return [...list].sort(
-      (a, b) => orderIndex.get(a.id)! - orderIndex.get(b.id)!,
-    );
-  };
-
-  const loadProjects = async (): Promise<void> => {
+  const loadProjects = useCallback(async (): Promise<void> => {
     const list = await getProjects();
     const ordered = list ? sortBySavedOrder(list) : [];
     setProjects(ordered);
-  };
+  }, []);
 
   useEffect(() => {
     void loadProjects();
+  }, [loadProjects]);
+
+  const handleProjectUpdated = useCallback(async () => {
+    await loadProjects();
+  }, [loadProjects]);
+
+  const handleEditCancel = useCallback(() => {
+    setSelectedProjectId(null);
   }, []);
 
   return (
@@ -123,15 +131,19 @@ export function Shell(): ReactElement {
         {draftProjectName ? (
           <ProjectCreateForm
             initialName={draftProjectName}
-            onCreated={async (newId) => {
+            onCreated={(newProject) => {
               // add new project id to the end of the saved order (if not present)
               const order = readOrder();
-              if (!order.includes(newId)) {
-                order.push(newId);
+              if (!order.includes(newProject.id)) {
+                order.push(newProject.id);
                 writeOrder(order);
               }
+              setProjects((currentProjects) => [
+                ...(currentProjects ?? []),
+                newProject,
+              ]);
               setDraftProjectName(null);
-              await loadProjects();
+              setSelectedProjectId(newProject.id);
             }}
             onCancel={() => {
               setDraftProjectName(null);
@@ -140,12 +152,8 @@ export function Shell(): ReactElement {
         ) : selectedProjectId ? (
           <ProjectEditForm
             projectId={selectedProjectId}
-            onUpdated={async () => {
-              await loadProjects();
-            }}
-            onCancel={() => {
-              setSelectedProjectId(null);
-            }}
+            onUpdated={handleProjectUpdated}
+            onCancel={handleEditCancel}
           />
         ) : null}
       </AppShell.Main>

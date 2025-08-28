@@ -30,6 +30,15 @@ export class PlanAPICommand extends AsyncCommand {
       return flattenResult(result);
     });
 
+    // Get a plan by project id
+    ipcMain.handle(
+      PlanAPIMethods.GET_PLAN_BY_PROJECT,
+      async (_, projectId: string) => {
+        const result = await planProxy.getPlanByProject(projectId);
+        return flattenResult(result);
+      },
+    );
+
     // Update a plan
     ipcMain.handle(PlanAPIMethods.UPDATE_PLAN, async (_, planDTO: PlanDTO) => {
       const { id, ...updateData } = planDTO;

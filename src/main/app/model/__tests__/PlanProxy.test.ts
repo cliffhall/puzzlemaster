@@ -77,25 +77,6 @@ describe("PlanProxy", () => {
       expect(dbPlan).not.toBeNull();
       expect(dbPlan?.description).toBe(planDTO.description);
     });
-
-    it("should create a plan without description", async () => {
-      // Set up test data without description
-      const { planDTO } = await createTestData(testSetup.prisma);
-      const planDTOWithoutDesc = { ...planDTO, description: undefined };
-
-      // Call the method under test
-      const result = await testSetup.planProxy.createPlan(planDTOWithoutDesc);
-
-      // Verify the result
-      expect(result.isOk()).toBe(true);
-
-      if (result.isOk()) {
-        const plan = result.value;
-        expect(plan.id).toBe(planDTO.id);
-        expect(plan.projectId).toBe(planDTO.projectId);
-        expect(plan.description).toBeUndefined();
-      }
-    });
   });
 
   describe("getPlan", () => {
@@ -131,6 +112,34 @@ describe("PlanProxy", () => {
       if (result.isErr()) {
         expect(result.error.message).toContain(
           `Plan with ID ${nonExistentId} not found`,
+        );
+      }
+    });
+  });
+
+  describe("getPlanByProject", () => {
+    it("should retrieve a plan by projectId", async () => {
+      const { planDTO, projectId } = await createTestData(testSetup.prisma);
+      await testSetup.planProxy.createPlan(planDTO);
+
+      const result = await testSetup.planProxy.getPlanByProject(projectId);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const plan = result.value;
+        expect(plan.id).toBe(planDTO.id);
+        expect(plan.projectId).toBe(projectId);
+        expect(plan.description).toBe(planDTO.description);
+      }
+    });
+
+    it("should return an error when no plan exists for projectId", async () => {
+      const nonProjectId = randomUUID();
+      const result = await testSetup.planProxy.getPlanByProject(nonProjectId);
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error.message).toContain(
+          `Plan for Project ID ${nonProjectId} not found`,
         );
       }
     });

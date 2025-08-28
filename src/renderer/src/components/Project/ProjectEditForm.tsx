@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useEffect, useState } from "react";
+import { ReactElement, memo, useCallback, useEffect, useState } from "react";
 import {
   Group,
   TextInput,
@@ -8,8 +8,13 @@ import {
   Paper,
   Title,
   Loader,
+  Text,
 } from "@mantine/core";
 import { getProject, updateProject } from "../../client/project";
+import { getPlanByProject } from "../../client/plan";
+import { PlanCreateForm } from "../Plan/PlanCreateForm";
+import { PlanEditForm } from "../Plan/PlanEditForm";
+import { Plan } from "../../../../domain";
 
 export type ProjectEditFormProps = {
   projectId: string;
@@ -23,7 +28,7 @@ export type ProjectEditFormProps = {
  * Loads an existing project and allows editing name and description.
  * Calls updateProject on submit.
  */
-export function ProjectEditForm({
+export const ProjectEditForm = memo(function ProjectEditForm({
   projectId,
   onUpdated,
   onCancel,
@@ -35,32 +40,56 @@ export function ProjectEditForm({
   const [initialDescription, setInitialDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [plan, setPlan] = useState<Plan | null>(null);
+  const [showCreatePlanForm, setShowCreatePlanForm] = useState<boolean>(false);
+  const [editPlanMode, setEditPlanMode] = useState<boolean>(false);
+
+  const hasPlan = !!plan;
 
   useEffect(() => {
-    let mounted = true;
+    const abortController = new AbortController();
     setLoading(true);
     setError(null);
     (async () => {
       try {
         const proj = await getProject(projectId);
-        if (mounted) {
-          if (proj) {
-            setName(proj.name);
-            setDescription(proj.description ?? "");
-            setInitialName(proj.name);
-            setInitialDescription(proj.description ?? "");
-          } else {
-            setError("Project not found.");
+        if (abortController.signal.aborted) return;
+
+        if (proj) {
+          setName(proj.name);
+          setDescription(proj.description ?? "");
+          setInitialName(proj.name);
+          setInitialDescription(proj.description ?? "");
+        } else {
+          setError("Project not found.");
+        }
+
+        // Only check for a plan if the project was found
+        if (proj) {
+          try {
+            const foundPlan = await getPlanByProject(projectId);
+            if (abortController.signal.aborted) return;
+            setPlan(foundPlan ?? null);
+            if (foundPlan) setShowCreatePlanForm(false);
+          } catch (err) {
+            if (abortController.signal.aborted) return;
+            // If plan is not found, API might throw. Assume no plan.
+            setPlan(null);
+            // Log plan load errors, but don't block UI
+            console.error("Failed to check for existing plan:", err);
           }
         }
       } catch (err) {
-        if (mounted) setError(err instanceof Error ? err.message : String(err));
+        if (abortController.signal.aborted) return;
+        setError(err instanceof Error ? err.message : String(err));
       } finally {
-        if (mounted) setLoading(false);
+        if (!abortController.signal.aborted) {
+          setLoading(false);
+        }
       }
     })();
     return () => {
-      mounted = false;
+      abortController.abort();
     };
   }, [projectId]);
 
@@ -96,54 +125,119 @@ export function ProjectEditForm({
     description.trim() !== initialDescription.trim();
 
   return (
-    <Paper p="md" withBorder>
-      {loading ? (
-        <Group justify="center" p="md">
-          <Loader size="sm" />
-        </Group>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <Stack gap="md">
-            <Title order={3}>Edit Project</Title>
-            <TextInput
-              label="Name"
-              required
-              value={name}
-              onChange={(e) => setName(e.currentTarget.value)}
-              placeholder="Project name"
-            />
-            <Textarea
-              label="Description"
-              description="Optional description of the project"
-              value={description}
-              onChange={(e) => setDescription(e.currentTarget.value)}
-              placeholder="Update your project description (optional)"
-              autosize
-              minRows={3}
-            />
-            {error && (
-              <div style={{ color: "var(--mantine-color-red-6)" }}>{error}</div>
-            )}
-            <Group justify="flex-end">
-              <Button
-                variant="default"
-                type="button"
-                onClick={onCancel}
-                disabled={submitting}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                loading={submitting}
-                disabled={!name.trim() || !hasChanges}
-              >
-                Save Changes
-              </Button>
-            </Group>
-          </Stack>
-        </form>
+    <>
+      <Paper p="md" my="md" withBorder>
+        {loading ? (
+          <Group justify="center" p="md">
+            <Loader size="sm" />
+          </Group>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <Stack gap="md">
+              <Title order={3}>
+                {!showCreatePlanForm && !editPlanMode && "Edit "}Project
+              </Title>
+              {showCreatePlanForm || editPlanMode ? (
+                <Stack gap="xs">
+                  <Text>
+                    <b>{name || "(Untitled)"}</b>
+                  </Text>
+                  <Text>{description || "(No description)"}</Text>
+                </Stack>
+              ) : (
+                <>
+                  <TextInput
+                    label="Name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.currentTarget.value)}
+                    placeholder="Project name"
+                  />
+                  <Textarea
+                    label="Description"
+                    description="Optional description of the project"
+                    value={description}
+                    onChange={(e) => setDescription(e.currentTarget.value)}
+                    placeholder="Update your project description (optional)"
+                    autosize
+                    minRows={3}
+                  />
+                </>
+              )}
+              {error && <Text c="red">{error}</Text>}
+              <Group justify="flex-end">
+                {!showCreatePlanForm && !editPlanMode && (
+                  <>
+                    <Button
+                      variant="default"
+                      type="button"
+                      onClick={onCancel}
+                      disabled={submitting}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      loading={submitting}
+                      disabled={!name.trim() || !hasChanges}
+                    >
+                      Save Changes
+                    </Button>
+                  </>
+                )}
+                {!hasPlan && !showCreatePlanForm && (
+                  <Button
+                    variant="light"
+                    type="button"
+                    onClick={() => {
+                      setEditPlanMode(false);
+                      setShowCreatePlanForm(true);
+                    }}
+                    disabled={showCreatePlanForm}
+                  >
+                    Create Plan
+                  </Button>
+                )}
+                {hasPlan && !editPlanMode && (
+                  <Button
+                    variant="light"
+                    type="button"
+                    onClick={() => {
+                      setShowCreatePlanForm(false);
+                      setEditPlanMode(true);
+                    }}
+                    disabled={editPlanMode}
+                  >
+                    Edit Plan
+                  </Button>
+                )}
+              </Group>
+            </Stack>
+          </form>
+        )}
+      </Paper>
+      {hasPlan && (
+        <PlanEditForm
+          initialPlan={plan}
+          mode={editPlanMode ? "edit" : "display"}
+          onSaved={(savedPlan) => {
+            setPlan(savedPlan);
+            setEditPlanMode(false);
+          }}
+          onCancelEdit={() => setEditPlanMode(false)}
+        />
       )}
-    </Paper>
+      {showCreatePlanForm && !hasPlan && (
+        <PlanCreateForm
+          projectId={projectId}
+          onCancel={() => setShowCreatePlanForm(false)}
+          onCreated={(newPlan) => {
+            setPlan(newPlan);
+            setShowCreatePlanForm(false);
+            onUpdated?.(projectId);
+          }}
+        />
+      )}
+    </>
   );
-}
+});

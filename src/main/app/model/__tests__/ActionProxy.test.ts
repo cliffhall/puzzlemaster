@@ -30,6 +30,7 @@ async function createTestData(prisma: PrismaClient): Promise<{
         plan: {
           create: {
             id: planId,
+            description: "Test plan description",
             phases: {
               create: [
                 {
@@ -335,6 +336,7 @@ describe("ActionProxy", () => {
           plan: {
             create: {
               id: planId,
+              description: "Test plan description",
               phases: {
                 create: [
                   {
@@ -418,6 +420,7 @@ describe("ActionProxy", () => {
           plan: {
             create: {
               id: planId,
+              description: "Test plan description",
               phases: {
                 create: [
                   {

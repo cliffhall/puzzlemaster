@@ -55,6 +55,24 @@ export async function getPlans(): Promise<Plan[] | undefined> {
   return returnValue;
 }
 
+export async function getPlanByProject(
+  projectId: string,
+): Promise<Plan | undefined> {
+  const result: PlanResult =
+    await window.puzzlemaster.plan.getPlanByProject(projectId);
+  let returnValue: Plan | undefined;
+
+  if (result.success) {
+    console.log("Retrieved Plan by Project:", result.data);
+    returnValue = result.data;
+  } else {
+    console.log("Error:", result.error);
+    returnValue = undefined;
+  }
+
+  return returnValue;
+}
+
 export async function updatePlan(planData: PlanDTO): Promise<Plan | undefined> {
   const result: PlanResult =
     await window.puzzlemaster.plan.updatePlan(planData);

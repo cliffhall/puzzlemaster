@@ -11,7 +11,7 @@ export const PlanSchema = z.object({
   id: z.string().uuid(),
   projectId: z.string().uuid(),
   phases: z.array(z.string().uuid()),
-  description: z.string().optional(),
+  description: z.string(),
 });
 
 export const CreatePlanSchema = PlanSchema.omit({ id: true });
@@ -31,6 +31,7 @@ export enum PlanAPIMethods {
   CREATE_PLAN = "create-plan",
   GET_PLAN = "get-plan",
   GET_PLANS = "get-plans",
+  GET_PLAN_BY_PROJECT = "get-plan-by-project",
   UPDATE_PLAN = "update-plan",
   DELETE_PLAN = "delete-plan",
 }
@@ -39,7 +40,7 @@ export class Plan {
   private constructor(
     public readonly id: string,
     public readonly projectId: string,
-    public description: string | undefined,
+    public description: string,
     public phases: string[],
   ) {}
 

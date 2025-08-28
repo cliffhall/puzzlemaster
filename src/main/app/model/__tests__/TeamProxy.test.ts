@@ -23,6 +23,7 @@ async function createTestData(prisma: PrismaClient): Promise<{
       plan: {
         create: {
           id: randomUUID(),
+          description: "Test plan description",
           project: {
             create: {
               id: randomUUID(),
@@ -223,6 +224,7 @@ describe("TeamProxy", () => {
           plan: {
             create: {
               id: randomUUID(),
+              description: "Test plan description",
               project: {
                 create: {
                   id: randomUUID(),

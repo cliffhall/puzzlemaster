@@ -35,7 +35,7 @@ export class PlanProxy extends Proxy {
       return Plan.create({
         id: plan.id,
         projectId: plan.projectId,
-        description: plan.description || undefined,
+        description: plan.description,
         phases: [],
       });
     } catch (error) {
@@ -64,7 +64,7 @@ export class PlanProxy extends Proxy {
       return Plan.create({
         id: plan.id,
         projectId: plan.projectId,
-        description: plan.description || undefined,
+        description: plan.description,
         phases: plan.phases.map((phase) => phase.id),
       });
     } catch (error) {
@@ -88,7 +88,7 @@ export class PlanProxy extends Proxy {
         Plan.create({
           id: plan.id,
           projectId: plan.projectId,
-          description: plan.description || undefined,
+          description: plan.description,
           phases: plan.phases.map((phase) => phase.id),
         }),
       );
@@ -98,6 +98,39 @@ export class PlanProxy extends Proxy {
       return Result.combine(planResults);
     } catch (error) {
       return err(DomainError.fromError("Failed to get plans", error));
+    }
+  }
+
+  /**
+   * Get a plan by Project ID
+   * @param projectId The project ID
+   * @returns A Result containing the plan or a DomainError
+   */
+  public async getPlanByProject(
+    projectId: string,
+  ): Promise<Result<Plan, DomainError>> {
+    try {
+      const plan = await this.prismaClient.plan.findFirst({
+        where: { projectId },
+        include: { phases: true },
+      });
+
+      if (!plan) {
+        return err(
+          new DomainError(`Plan for Project ID ${projectId} not found`),
+        );
+      }
+
+      return Plan.create({
+        id: plan.id,
+        projectId: plan.projectId,
+        description: plan.description,
+        phases: plan.phases.map((phase) => phase.id),
+      });
+    } catch (error) {
+      return err(
+        DomainError.fromError("Failed to get plan by projectId", error),
+      );
     }
   }
 
@@ -127,7 +160,7 @@ export class PlanProxy extends Proxy {
       // Prepare update data
       const updateData: {
         projectId?: string;
-        description?: string | null;
+        description?: string;
       } = {};
       if (planDTO.projectId) updateData.projectId = planDTO.projectId;
       if (planDTO.description !== undefined)
@@ -145,7 +178,7 @@ export class PlanProxy extends Proxy {
       return Plan.create({
         id: plan.id,
         projectId: plan.projectId,
-        description: plan.description || undefined,
+        description: plan.description,
         phases: plan.phases.map((phase) => phase.id),
       });
     } catch (error) {
