@@ -29,11 +29,7 @@ export type ProjectEditFormProps = {
  * Calls updateProject on submit.
  */
 export const ProjectEditForm = memo(
-  ({
-    projectId,
-    onUpdated,
-    onCancel,
-  }: ProjectEditFormProps): ReactElement => {
+  ({ projectId, onUpdated, onCancel }: ProjectEditFormProps): ReactElement => {
     const [loading, setLoading] = useState(true);
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -42,7 +38,8 @@ export const ProjectEditForm = memo(
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [plan, setPlan] = useState<Plan | null>(null);
-    const [showCreatePlanForm, setShowCreatePlanForm] = useState<boolean>(false);
+    const [showCreatePlanForm, setShowCreatePlanForm] =
+      useState<boolean>(false);
     const [editPlanMode, setEditPlanMode] = useState<boolean>(false);
 
     const hasPlan = !!plan;
