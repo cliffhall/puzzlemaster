@@ -188,7 +188,7 @@ export function ProjectEditForm({
                     </Button>
                   </>
                 )}
-                {!hasPlan && (
+                {!hasPlan && !showCreatePlanForm && (
                   <Button
                     variant="light"
                     type="button"
