@@ -82,14 +82,6 @@ export function PlanEditForm({
     };
   }, [projectId, planId, initialPlan]);
 
-  // When the plan prop changes, update our state
-  useEffect(() => {
-    if (initialPlan) {
-      setPlan(initialPlan);
-      setDescription(initialPlan.description ?? "");
-    }
-  }, [initialPlan]);
-
   const title = useMemo(() => (isDisplay ? "Plan" : "Edit Plan"), [isDisplay]);
 
   const canSave = useMemo(() => {
@@ -131,7 +123,7 @@ export function PlanEditForm({
           <Title order={4}>{title}</Title>
           {isDisplay ? (
             <Stack gap="xs">
-              <Text>{plan.description || "(No description)"}</Text>
+              <Text>{plan.description}</Text>
             </Stack>
           ) : (
             <>
@@ -141,7 +133,7 @@ export function PlanEditForm({
                 value={description}
                 required
                 onChange={(e) => setDescription(e.currentTarget.value)}
-                placeholder="Describe your plan (optional)"
+                placeholder="Describe your plan"
                 autosize
                 minRows={3}
               />
