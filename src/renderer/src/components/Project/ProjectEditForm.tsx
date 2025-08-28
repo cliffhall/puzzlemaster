@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { getProject, updateProject } from "../../client/project";
 import { getPlanByProject } from "../../client/plan";
-import { CreatePlanForm } from "../Plan/CreatePlanForm";
+import { PlanCreateForm } from "../Plan/PlanCreateForm";
 import { PlanEditForm } from "../Plan/PlanEditForm";
 
 export type ProjectEditFormProps = {
@@ -230,7 +230,7 @@ export function ProjectEditForm({
         />
       )}
       {showCreatePlanForm && !hasPlan && (
-        <CreatePlanForm
+        <PlanCreateForm
           projectId={projectId}
           onCancel={() => setShowCreatePlanForm(false)}
           onCreated={() => {

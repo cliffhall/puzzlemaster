@@ -23,7 +23,7 @@ export type CreatePlanFormProps = {
  * Minimal form to create a Plan associated with a Project.
  * Collects required description and creates the plan with an empty phases array.
  */
-export function CreatePlanForm({
+export function PlanCreateForm({
   projectId,
   onCreated,
   onCancel,
@@ -60,7 +60,7 @@ export function CreatePlanForm({
         setSubmitting(false);
       }
     },
-    [projectId, description, onCreated],
+    [submitting, description, projectId, onCreated],
   );
 
   return (
