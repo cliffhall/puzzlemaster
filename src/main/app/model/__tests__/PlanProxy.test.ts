@@ -117,6 +117,34 @@ describe("PlanProxy", () => {
     });
   });
 
+  describe("getPlanByProject", () => {
+    it("should retrieve a plan by projectId", async () => {
+      const { planDTO, projectId } = await createTestData(testSetup.prisma);
+      await testSetup.planProxy.createPlan(planDTO);
+
+      const result = await testSetup.planProxy.getPlanByProject(projectId);
+
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        const plan = result.value;
+        expect(plan.id).toBe(planDTO.id);
+        expect(plan.projectId).toBe(projectId);
+        expect(plan.description).toBe(planDTO.description);
+      }
+    });
+
+    it("should return an error when no plan exists for projectId", async () => {
+      const nonProjectId = randomUUID();
+      const result = await testSetup.planProxy.getPlanByProject(nonProjectId);
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error.message).toContain(
+          `Plan for Project ID ${nonProjectId} not found`,
+        );
+      }
+    });
+  });
+
   describe("getPlans", () => {
     it("should retrieve all plans", async () => {
       // Set up test data - create multiple plans

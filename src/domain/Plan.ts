@@ -31,6 +31,7 @@ export enum PlanAPIMethods {
   CREATE_PLAN = "create-plan",
   GET_PLAN = "get-plan",
   GET_PLANS = "get-plans",
+  GET_PLAN_BY_PROJECT = "get-plan-by-project",
   UPDATE_PLAN = "update-plan",
   DELETE_PLAN = "delete-plan",
 }

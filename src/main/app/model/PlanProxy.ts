@@ -102,6 +102,39 @@ export class PlanProxy extends Proxy {
   }
 
   /**
+   * Get a plan by Project ID
+   * @param projectId The project ID
+   * @returns A Result containing the plan or a DomainError
+   */
+  public async getPlanByProject(
+    projectId: string,
+  ): Promise<Result<Plan, DomainError>> {
+    try {
+      const plan = await this.prismaClient.plan.findFirst({
+        where: { projectId },
+        include: { phases: true },
+      });
+
+      if (!plan) {
+        return err(
+          new DomainError(`Plan for Project ID ${projectId} not found`),
+        );
+      }
+
+      return Plan.create({
+        id: plan.id,
+        projectId: plan.projectId,
+        description: plan.description,
+        phases: plan.phases.map((phase) => phase.id),
+      });
+    } catch (error) {
+      return err(
+        DomainError.fromError("Failed to get plan by projectId", error),
+      );
+    }
+  }
+
+  /**
    * Update a plan
    * @param id The plan ID
    * @param planDTO The plan data transfer object (can be only fields that changed)

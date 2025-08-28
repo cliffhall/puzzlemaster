@@ -9,7 +9,7 @@ import {
   Textarea,
   Title,
 } from "@mantine/core";
-import { getPlans, getPlan, updatePlan } from "../../client/plan";
+import { getPlanByProject, getPlan, updatePlan } from "../../client/plan";
 import { Plan } from "../../../../domain";
 
 export type PlanEditFormProps = {
@@ -50,8 +50,7 @@ export function PlanEditForm({
         if (planId) {
           found = await getPlan(planId);
         } else if (projectId) {
-          const plans = await getPlans();
-          found = (plans ?? []).find((p) => p.projectId === projectId);
+          found = await getPlanByProject(projectId);
         }
         if (cancelled) return;
         if (found) {

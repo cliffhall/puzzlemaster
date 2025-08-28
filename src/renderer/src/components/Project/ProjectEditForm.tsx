@@ -11,7 +11,7 @@ import {
   Text,
 } from "@mantine/core";
 import { getProject, updateProject } from "../../client/project";
-import { getPlans } from "../../client/plan";
+import { getPlanByProject } from "../../client/plan";
 import { CreatePlanForm } from "../Plan/CreatePlanForm";
 import { PlanEditForm } from "../Plan/PlanEditForm";
 
@@ -80,9 +80,9 @@ export function ProjectEditForm({
     const abortController = new AbortController();
     (async () => {
       try {
-        const plans = await getPlans();
+        const plan = await getPlanByProject(projectId);
         if (abortController.signal.aborted) return;
-        const has = (plans ?? []).some((p) => p.projectId === projectId);
+        const has = !!plan;
         setHasPlan(has);
         if (has) setShowCreatePlanForm(false);
       } catch (err) {
