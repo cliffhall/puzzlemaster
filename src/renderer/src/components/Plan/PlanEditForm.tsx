@@ -10,9 +10,13 @@ import {
   Title,
   Table,
 } from "@mantine/core";
-import { getPlanByProject, getPlan, updatePlan } from "../../client/plan";
-import { getPhases } from "../../client/phase";
-import { getActionsByPhase } from "../../client/action";
+import {
+  getPlanByProject,
+  getPlan,
+  updatePlan,
+  getPhases,
+  getActionsByPhase,
+} from "../../client";
 import { Plan, Phase, Action } from "../../../../domain";
 import { PhaseCreateForm } from "../Phase/PhaseCreateForm";
 

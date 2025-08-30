@@ -9,7 +9,7 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { createProject } from "../../client/project";
+import { createProject } from "../../client";
 import { Project } from "../../../../domain";
 
 export type ProjectCreateFormProps = {

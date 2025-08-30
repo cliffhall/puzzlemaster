@@ -3,7 +3,7 @@ import { ActionIcon, NavLink, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconGripVertical, IconX } from "@tabler/icons-react";
 import type { Project } from "../../../../domain";
-import { deleteProject } from "../../client/project";
+import { deleteProject } from "../../client";
 
 export type ProjectListProps = {
   projects: Project[] | null;

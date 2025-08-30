@@ -17,9 +17,8 @@ import {
   Loader,
   Text,
 } from "@mantine/core";
-import { getProject, updateProject } from "../../client/project";
+import { getProject, updateProject, getPlanByProject} from "../../client";
 import { PlanCreateForm, PlanEditForm } from "../Plan";
-import { getPlanByProject } from "../../client/plan";
 import { Plan } from "../../../../domain";
 
 export type ProjectEditFormProps = {

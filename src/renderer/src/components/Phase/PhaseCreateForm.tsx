@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useState } from "react";
 import { ActionIcon, CloseButton, Group, Input, Text } from "@mantine/core";
-import { createPhase } from "../../client/phase";
+import { createPhase } from "../../client";
 import { Phase } from "../../../../domain";
 import { IconPlus } from "@tabler/icons-react";
 

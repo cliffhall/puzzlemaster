@@ -8,7 +8,7 @@ import {
   ProjectList,
 } from "../Project";
 import { TitleBar } from "../TitleBar";
-import { getProjects } from "../../client/project";
+import { getProjects } from "../../client";
 import type { Project } from "../../../../domain";
 
 const ORDER_KEY = "projectOrder";

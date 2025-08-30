@@ -8,7 +8,7 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { createPlan } from "../../client/plan";
+import { createPlan } from "../../client";
 import { Plan } from "../../../../domain";
 
 export type CreatePlanFormProps = {
