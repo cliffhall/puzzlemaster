@@ -75,7 +75,8 @@ export function Shell(): ReactElement {
 
   const handleEditClose = useCallback(() => {
     setSelectedProjectId(null);
-  }, []);
+    if (!opened) toggle();
+  }, [opened, toggle]);
 
   return (
     <AppShell
