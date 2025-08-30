@@ -21,6 +21,7 @@ export class PrepareViewCommand extends AsyncCommand {
         minWidth: 769,
         show: false,
         frame: false,
+        resizable: true,
         trafficLightPosition: { x: 15, y: 15 },
         title: "Puzzlemaster",
         titleBarStyle: "hidden",

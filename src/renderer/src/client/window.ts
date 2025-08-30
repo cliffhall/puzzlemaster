@@ -1,3 +1,3 @@
-export async function isMaximized(): Promise<boolean | undefined> {
+export async function getIsMaximized(): Promise<boolean | undefined> {
   return window.puzzlemaster.window.isMaximized();
 }
