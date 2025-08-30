@@ -78,9 +78,12 @@ export class PhaseProxy extends Proxy {
    * Get all phases
    * @returns A Result containing an array of phases or a DomainError
    */
-  public async getPhases(): Promise<Result<Phase[], DomainError>> {
+  public async getPhases(
+    planId?: string,
+  ): Promise<Result<Phase[], DomainError>> {
     try {
       const phases = await this.prismaClient.phase.findMany({
+        where: planId ? { planId } : undefined,
         include: {
           actions: true,
         },

@@ -12,6 +12,7 @@ import {
   TaskProxy,
   TeamProxy,
   ValidatorProxy,
+  PhaseProxy,
 } from "../../model";
 
 export class PrepareModelCommand extends AsyncCommand {
@@ -36,6 +37,7 @@ export class PrepareModelCommand extends AsyncCommand {
     f.registerProxy(new ActionProxy());
     f.registerProxy(new AgentProxy());
     f.registerProxy(new JobProxy());
+    f.registerProxy(new PhaseProxy());
     f.registerProxy(new PlanProxy());
     f.registerProxy(new ProjectProxy());
     f.registerProxy(new RoleProxy());

@@ -6,7 +6,8 @@ export const phase: PhaseAPI = {
   createPhase: (phaseDTO: CreatePhaseDTO) =>
     ipcRenderer.invoke(PhaseAPIMethods.CREATE_PHASE, phaseDTO),
   getPhase: (id: string) => ipcRenderer.invoke(PhaseAPIMethods.GET_PHASE, id),
-  getPhases: () => ipcRenderer.invoke(PhaseAPIMethods.GET_PHASES),
+  getPhases: (planId: string) =>
+    ipcRenderer.invoke(PhaseAPIMethods.GET_PHASES, planId),
   updatePhase: (phaseDTO: PhaseDTO) =>
     ipcRenderer.invoke(PhaseAPIMethods.UPDATE_PHASE, phaseDTO),
   deletePhase: (id: string) =>

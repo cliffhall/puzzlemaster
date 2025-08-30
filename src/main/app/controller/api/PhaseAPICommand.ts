@@ -27,9 +27,9 @@ export class PhaseAPICommand extends AsyncCommand {
       return flattenResult(result);
     });
 
-    // Get all phases
-    ipcMain.handle(PhaseAPIMethods.GET_PHASES, async () => {
-      const result = await phaseProxy.getPhases();
+    // Get phases for a plan
+    ipcMain.handle(PhaseAPIMethods.GET_PHASES, async (_, _planId: string) => {
+      const result = await phaseProxy.getPhases(_planId);
       return flattenResult(result);
     });
 

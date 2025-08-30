@@ -8,9 +8,13 @@ import {
   Text,
   Textarea,
   Title,
+  Table,
 } from "@mantine/core";
 import { getPlanByProject, getPlan, updatePlan } from "../../client/plan";
-import { Plan } from "../../../../domain";
+import { getPhases } from "../../client/phase";
+import { getActionsByPhase } from "../../client/action";
+import { Plan, Phase, Action } from "../../../../domain";
+import { CreatePhaseForm } from "../Phase/CreatePhaseForm";
 
 export type PlanEditFormProps = {
   projectId?: string; // if provided, we load plan by projectId (first match)
@@ -39,6 +43,14 @@ export function PlanEditForm({
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const isDisplay = mode === "display";
+
+  // phases and actions state
+  const [phases, setPhases] = useState<Phase[]>([]);
+  const [actionsByPhase, setActionsByPhase] = useState<
+    Record<string, Action[]>
+  >({});
+  const [loadingPhases, setLoadingPhases] = useState(false);
+  const [showCreatePhase, setShowCreatePhase] = useState(false);
 
   // load plan either by id or by projectId, or accept it as a prop
   useEffect(() => {
@@ -110,6 +122,79 @@ export function PlanEditForm({
     }
   };
 
+  // Load phases for this plan and their actions
+  useEffect(() => {
+    let cancelled = false;
+    const load = async (): Promise<void> => {
+      if (!plan) {
+        setPhases([]);
+        setActionsByPhase({});
+        return;
+      }
+      setLoadingPhases(true);
+      try {
+        const mine = (await getPhases(plan.id)) || [];
+        if (cancelled) return;
+        setPhases(mine);
+        // load actions per phase
+        const actionsEntries: [string, Action[]][] = [];
+        for (const phase of mine) {
+          const actions = (await getActionsByPhase(phase.id)) || [];
+          if (cancelled) return;
+          actionsEntries.push([phase.id, actions]);
+        }
+        setActionsByPhase(Object.fromEntries(actionsEntries));
+      } finally {
+        if (!cancelled) setLoadingPhases(false);
+      }
+    };
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [plan]);
+
+  const renderPhasesTable = (): ReactElement | null => {
+    if (!plan) return null;
+    if (loadingPhases)
+      return (
+        <Group justify="center" p="sm">
+          <Loader size="xs" />
+        </Group>
+      );
+    if (!phases.length) return null;
+    return (
+      <Stack gap="xs">
+        <Group justify="space-between">
+          <Title order={5}>Phases</Title>
+        </Group>
+        <Table striped highlightOnHover withTableBorder withColumnBorders>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Name</Table.Th>
+              <Table.Th>Job</Table.Th>
+              <Table.Th>Team</Table.Th>
+              <Table.Th>Actions</Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
+            {phases.map((ph) => {
+              const actions = actionsByPhase[ph.id] || [];
+              return (
+                <Table.Tr key={ph.id}>
+                  <Table.Td>{ph.name}</Table.Td>
+                  <Table.Td />
+                  <Table.Td />
+                  <Table.Td>{actions.map((a) => a.name).join(", ")}</Table.Td>
+                </Table.Tr>
+              );
+            })}
+          </Table.Tbody>
+        </Table>
+      </Stack>
+    );
+  };
+
   return (
     <Paper p="md" withBorder>
       {loading ? (
@@ -124,6 +209,7 @@ export function PlanEditForm({
           {isDisplay ? (
             <Stack gap="xs">
               <Text>{plan.description}</Text>
+              {renderPhasesTable()}
             </Stack>
           ) : (
             <>
@@ -137,6 +223,7 @@ export function PlanEditForm({
                 autosize
                 minRows={3}
               />
+              {renderPhasesTable()}
               <Group justify="flex-end">
                 <Button
                   variant="default"
@@ -152,8 +239,22 @@ export function PlanEditForm({
                 >
                   Save Changes
                 </Button>
+                <Button onClick={() => setShowCreatePhase(true)}>
+                  Add Phase
+                </Button>
               </Group>
             </>
+          )}
+          {showCreatePhase && plan && (
+            <CreatePhaseForm
+              planId={plan.id}
+              onCreated={(newPhase) => {
+                setShowCreatePhase(false);
+                setPhases((prev) => [...prev, newPhase]);
+                setActionsByPhase((prev) => ({ ...prev, [newPhase.id]: [] }));
+              }}
+              onCancel={() => setShowCreatePhase(false)}
+            />
           )}
         </Stack>
       )}

@@ -40,8 +40,9 @@ export async function getPhase(id: string): Promise<Phase | undefined> {
   return returnValue;
 }
 
-export async function getPhases(): Promise<Phase[] | undefined> {
-  const result: PhaseListResult = await window.puzzlemaster.phase.getPhases();
+export async function getPhases(planId: string): Promise<Phase[] | undefined> {
+  const result: PhaseListResult =
+    await window.puzzlemaster.phase.getPhases(planId);
   let returnValue: Phase[] | undefined;
 
   if (result.success) {

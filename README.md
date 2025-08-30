@@ -1,6 +1,6 @@
 # Puzzlemaster
 
-An MCP client that allows teams of agents to complete long-horizon tasks.
+An MCP host application that allows teams of agents to complete long-horizon tasks.
 
 ## About · [Domain Model](docs/domain-model.md) · [Development](docs/development.md)
 
