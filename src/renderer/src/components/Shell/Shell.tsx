@@ -73,7 +73,7 @@ export function Shell(): ReactElement {
     await loadProjects();
   }, [loadProjects]);
 
-  const handleEditCancel = useCallback(() => {
+  const handleEditClose = useCallback(() => {
     setSelectedProjectId(null);
   }, []);
 
@@ -153,7 +153,7 @@ export function Shell(): ReactElement {
           <ProjectEditForm
             projectId={selectedProjectId}
             onUpdated={handleProjectUpdated}
-            onCancel={handleEditCancel}
+            onClose={handleEditClose}
           />
         ) : null}
       </AppShell.Main>

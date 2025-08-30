@@ -92,7 +92,7 @@ export function ProjectCreateForm({
               Cancel
             </Button>
             <Button type="submit" loading={submitting} disabled={!name.trim()}>
-              Create Project
+              Save Project
             </Button>
           </Group>
         </Stack>

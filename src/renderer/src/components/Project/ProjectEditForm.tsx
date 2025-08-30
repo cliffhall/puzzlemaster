@@ -1,4 +1,11 @@
-import { ReactElement, memo, useCallback, useEffect, useState } from "react";
+import {
+  ReactElement,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import {
   Group,
   TextInput,
@@ -19,7 +26,7 @@ import { Plan } from "../../../../domain";
 export type ProjectEditFormProps = {
   projectId: string;
   onUpdated?: (id: string) => void;
-  onCancel?: () => void;
+  onClose?: () => void;
 };
 
 /**
@@ -31,7 +38,7 @@ export type ProjectEditFormProps = {
 export const ProjectEditForm = memo(function ProjectEditForm({
   projectId,
   onUpdated,
-  onCancel,
+  onClose,
 }: ProjectEditFormProps): ReactElement {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
@@ -60,6 +67,8 @@ export const ProjectEditForm = memo(function ProjectEditForm({
           setDescription(proj.description ?? "");
           setInitialName(proj.name);
           setInitialDescription(proj.description ?? "");
+          setEditPlanMode(false);
+          setShowCreatePlanForm(false);
         } else {
           setError("Project not found.");
         }
@@ -93,6 +102,18 @@ export const ProjectEditForm = memo(function ProjectEditForm({
     };
   }, [projectId]);
 
+  const hasChanges = useMemo(() => {
+    return (
+      name.trim() !== initialName.trim() ||
+      description.trim() !== initialDescription.trim()
+    );
+  }, [name, initialName, description, initialDescription]);
+
+  const handleCancel = (): void => {
+    setName(initialName);
+    setDescription(initialDescription);
+  };
+
   const handleSubmit = useCallback(
     async (e?: React.FormEvent) => {
       if (e) e.preventDefault();
@@ -119,10 +140,6 @@ export const ProjectEditForm = memo(function ProjectEditForm({
     },
     [projectId, name, description, submitting, onUpdated],
   );
-
-  const hasChanges =
-    name.trim() !== initialName.trim() ||
-    description.trim() !== initialDescription.trim();
 
   return (
     <>
@@ -171,12 +188,12 @@ export const ProjectEditForm = memo(function ProjectEditForm({
                     <Button
                       variant="default"
                       type="button"
-                      onClick={onCancel}
+                      onClick={hasChanges ? handleCancel : onClose}
                       disabled={submitting}
                     >
-                      {!!name.trim() && hasChanges ? "Cancel" : "Close"}
+                      {hasChanges ? "Cancel" : "Close"}
                     </Button>
-                    {!!name.trim() && hasChanges && (
+                    {hasChanges && (
                       <Button type="submit" loading={submitting}>
                         Save Changes
                       </Button>
@@ -222,12 +239,12 @@ export const ProjectEditForm = memo(function ProjectEditForm({
                 setPlan(savedPlan);
                 setEditPlanMode(false);
               }}
-              onCancelEdit={() => setEditPlanMode(false)}
+              onDoneEditing={() => setEditPlanMode(false)}
             />
           </Stack>
         )}
         {showCreatePlanForm && !hasPlan && (
-          <Stack p="md">
+          <Stack gap="md" my="md">
             <PlanCreateForm
               projectId={projectId}
               onCancel={() => setShowCreatePlanForm(false)}

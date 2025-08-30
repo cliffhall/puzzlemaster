@@ -22,7 +22,7 @@ export type PlanEditFormProps = {
   initialPlan?: Plan | null; // Pass plan data directly to avoid re-fetch
   mode: "display" | "edit";
   onSaved?: (plan: Plan) => void;
-  onCancelEdit?: () => void;
+  onDoneEditing?: () => void;
 };
 
 /**
@@ -36,7 +36,7 @@ export function PlanEditForm({
   initialPlan,
   mode,
   onSaved,
-  onCancelEdit,
+  onDoneEditing,
 }: PlanEditFormProps): ReactElement {
   const [loading, setLoading] = useState(false);
   const [plan, setPlan] = useState<Plan | null>(null);
@@ -96,10 +96,15 @@ export function PlanEditForm({
 
   const title = useMemo(() => (isDisplay ? "Plan" : "Edit Plan"), [isDisplay]);
 
-  const canSave = useMemo(() => {
+  const hasChanges = useMemo(() => {
     if (!plan) return false;
     return description.trim().length > 0 && plan.description !== description;
   }, [plan, description]);
+
+  const handleCancel = (): void => {
+    setDescription(plan?.description || "");
+  };
+
 
   const handleSave = async (): Promise<void> => {
     if (!plan || submitting) return;
@@ -228,12 +233,12 @@ export function PlanEditForm({
                 <Group justify="flex-end">
                   <Button
                     variant="default"
-                    onClick={onCancelEdit}
+                    onClick={hasChanges ? handleCancel : onDoneEditing}
                     disabled={submitting}
                   >
-                    Cancel
+                    {hasChanges ? "Cancel" : "Done Editing"}
                   </Button>
-                  {canSave && (
+                  {hasChanges && (
                     <Button onClick={handleSave} loading={submitting}>
                       Save Changes
                     </Button>
