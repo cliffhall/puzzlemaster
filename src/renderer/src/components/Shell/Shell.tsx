@@ -101,6 +101,7 @@ export function Shell(): ReactElement {
             onSelect={(id) => {
               setDraftProjectName(null);
               setSelectedProjectId(id);
+              toggle();
             }}
             onDeleted={async (id) => {
               // If the deleted project is currently selected, clear selection
