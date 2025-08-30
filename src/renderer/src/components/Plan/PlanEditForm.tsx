@@ -14,7 +14,7 @@ import { getPlanByProject, getPlan, updatePlan } from "../../client/plan";
 import { getPhases } from "../../client/phase";
 import { getActionsByPhase } from "../../client/action";
 import { Plan, Phase, Action } from "../../../../domain";
-import { CreatePhaseForm } from "../Phase/CreatePhaseForm";
+import { PhaseCreateForm } from "../Phase/PhaseCreateForm";
 
 export type PlanEditFormProps = {
   projectId?: string; // if provided, we load plan by projectId (first match)
@@ -50,7 +50,6 @@ export function PlanEditForm({
     Record<string, Action[]>
   >({});
   const [loadingPhases, setLoadingPhases] = useState(false);
-  const [showCreatePhase, setShowCreatePhase] = useState(false);
 
   // load plan either by id or by projectId, or accept it as a prop
   useEffect(() => {
@@ -94,7 +93,7 @@ export function PlanEditForm({
     };
   }, [projectId, planId, initialPlan]);
 
-  const title = useMemo(() => (isDisplay ? "Plan" : "Edit Plan"), [isDisplay]);
+  const title = "Plan"; //useMemo(() => (isDisplay ? "Plan" : "Edit Plan"), [isDisplay]);
 
   const hasChanges = useMemo(() => {
     if (!plan) return false;
@@ -104,7 +103,6 @@ export function PlanEditForm({
   const handleCancel = (): void => {
     setDescription(plan?.description || "");
   };
-
 
   const handleSave = async (): Promise<void> => {
     if (!plan || submitting) return;
@@ -171,7 +169,7 @@ export function PlanEditForm({
     return (
       <Stack gap="xs">
         <Group justify="space-between">
-          <Title order={4}>Phases</Title>
+          <Title order={5}>Phases</Title>
         </Group>
         <Table striped highlightOnHover withTableBorder withColumnBorders>
           <Table.Thead>
@@ -201,7 +199,7 @@ export function PlanEditForm({
   };
 
   return (
-    <Paper p="md" withBorder>
+    <Paper p="md" shadow={isDisplay ? "none" : "sm"} withBorder={!isDisplay}>
       {loading ? (
         <Group justify="center" p="md">
           <Loader size="sm" />
@@ -210,7 +208,7 @@ export function PlanEditForm({
         <Text c="dimmed">No plan found for this project.</Text>
       ) : (
         <Stack gap="md">
-          <Title order={3}>{title}</Title>
+          <Title order={4}>{title}</Title>
           {isDisplay ? (
             <Stack gap="xs">
               <Text>{plan.description}</Text>
@@ -229,40 +227,33 @@ export function PlanEditForm({
                 minRows={3}
               />
               {renderPhasesTable()}
-              {!showCreatePhase && (
-                <Group justify="flex-end">
-                  <Button
-                    variant="default"
-                    onClick={hasChanges ? handleCancel : onDoneEditing}
-                    disabled={submitting}
-                  >
-                    {hasChanges ? "Cancel" : "Done Editing"}
+              <Group justify="flex-end">
+                <Button
+                  variant="default"
+                  onClick={hasChanges ? handleCancel : onDoneEditing}
+                  disabled={submitting}
+                >
+                  {hasChanges ? "Cancel" : "Done Editing"}
+                </Button>
+                {hasChanges && (
+                  <Button onClick={handleSave} loading={submitting}>
+                    Save Changes
                   </Button>
-                  {hasChanges && (
-                    <Button onClick={handleSave} loading={submitting}>
-                      Save Changes
-                    </Button>
-                  )}
-                  <Button
-                    variant="light"
-                    onClick={() => setShowCreatePhase(true)}
-                  >
-                    Add Phase
-                  </Button>
-                </Group>
-              )}
+                )}
+                {plan && (
+                  <PhaseCreateForm
+                    planId={plan.id}
+                    onCreated={(newPhase) => {
+                      setPhases((prev) => [...prev, newPhase]);
+                      setActionsByPhase((prev) => ({
+                        ...prev,
+                        [newPhase.id]: [],
+                      }));
+                    }}
+                  />
+                )}
+              </Group>
             </>
-          )}
-          {showCreatePhase && plan && (
-            <CreatePhaseForm
-              planId={plan.id}
-              onCreated={(newPhase) => {
-                setShowCreatePhase(false);
-                setPhases((prev) => [...prev, newPhase]);
-                setActionsByPhase((prev) => ({ ...prev, [newPhase.id]: [] }));
-              }}
-              onCancel={() => setShowCreatePhase(false)}
-            />
           )}
         </Stack>
       )}

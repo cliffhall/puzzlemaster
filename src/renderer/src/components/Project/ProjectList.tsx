@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { ActionIcon, NavLink, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconGripVertical, IconX } from "@tabler/icons-react";

@@ -1,4 +1,4 @@
-import {
+import React, {
   ReactElement,
   memo,
   useCallback,
@@ -18,9 +18,8 @@ import {
   Text,
 } from "@mantine/core";
 import { getProject, updateProject } from "../../client/project";
+import { PlanCreateForm, PlanEditForm } from "../Plan";
 import { getPlanByProject } from "../../client/plan";
-import { PlanCreateForm } from "../Plan/PlanCreateForm";
-import { PlanEditForm } from "../Plan/PlanEditForm";
 import { Plan } from "../../../../domain";
 
 export type ProjectEditFormProps = {
@@ -143,7 +142,12 @@ export const ProjectEditForm = memo(function ProjectEditForm({
 
   return (
     <>
-      <Paper p="md" my="md" withBorder>
+      <Paper
+        p="md"
+        my="md"
+        shadow={editPlanMode || showCreatePlanForm ? "none" : "sm"}
+        withBorder={!editPlanMode && !showCreatePlanForm}
+      >
         {loading ? (
           <Group justify="center" p="md">
             <Loader size="sm" />
@@ -152,7 +156,6 @@ export const ProjectEditForm = memo(function ProjectEditForm({
           <form onSubmit={handleSubmit}>
             <Stack gap="md">
               <Title order={3}>
-                {!showCreatePlanForm && !editPlanMode && "Edit "}
                 {!showCreatePlanForm && !editPlanMode
                   ? "Project"
                   : name || "(Untitled)"}
@@ -237,7 +240,6 @@ export const ProjectEditForm = memo(function ProjectEditForm({
               mode={editPlanMode ? "edit" : "display"}
               onSaved={(savedPlan) => {
                 setPlan(savedPlan);
-                setEditPlanMode(false);
               }}
               onDoneEditing={() => setEditPlanMode(false)}
             />

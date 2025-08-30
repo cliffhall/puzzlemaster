@@ -1,15 +1,8 @@
-import { ReactElement, useCallback, useState } from "react";
-import {
-  Button,
-  Group,
-  Paper,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import React, { ReactElement, useCallback, useState } from "react";
+import { ActionIcon, CloseButton, Group, Input, Text } from "@mantine/core";
 import { createPhase } from "../../client/phase";
 import { Phase } from "../../../../domain";
+import { IconPlus } from "@tabler/icons-react";
 
 export type CreatePhaseFormProps = {
   planId: string;
@@ -23,10 +16,9 @@ export type CreatePhaseFormProps = {
  * Minimal form to create a Phase associated with a Plan.
  * Collects required name and creates the phase (with no actions initially).
  */
-export function CreatePhaseForm({
+export function PhaseCreateForm({
   planId,
   onCreated,
-  onCancel,
 }: CreatePhaseFormProps): ReactElement {
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -51,6 +43,7 @@ export function CreatePhaseForm({
         });
         if (created) {
           onCreated?.(created);
+          setName("");
         } else {
           setError("Failed to create phase.");
         }
@@ -64,33 +57,31 @@ export function CreatePhaseForm({
   );
 
   return (
-    <Paper p="md" withBorder>
-      <form onSubmit={handleSubmit}>
-        <Stack gap="md">
-          <Title order={5}>Create Phase</Title>
-          <TextInput
-            label="Name"
-            placeholder="Name this phase"
-            required
-            value={name}
-            onChange={(e) => setName(e.currentTarget.value)}
-          />
-          {error && <Text c="red">{error}</Text>}
-          <Group justify="flex-end">
-            <Button
-              variant="default"
-              type="button"
-              onClick={onCancel}
-              disabled={submitting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" loading={submitting} disabled={!name.trim()}>
-              Create Phase
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Paper>
+    <form onSubmit={handleSubmit}>
+      <Group wrap="nowrap" w="100%">
+        {error && <Text c="red">{error}</Text>}
+        <Input
+          value={name}
+          onChange={(e) => setName(e.currentTarget.value)}
+          placeholder="New phase name"
+          rightSectionPointerEvents="all"
+          rightSection={
+            <CloseButton
+              aria-label="Clear input"
+              onClick={() => setName("")}
+              style={{ display: name ? undefined : "none" }}
+            />
+          }
+        />
+        <ActionIcon
+          variant="filled"
+          type="submit"
+          loading={submitting}
+          disabled={!name.trim() || submitting}
+        >
+          <IconPlus stroke={1.5} />
+        </ActionIcon>
+      </Group>
+    </form>
   );
 }

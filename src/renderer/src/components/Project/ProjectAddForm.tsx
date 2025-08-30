@@ -1,4 +1,4 @@
-import { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useCallback, useState } from "react";
 import { Group, Input, CloseButton, ActionIcon } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
