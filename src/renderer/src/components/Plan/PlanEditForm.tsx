@@ -9,6 +9,7 @@ import {
   Textarea,
   Title,
   Table,
+  ActionIcon,
 } from "@mantine/core";
 import {
   getPlanByProject,
@@ -16,9 +17,12 @@ import {
   updatePlan,
   getPhases,
   getActionsByPhase,
+  deletePhase,
 } from "../../client";
 import { Plan, Phase, Action } from "../../../../domain";
 import { PhaseCreateForm } from "../Phase/PhaseCreateForm";
+import { modals } from "@mantine/modals";
+import { IconX } from "@tabler/icons-react";
 
 export type PlanEditFormProps = {
   projectId?: string; // if provided, we load plan by projectId (first match)
@@ -54,6 +58,7 @@ export function PlanEditForm({
     Record<string, Action[]>
   >({});
   const [loadingPhases, setLoadingPhases] = useState(false);
+  const [deletingPhaseId, setDeletingPhaseId] = useState<string | null>(null);
 
   // load plan either by id or by projectId, or accept it as a prop
   useEffect(() => {
@@ -182,6 +187,7 @@ export function PlanEditForm({
               <Table.Th>Job</Table.Th>
               <Table.Th>Team</Table.Th>
               <Table.Th>Actions</Table.Th>
+              {!isDisplay && <Table.Th style={{ width: 36 }} />}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
@@ -193,6 +199,49 @@ export function PlanEditForm({
                   <Table.Td />
                   <Table.Td />
                   <Table.Td>{actions.map((a) => a.name).join(", ")}</Table.Td>
+                  {!isDisplay && (
+                    <Table.Td style={{ width: 36 }}>
+                      <ActionIcon
+                        size="sm"
+                        variant="subtle"
+                        color="red"
+                        aria-label={`Delete ${ph.name}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          modals.openConfirmModal({
+                            title: "Delete phase",
+                            centered: true,
+                            children: (
+                              <Text size="sm">
+                                Are you sure you want to delete the phase <b>{ph.name}</b>? This action cannot be undone.
+                              </Text>
+                            ),
+                            labels: { confirm: "Delete", cancel: "Cancel" },
+                            confirmProps: { color: "red" },
+                            onConfirm: async () => {
+                              try {
+                                setDeletingPhaseId(ph.id);
+                                const ok = await deletePhase(ph.id);
+                                if (ok) {
+                                  setPhases((prev) => prev.filter((p) => p.id !== ph.id));
+                                  setActionsByPhase((prev) => {
+                                    const { [ph.id]: _omit, ...rest } = prev;
+                                    return rest;
+                                  });
+                                }
+                              } finally {
+                                setDeletingPhaseId((curr) => (curr === ph.id ? null : curr));
+                              }
+                            },
+                          });
+                        }}
+                        loading={deletingPhaseId === ph.id}
+                      >
+                        <IconX size={14} />
+                      </ActionIcon>
+                    </Table.Td>
+                  )}
                 </Table.Tr>
               );
             })}
