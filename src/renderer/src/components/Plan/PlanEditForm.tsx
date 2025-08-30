@@ -166,7 +166,7 @@ export function PlanEditForm({
     return (
       <Stack gap="xs">
         <Group justify="space-between">
-          <Title order={5}>Phases</Title>
+          <Title order={4}>Phases</Title>
         </Group>
         <Table striped highlightOnHover withTableBorder withColumnBorders>
           <Table.Thead>
@@ -205,7 +205,7 @@ export function PlanEditForm({
         <Text c="dimmed">No plan found for this project.</Text>
       ) : (
         <Stack gap="md">
-          <Title order={4}>{title}</Title>
+          <Title order={3}>{title}</Title>
           {isDisplay ? (
             <Stack gap="xs">
               <Text>{plan.description}</Text>
@@ -224,25 +224,28 @@ export function PlanEditForm({
                 minRows={3}
               />
               {renderPhasesTable()}
-              <Group justify="flex-end">
-                <Button
-                  variant="default"
-                  onClick={onCancelEdit}
-                  disabled={submitting}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSave}
-                  loading={submitting}
-                  disabled={!canSave}
-                >
-                  Save Changes
-                </Button>
-                <Button onClick={() => setShowCreatePhase(true)}>
-                  Add Phase
-                </Button>
-              </Group>
+              {!showCreatePhase && (
+                <Group justify="flex-end">
+                  <Button
+                    variant="default"
+                    onClick={onCancelEdit}
+                    disabled={submitting}
+                  >
+                    Cancel
+                  </Button>
+                  {canSave && (
+                    <Button onClick={handleSave} loading={submitting}>
+                      Save Changes
+                    </Button>
+                  )}
+                  <Button
+                    variant="light"
+                    onClick={() => setShowCreatePhase(true)}
+                  >
+                    Add Phase
+                  </Button>
+                </Group>
+              )}
             </>
           )}
           {showCreatePhase && plan && (

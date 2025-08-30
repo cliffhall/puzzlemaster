@@ -135,13 +135,13 @@ export const ProjectEditForm = memo(function ProjectEditForm({
           <form onSubmit={handleSubmit}>
             <Stack gap="md">
               <Title order={3}>
-                {!showCreatePlanForm && !editPlanMode && "Edit "}Project
+                {!showCreatePlanForm && !editPlanMode && "Edit "}
+                {!showCreatePlanForm && !editPlanMode
+                  ? "Project"
+                  : name || "(Untitled)"}
               </Title>
               {showCreatePlanForm || editPlanMode ? (
                 <Stack gap="xs">
-                  <Text>
-                    <b>{name || "(Untitled)"}</b>
-                  </Text>
                   <Text>{description || "(No description)"}</Text>
                 </Stack>
               ) : (
@@ -174,15 +174,13 @@ export const ProjectEditForm = memo(function ProjectEditForm({
                       onClick={onCancel}
                       disabled={submitting}
                     >
-                      Cancel
+                      {!!name.trim() && hasChanges ? "Cancel" : "Close"}
                     </Button>
-                    <Button
-                      type="submit"
-                      loading={submitting}
-                      disabled={!name.trim() || !hasChanges}
-                    >
-                      Save Changes
-                    </Button>
+                    {!!name.trim() && hasChanges && (
+                      <Button type="submit" loading={submitting}>
+                        Save Changes
+                      </Button>
+                    )}
                   </>
                 )}
                 {!hasPlan && !showCreatePlanForm && (
@@ -215,29 +213,33 @@ export const ProjectEditForm = memo(function ProjectEditForm({
             </Stack>
           </form>
         )}
+        {hasPlan && (
+          <Stack gap="md" my="md">
+            <PlanEditForm
+              initialPlan={plan}
+              mode={editPlanMode ? "edit" : "display"}
+              onSaved={(savedPlan) => {
+                setPlan(savedPlan);
+                setEditPlanMode(false);
+              }}
+              onCancelEdit={() => setEditPlanMode(false)}
+            />
+          </Stack>
+        )}
+        {showCreatePlanForm && !hasPlan && (
+          <Stack p="md">
+            <PlanCreateForm
+              projectId={projectId}
+              onCancel={() => setShowCreatePlanForm(false)}
+              onCreated={(newPlan) => {
+                setPlan(newPlan);
+                setShowCreatePlanForm(false);
+                onUpdated?.(projectId);
+              }}
+            />
+          </Stack>
+        )}
       </Paper>
-      {hasPlan && (
-        <PlanEditForm
-          initialPlan={plan}
-          mode={editPlanMode ? "edit" : "display"}
-          onSaved={(savedPlan) => {
-            setPlan(savedPlan);
-            setEditPlanMode(false);
-          }}
-          onCancelEdit={() => setEditPlanMode(false)}
-        />
-      )}
-      {showCreatePlanForm && !hasPlan && (
-        <PlanCreateForm
-          projectId={projectId}
-          onCancel={() => setShowCreatePlanForm(false)}
-          onCreated={(newPlan) => {
-            setPlan(newPlan);
-            setShowCreatePlanForm(false);
-            onUpdated?.(projectId);
-          }}
-        />
-      )}
     </>
   );
 });

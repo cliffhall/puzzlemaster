@@ -67,7 +67,7 @@ export function PlanCreateForm({
     <Paper p="md" withBorder>
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <Title order={4}>Create Plan</Title>
+          <Title order={3}>Create Plan</Title>
           <Textarea
             label="Description"
             required
