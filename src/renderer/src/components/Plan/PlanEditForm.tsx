@@ -213,7 +213,12 @@ export function PlanEditForm({
         <Group justify="space-between">
           <Title order={5}>Phases</Title>
         </Group>
-        <Table striped highlightOnHover withTableBorder withColumnBorders>
+        <Table
+          striped
+          highlightOnHover={!isDisplay && !jobEditor}
+          withTableBorder
+          withColumnBorders
+        >
           <Table.Thead>
             <Table.Tr>
               <Table.Th style={{ width: 300 }}>Name</Table.Th>
