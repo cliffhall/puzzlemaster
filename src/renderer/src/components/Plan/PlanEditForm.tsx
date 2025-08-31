@@ -102,8 +102,6 @@ export function PlanEditForm({
     };
   }, [projectId, planId, initialPlan]);
 
-  const title = "Plan"; //useMemo(() => (isDisplay ? "Plan" : "Edit Plan"), [isDisplay]);
-
   const hasChanges = useMemo(() => {
     if (!plan) return false;
     return description.trim().length > 0 && plan.description !== description;
@@ -267,7 +265,7 @@ export function PlanEditForm({
         <Text c="dimmed">No plan found for this project.</Text>
       ) : (
         <Stack gap="md">
-          <Title order={4}>{title}</Title>
+          <Title order={4}>Plan</Title>
           {isDisplay ? (
             <Stack gap="xs">
               <Text>{plan.description}</Text>
