@@ -17,7 +17,7 @@ import {
   Loader,
   Text,
 } from "@mantine/core";
-import { getProject, updateProject, getPlanByProject} from "../../client";
+import { getProject, updateProject, getPlanByProject } from "../../client";
 import { PlanCreateForm, PlanEditForm } from "../Plan";
 import { Plan } from "../../../../domain";
 

@@ -183,19 +183,19 @@ export function PlanEditForm({
         <Table striped highlightOnHover withTableBorder withColumnBorders>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Name</Table.Th>
-              <Table.Th>Job</Table.Th>
-              <Table.Th>Team</Table.Th>
+              <Table.Th style={{ width: 300 }}>Name</Table.Th>
+              <Table.Th style={{ width: 100 }}>Job</Table.Th>
+              <Table.Th style={{ width: 200 }}>Team</Table.Th>
               <Table.Th>Actions</Table.Th>
               {!isDisplay && <Table.Th style={{ width: 36 }} />}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {phases.map((ph) => {
-              const actions = actionsByPhase[ph.id] || [];
+            {phases.map((phase) => {
+              const actions = actionsByPhase[phase.id] || [];
               return (
-                <Table.Tr key={ph.id}>
-                  <Table.Td>{ph.name}</Table.Td>
+                <Table.Tr key={phase.id}>
+                  <Table.Td>{phase.name}</Table.Td>
                   <Table.Td />
                   <Table.Td />
                   <Table.Td>{actions.map((a) => a.name).join(", ")}</Table.Td>
@@ -205,7 +205,7 @@ export function PlanEditForm({
                         size="sm"
                         variant="subtle"
                         color="red"
-                        aria-label={`Delete ${ph.name}`}
+                        aria-label={`Delete ${phase.name}`}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
@@ -214,29 +214,35 @@ export function PlanEditForm({
                             centered: true,
                             children: (
                               <Text size="sm">
-                                Are you sure you want to delete the phase <b>{ph.name}</b>? This action cannot be undone.
+                                Are you sure you want to delete the phase{" "}
+                                <b>{phase.name}</b>? This action cannot be
+                                undone.
                               </Text>
                             ),
                             labels: { confirm: "Delete", cancel: "Cancel" },
                             confirmProps: { color: "red" },
                             onConfirm: async () => {
                               try {
-                                setDeletingPhaseId(ph.id);
-                                const ok = await deletePhase(ph.id);
+                                setDeletingPhaseId(phase.id);
+                                const ok = await deletePhase(phase.id);
                                 if (ok) {
-                                  setPhases((prev) => prev.filter((p) => p.id !== ph.id));
+                                  setPhases((prev) =>
+                                    prev.filter((p) => p.id !== phase.id),
+                                  );
                                   setActionsByPhase((prev) => {
-                                    const { [ph.id]: _omit, ...rest } = prev;
+                                    const { [phase.id]: _omit, ...rest } = prev;
                                     return rest;
                                   });
                                 }
                               } finally {
-                                setDeletingPhaseId((curr) => (curr === ph.id ? null : curr));
+                                setDeletingPhaseId((curr) =>
+                                  curr === phase.id ? null : curr,
+                                );
                               }
                             },
                           });
                         }}
-                        loading={deletingPhaseId === ph.id}
+                        loading={deletingPhaseId === phase.id}
                       >
                         <IconX size={14} />
                       </ActionIcon>
