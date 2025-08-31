@@ -145,7 +145,7 @@ export function PlanEditForm({
     }
   };
 
-  // Load phases for this plan and their actions
+  // Load phases for this plan and their jobs, teams, and actions
   useEffect(() => {
     let cancelled = false;
     const load = async (): Promise<void> => {
@@ -185,6 +185,11 @@ export function PlanEditForm({
       cancelled = true;
     };
   }, [plan]);
+
+  // Clear job editor state when plan changes to prevent stale data
+  useEffect(() => {
+    setJobEditor(null);
+  }, [projectId, planId, plan?.id]);
 
   const openCreateJobInline = (phase: Phase): void => {
     setJobEditor({ mode: "create", phase });
