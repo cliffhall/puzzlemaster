@@ -253,6 +253,7 @@ export const ProjectEditForm = memo(function ProjectEditForm({
                 setPlan(newPlan);
                 setShowCreatePlanForm(false);
                 onUpdated?.(projectId);
+                setEditPlanMode(true);
               }}
             />
           </Stack>

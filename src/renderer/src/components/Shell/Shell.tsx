@@ -125,6 +125,7 @@ export function Shell(): ReactElement {
             onAdd={async (name) => {
               setSelectedProjectId(null);
               setDraftProjectName(name);
+              toggle();
             }}
           />
         </AppShell.Section>
@@ -149,6 +150,7 @@ export function Shell(): ReactElement {
             }}
             onCancel={() => {
               setDraftProjectName(null);
+              if (!opened) toggle();
             }}
           />
         ) : selectedProjectId ? (
