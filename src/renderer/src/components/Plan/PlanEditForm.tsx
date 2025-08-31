@@ -18,11 +18,13 @@ import {
   getPhases,
   getActionsByPhase,
   deletePhase,
+  getJobs,
 } from "../../client";
-import { Plan, Phase, Action } from "../../../../domain";
+import { Plan, Phase, Action, Job } from "../../../../domain";
 import { PhaseCreateForm } from "../Phase/PhaseCreateForm";
+import { JobCreateForm, JobEditForm } from "../Job";
 import { modals } from "@mantine/modals";
-import { IconX } from "@tabler/icons-react";
+import { IconPencil, IconPlus, IconX } from "@tabler/icons-react";
 
 export type PlanEditFormProps = {
   projectId?: string; // if provided, we load plan by projectId (first match)
@@ -50,15 +52,26 @@ export function PlanEditForm({
   const [plan, setPlan] = useState<Plan | null>(null);
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const isDisplay = mode === "display";
 
   // phases and actions state
   const [phases, setPhases] = useState<Phase[]>([]);
   const [actionsByPhase, setActionsByPhase] = useState<
     Record<string, Action[]>
   >({});
+  const [jobsByPhase, setJobsByPhase] = useState<
+    Record<string, Job | undefined>
+  >({});
   const [loadingPhases, setLoadingPhases] = useState(false);
   const [deletingPhaseId, setDeletingPhaseId] = useState<string | null>(null);
+
+  // Inline job editor state
+  const [jobEditor, setJobEditor] = useState<
+    | { mode: "create"; phase: Phase }
+    | { mode: "edit"; phase: Phase; job: Job }
+    | null
+  >(null);
+
+  const isDisplay = mode === "display";
 
   // load plan either by id or by projectId, or accept it as a prop
   useEffect(() => {
@@ -139,6 +152,7 @@ export function PlanEditForm({
       if (!plan) {
         setPhases([]);
         setActionsByPhase({});
+        setJobsByPhase({});
         return;
       }
       setLoadingPhases(true);
@@ -154,6 +168,14 @@ export function PlanEditForm({
           actionsEntries.push([phase.id, actions]);
         }
         setActionsByPhase(Object.fromEntries(actionsEntries));
+        // load jobs and map by phase
+        const allJobs = (await getJobs()) || [];
+        if (cancelled) return;
+        const jobsEntries: [string, Job | undefined][] = mine.map((p) => [
+          p.id,
+          allJobs.find((j) => j.phaseId === p.id),
+        ]);
+        setJobsByPhase(Object.fromEntries(jobsEntries));
       } finally {
         if (!cancelled) setLoadingPhases(false);
       }
@@ -163,6 +185,14 @@ export function PlanEditForm({
       cancelled = true;
     };
   }, [plan]);
+
+  const openCreateJobInline = (phase: Phase): void => {
+    setJobEditor({ mode: "create", phase });
+  };
+
+  const openEditJobInline = (phase: Phase, job: Job): void => {
+    setJobEditor({ mode: "edit", phase, job });
+  };
 
   const renderPhasesTable = (): ReactElement | null => {
     if (!plan) return null;
@@ -182,22 +212,71 @@ export function PlanEditForm({
           <Table.Thead>
             <Table.Tr>
               <Table.Th style={{ width: 300 }}>Name</Table.Th>
-              <Table.Th style={{ width: 100 }}>Job</Table.Th>
+              <Table.Th style={{ width: 300 }}>Job</Table.Th>
               <Table.Th style={{ width: 200 }}>Team</Table.Th>
               <Table.Th>Actions</Table.Th>
-              {!isDisplay && <Table.Th style={{ width: 36 }} />}
+              {!isDisplay && !jobEditor && <Table.Th style={{ width: 36 }} />}
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
             {phases.map((phase) => {
               const actions = actionsByPhase[phase.id] || [];
+              const job = jobsByPhase[phase.id];
               return (
                 <Table.Tr key={phase.id}>
                   <Table.Td>{phase.name}</Table.Td>
-                  <Table.Td />
+                  <Table.Td>
+                    {job ? (
+                      <Group gap="xs" justify="space-between" wrap="nowrap">
+                        <Text
+                          size="sm"
+                          style={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            flex: 1,
+                          }}
+                        >
+                          {job.name}
+                        </Text>
+                        {!isDisplay && !jobEditor && (
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            aria-label={`Edit job for ${phase.name}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              openEditJobInline(phase, job);
+                            }}
+                            title="Edit Job"
+                          >
+                            <IconPencil size={14} />
+                          </ActionIcon>
+                        )}
+                      </Group>
+                    ) : (
+                      !isDisplay &&
+                      !jobEditor && (
+                        <ActionIcon
+                          size="sm"
+                          variant="subtle"
+                          aria-label={`Create job for ${phase.name}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openCreateJobInline(phase);
+                          }}
+                          title="Create Job"
+                        >
+                          <IconPlus size={14} />
+                        </ActionIcon>
+                      )
+                    )}
+                  </Table.Td>
                   <Table.Td />
                   <Table.Td>{actions.map((a) => a.name).join(", ")}</Table.Td>
-                  {!isDisplay && (
+                  {!isDisplay && !jobEditor && (
                     <Table.Td style={{ width: 36 }}>
                       <ActionIcon
                         size="sm"
@@ -231,6 +310,10 @@ export function PlanEditForm({
                                     const { [phase.id]: _omit, ...rest } = prev;
                                     return rest;
                                   });
+                                  setJobsByPhase((prev) => {
+                                    const { [phase.id]: _omit, ...rest } = prev;
+                                    return rest;
+                                  });
                                 }
                               } finally {
                                 setDeletingPhaseId((curr) =>
@@ -256,7 +339,11 @@ export function PlanEditForm({
   };
 
   return (
-    <Paper p="md" shadow={isDisplay ? "none" : "sm"} withBorder={!isDisplay}>
+    <Paper
+      p="md"
+      shadow={isDisplay || jobEditor ? "none" : "sm"}
+      withBorder={!isDisplay && !jobEditor}
+    >
       {loading ? (
         <Group justify="center" p="md">
           <Loader size="sm" />
@@ -266,13 +353,10 @@ export function PlanEditForm({
       ) : (
         <Stack gap="md">
           <Title order={4}>Plan</Title>
-          {isDisplay ? (
-            <Stack gap="xs">
+          <>
+            {isDisplay || jobEditor ? (
               <Text>{plan.description}</Text>
-              {renderPhasesTable()}
-            </Stack>
-          ) : (
-            <>
+            ) : (
               <Textarea
                 label="Description"
                 description="Detailed description of the plan"
@@ -283,7 +367,43 @@ export function PlanEditForm({
                 autosize
                 minRows={3}
               />
-              {renderPhasesTable()}
+            )}
+            {renderPhasesTable()}
+            {!isDisplay && jobEditor && (
+              <Paper p="sm" withBorder>
+                <Stack gap="sm">
+                  <Title order={5}>Job</Title>
+                  {jobEditor.mode === "create" ? (
+                    <JobCreateForm
+                      phaseId={jobEditor.phase.id}
+                      phaseName={jobEditor.phase.name}
+                      onCreated={(job) => {
+                        setJobsByPhase((prev) => ({
+                          ...prev,
+                          [jobEditor.phase.id]: job,
+                        }));
+                        setJobEditor(null);
+                      }}
+                      onCancel={() => setJobEditor(null)}
+                    />
+                  ) : (
+                    <JobEditForm
+                      phaseName={jobEditor.phase.name}
+                      job={jobEditor.job}
+                      onUpdated={(updated) => {
+                        setJobsByPhase((prev) => ({
+                          ...prev,
+                          [jobEditor.phase.id]: updated,
+                        }));
+                        setJobEditor(null);
+                      }}
+                      onCancel={() => setJobEditor(null)}
+                    />
+                  )}
+                </Stack>
+              </Paper>
+            )}
+            {!isDisplay && !jobEditor && (
               <Group justify="flex-end">
                 <Button
                   variant="default"
@@ -310,8 +430,8 @@ export function PlanEditForm({
                   />
                 )}
               </Group>
-            </>
-          )}
+            )}
+          </>
         </Stack>
       )}
     </Paper>
