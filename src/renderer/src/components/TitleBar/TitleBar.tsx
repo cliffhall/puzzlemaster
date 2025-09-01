@@ -17,7 +17,7 @@ export function TitleBar({ opened, toggle }: TitleBarProps): ReactElement {
   return (
     <AppShell.Header>
       <Group w="100%" gap="0" h="100%" wrap="nowrap">
-        <Group pl={fullscreen ? "15px" : "80px"} h="100%" w="170px" gap="10px">
+        <Group pl={fullscreen ? "15px" : "80px"} h="100%" w="170px" gap="5px">
           <NavToggle toggle={toggle} opened={opened} />
           <ThemeToggle />
         </Group>

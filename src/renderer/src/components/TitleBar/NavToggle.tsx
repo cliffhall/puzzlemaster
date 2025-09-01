@@ -18,7 +18,7 @@ export function NavToggle(props: NavToggleProps): ReactElement {
     <ActionIcon
       className="nav-toggle"
       onClick={() => toggle()}
-      variant="default"
+      variant="subtle"
       size="md"
       aria-label="Toggle sidebar"
     >
