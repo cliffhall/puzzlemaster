@@ -28,7 +28,7 @@ export function JobEditForm({
 
   const hasChanges = useMemo(() => {
     const trimmedName = name.trim();
-    const initialName = (job.name ?? "").trim();
+    const initialName = job.name.trim();
     const normalizedDesc = description.trim() || ""; // treat empty as ""
     const initialDesc = (job.description ?? "").trim();
     return trimmedName !== initialName || normalizedDesc !== initialDesc;
@@ -54,7 +54,7 @@ export function JobEditForm({
           id: job.id,
           phaseId: job.phaseId,
           name: trimmed,
-          description: description.trim() ? description : undefined,
+          description: description.trim() || undefined,
           status: job.status,
           tasks: job.tasks,
         });
@@ -69,7 +69,9 @@ export function JobEditForm({
         setSubmitting(false);
       }
     },
-    [name, description, submitting, onUpdated, job, hasChanges],
+    // Submitting could be stale if the form is re-rendered while submitting
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name, description, onUpdated, job, hasChanges],
   );
 
   return (

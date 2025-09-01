@@ -171,9 +171,10 @@ export function PlanEditForm({
         // load jobs and map by phase
         const allJobs = (await getJobs()) || [];
         if (cancelled) return;
+        const jobsByPhaseId = new Map(allJobs.map((job) => [job.phaseId, job]));
         const jobsEntries: [string, Job | undefined][] = mine.map((p) => [
           p.id,
-          allJobs.find((j) => j.phaseId === p.id),
+          jobsByPhaseId.get(p.id),
         ]);
         setJobsByPhase(Object.fromEntries(jobsEntries));
       } finally {

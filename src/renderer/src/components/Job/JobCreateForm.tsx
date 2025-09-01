@@ -42,7 +42,7 @@ export function JobCreateForm({
         const created = await createJob({
           phaseId,
           name: trimmed,
-          description: description || undefined,
+          description: description.trim() || undefined,
           status: "PENDING",
           tasks: [] as string[],
         });
@@ -59,7 +59,9 @@ export function JobCreateForm({
         setSubmitting(false);
       }
     },
-    [name, description, submitting, onCreated, phaseId],
+    // Submitting could be stale if the form is re-rendered while submitting
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name, description, onCreated, phaseId],
   );
 
   return (
