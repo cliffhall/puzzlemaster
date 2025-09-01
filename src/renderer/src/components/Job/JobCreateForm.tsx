@@ -65,7 +65,9 @@ export function JobCreateForm({
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="sm">
-        <Text size="sm" c="dimmed">Phase: {phaseName}</Text>
+        <Text size="sm" c="dimmed">
+          Phase: {phaseName}
+        </Text>
         <TextInput
           label="Name"
           required
@@ -84,7 +86,12 @@ export function JobCreateForm({
         />
         {error && <Text c="red">{error}</Text>}
         <Group justify="flex-end">
-          <Button variant="default" type="button" onClick={onCancel} disabled={submitting}>
+          <Button
+            variant="default"
+            type="button"
+            onClick={onCancel}
+            disabled={submitting}
+          >
             Cancel
           </Button>
           <Button type="submit" loading={submitting} disabled={!name.trim()}>

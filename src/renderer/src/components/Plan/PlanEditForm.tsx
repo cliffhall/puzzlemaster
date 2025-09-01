@@ -213,12 +213,15 @@ export function PlanEditForm({
         <Group justify="space-between">
           <Title order={5}>Phases</Title>
         </Group>
+
+        {/* Table */}
         <Table
           striped
           highlightOnHover={!isDisplay && !jobEditor}
           withTableBorder
           withColumnBorders
         >
+          {/* Table Header */}
           <Table.Thead>
             <Table.Tr>
               <Table.Th style={{ width: 300 }}>Name</Table.Th>
@@ -228,46 +231,48 @@ export function PlanEditForm({
               {!isDisplay && !jobEditor && <Table.Th style={{ width: 36 }} />}
             </Table.Tr>
           </Table.Thead>
+
+          {/* Table Body */}
           <Table.Tbody>
+            {/* Each Table Row */}
             {phases.map((phase) => {
               const actions = actionsByPhase[phase.id] || [];
               const job = jobsByPhase[phase.id];
               return (
                 <Table.Tr key={phase.id}>
+                  {/* Phase column */}
                   <Table.Td>{phase.name}</Table.Td>
+
+                  {/* Job column */}
                   <Table.Td>
-                    {job ? (
-                      <Group gap="xs" justify="space-between" wrap="nowrap">
-                        <Text
+                    <Group gap="xs" justify="space-between" wrap="nowrap">
+                      <Text
+                        size="sm"
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                          flex: 1,
+                        }}
+                      >
+                        {job?.name || " "}
+                      </Text>
+                      {!isDisplay && !jobEditor && job && (
+                        <ActionIcon
                           size="sm"
-                          style={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                            flex: 1,
+                          variant="subtle"
+                          aria-label={`Edit job for ${phase.name}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openEditJobInline(phase, job);
                           }}
+                          title="Edit Job"
                         >
-                          {job.name}
-                        </Text>
-                        {!isDisplay && !jobEditor && (
-                          <ActionIcon
-                            size="sm"
-                            variant="subtle"
-                            aria-label={`Edit job for ${phase.name}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              openEditJobInline(phase, job);
-                            }}
-                            title="Edit Job"
-                          >
-                            <IconPencil size={14} />
-                          </ActionIcon>
-                        )}
-                      </Group>
-                    ) : (
-                      !isDisplay &&
-                      !jobEditor && (
+                          <IconPencil size={14} />
+                        </ActionIcon>
+                      )}
+                      {!isDisplay && !jobEditor && !job && (
                         <ActionIcon
                           size="sm"
                           variant="subtle"
@@ -281,11 +286,17 @@ export function PlanEditForm({
                         >
                           <IconPlus size={14} />
                         </ActionIcon>
-                      )
-                    )}
+                      )}
+                    </Group>
                   </Table.Td>
+
+                  {/* Team column */}
                   <Table.Td />
+
+                  {/* Actions column */}
                   <Table.Td>{actions.map((a) => a.name).join(", ")}</Table.Td>
+
+                  {/* Conditionally displayed delete button column */}
                   {!isDisplay && !jobEditor && (
                     <Table.Td style={{ width: 36 }}>
                       <ActionIcon
