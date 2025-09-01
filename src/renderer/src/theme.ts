@@ -32,10 +32,24 @@ const skyBlue: MantineColorsTuple = [
   "#0043b5",
 ];
 
+const blueGrey: MantineColorsTuple = [
+  "#f1f4fe",
+  "#e4e6ed",
+  "#c8cad3",
+  "#a9adb9",
+  "#9094a3",
+  "#7f8496",
+  "#777c91",
+  "#63687c",
+  "#595e72",
+  "#4a5167",
+];
+
 export const mantineTheme: MantineThemeOverride = createTheme({
   /** Put your mantine theme override here */
 
   colors: {
+    grey: blueGrey,
     blue: skyBlue,
   },
 
@@ -61,7 +75,7 @@ export const mantineTheme: MantineThemeOverride = createTheme({
     "2xl": rem("28px"),
     "3xl": rem("32px"),
   },
-  primaryColor: "blue",
+  primaryColor: "grey",
   components: {
     /** Put your mantine component override here */
     Container: Container.extend({

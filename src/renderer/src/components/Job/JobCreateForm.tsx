@@ -65,9 +65,7 @@ export function JobCreateForm({
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="sm">
-        <Text size="sm" c="dimmed">
-          Phase: {phaseName}
-        </Text>
+        <TextInput label="Phase" readOnly value={phaseName} variant="filled" />
         <TextInput
           label="Name"
           required

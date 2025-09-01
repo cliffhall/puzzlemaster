@@ -67,7 +67,7 @@ export function PlanCreateForm({
     <Paper p="md" withBorder>
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <Title order={3}>Create Plan</Title>
+          <Title order={3}>Plan</Title>
           <Textarea
             label="Description"
             required
@@ -88,11 +88,12 @@ export function PlanCreateForm({
               Cancel
             </Button>
             <Button
+              variant="filled"
               type="submit"
               loading={submitting}
               disabled={!description.trim()}
             >
-              Create Plan
+              Save Plan
             </Button>
           </Group>
         </Stack>
