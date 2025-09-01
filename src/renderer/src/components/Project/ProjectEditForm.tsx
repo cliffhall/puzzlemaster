@@ -204,7 +204,7 @@ export const ProjectEditForm = memo(function ProjectEditForm({
                 )}
                 {!hasPlan && !showCreatePlanForm && (
                   <Button
-                    variant="light"
+                    variant="subtle"
                     type="button"
                     onClick={() => {
                       setEditPlanMode(false);
@@ -212,12 +212,12 @@ export const ProjectEditForm = memo(function ProjectEditForm({
                     }}
                     disabled={showCreatePlanForm}
                   >
-                    Create Plan
+                    Add Plan
                   </Button>
                 )}
                 {hasPlan && !editPlanMode && (
                   <Button
-                    variant="light"
+                    variant="subtle"
                     type="button"
                     onClick={() => {
                       setShowCreatePlanForm(false);

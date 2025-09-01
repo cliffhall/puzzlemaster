@@ -19,7 +19,7 @@ export function ThemeToggle(): ReactElement {
       onClick={() =>
         setColorScheme(computedColorScheme === "light" ? "dark" : "light")
       }
-      variant="default"
+      variant="subtle"
       size="md"
       aria-label="Toggle color scheme"
     >

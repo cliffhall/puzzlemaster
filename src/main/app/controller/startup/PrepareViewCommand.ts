@@ -16,13 +16,16 @@ export class PrepareViewCommand extends AsyncCommand {
 
     function createWindow(): void {
       const mainWindow = new BrowserWindow({
-        width: 900,
-        height: 670,
-        minWidth: 769,
+        width: 1024,
+        height: 768,
+        minWidth: 1024,
+        minHeight: 768,
+        center: true,
+        icon: join(__dirname, "../../../assets/images/puzzlemaster.png"),
         show: false,
         frame: false,
         resizable: true,
-        trafficLightPosition: { x: 15, y: 15 },
+        trafficLightPosition: { x: 20, y: 15 },
         title: "Puzzlemaster",
         titleBarStyle: "hidden",
         titleBarOverlay: {
