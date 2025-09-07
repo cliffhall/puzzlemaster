@@ -43,7 +43,7 @@ function parseMigrationSql(migrationDir) {
   const sqlContent = fs.readFileSync(migrationSqlPath, 'utf8');
 
   // Split by semicolons and clean up each statement
-  const statements = sqlContent
+  return sqlContent
     .split(';')
     .map(stmt => stmt.trim())
     .filter(stmt => {
