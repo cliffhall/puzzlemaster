@@ -52,19 +52,18 @@ function parseMigrationSql(migrationDir) {
     })
     .map(stmt => {
       // Remove comments and extra whitespace, but keep the SQL structure
-      const cleaned = stmt
-        .split('\n')
-        .map(line => {
+      return stmt
+        .split("\n")
+        .map((line) => {
           // Remove comments that start with -- but keep the rest of the line
-          const commentIndex = line.indexOf('--');
+          const commentIndex = line.indexOf("--");
           if (commentIndex !== -1) {
             line = line.substring(0, commentIndex);
           }
           return line.trim();
         })
-        .filter(line => line.length > 0)
-        .join('\n');
-      return cleaned;
+        .filter((line) => line.length > 0)
+        .join("\n");
     })
     .filter(stmt => {
       // Only keep statements that have actual SQL content after cleaning
