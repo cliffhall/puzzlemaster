@@ -3,16 +3,13 @@ import { Validator, ValidatorDTO, DomainError } from "../../../domain";
 import { Result, ok, err } from "neverthrow";
 import { PrismaClient } from "db";
 
-// For production code, use a singleton instance
-const prisma = new PrismaClient();
-
 export class ValidatorProxy extends Proxy {
   static NAME: string = "ValidatorProxy";
   private prismaClient: PrismaClient;
 
-  constructor(prismaClient?: PrismaClient) {
+  constructor(prismaClient: PrismaClient) {
     super(ValidatorProxy.NAME, process);
-    this.prismaClient = prismaClient || prisma;
+    this.prismaClient = prismaClient;
   }
 
   /**

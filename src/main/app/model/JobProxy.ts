@@ -3,16 +3,13 @@ import { Job, JobDTO, DomainError } from "../../../domain";
 import { Result, ok, err } from "neverthrow";
 import { PrismaClient, JobStatus } from "db";
 
-// For production code, use a singleton instance
-const prisma = new PrismaClient();
-
 export class JobProxy extends Proxy {
   static NAME: string = "JobProxy";
   private prismaClient: PrismaClient;
 
-  constructor(prismaClient?: PrismaClient) {
+  constructor(prismaClient: PrismaClient) {
     super(JobProxy.NAME, process);
-    this.prismaClient = prismaClient || prisma;
+    this.prismaClient = prismaClient;
   }
 
   /**

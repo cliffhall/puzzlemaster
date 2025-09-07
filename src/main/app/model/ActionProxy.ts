@@ -3,16 +3,13 @@ import { Action, ActionDTO, DomainError } from "../../../domain";
 import { Result, ok, err } from "neverthrow";
 import { PrismaClient } from "db";
 
-// For production code, use a singleton instance
-const prisma = new PrismaClient();
-
 export class ActionProxy extends Proxy {
   static NAME: string = "ActionProxy";
   private prismaClient: PrismaClient;
 
-  constructor(prismaClient?: PrismaClient) {
+  constructor(prismaClient: PrismaClient) {
     super(ActionProxy.NAME, process);
-    this.prismaClient = prismaClient || prisma;
+    this.prismaClient = prismaClient;
   }
 
   /**
