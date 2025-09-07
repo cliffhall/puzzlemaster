@@ -11,3 +11,4 @@ coverage
 .stylelintcache
 prisma/generated/
 prisma/database/
+/resources/database/
