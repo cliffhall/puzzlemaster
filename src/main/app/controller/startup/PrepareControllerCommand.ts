@@ -39,7 +39,7 @@ export class PrepareControllerCommand extends AsyncMacroCommand {
    */
   public override execute(note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
-    f.log("⚙️ PrepareControllerCommand - Preparing API Handlers", 2);
+    f.log("📋 PrepareControllerCommand - Preparing API", 2);
     super.execute(note);
   }
 }

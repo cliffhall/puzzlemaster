@@ -23,7 +23,7 @@ export class StartupCommand extends AsyncMacroCommand {
    */
   public override execute(note: INotification): void {
     (this.facade as IAppFacade).log(
-      "⚙️ StartupCommand - Running Startup Subcommands",
+      "📋 StartupCommand - Running Startup Subcommands",
       1,
     );
     super.execute(note);

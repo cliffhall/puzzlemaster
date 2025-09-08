@@ -15,6 +15,10 @@ export class WindowAPICommand extends SimpleCommand {
 
     // Handler for checking if window is maximized
     ipcMain.handle(WindowAPIMethods.IS_MAXIMIZED, async () => {
+      f.log(
+        `️👉 Window API method ${WindowAPIMethods.IS_MAXIMIZED} invoked`,
+        0,
+      );
       const mainWindow = BrowserWindow.getFocusedWindow();
       return mainWindow ? mainWindow.isFullScreen() : false;
     });

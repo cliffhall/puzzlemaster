@@ -9,29 +9,33 @@ import { ipcMain } from "electron";
 export class TeamAPICommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
-    f.log("⚙️ TeamAPICommand - Installing Team API Handlers", 2);
+    f.log("⚙️ TeamAPICommand - Installing Team API Handlers", 3);
     const teamProxy = f.retrieveProxy(TeamProxy.NAME) as TeamProxy;
 
     // Create a team and return it
     ipcMain.handle(TeamAPIMethods.CREATE_TEAM, async (_, teamDTO: TeamDTO) => {
+      f.log(`️👉 Team API method ${TeamAPIMethods.CREATE_TEAM} invoked`, 0);
       const result = await teamProxy.createTeam(teamDTO);
       return flattenResult(result);
     });
 
     // Get a team by id
     ipcMain.handle(TeamAPIMethods.GET_TEAM, async (_, id: string) => {
+      f.log(`️👉 Team API method ${TeamAPIMethods.GET_TEAM} invoked`, 0);
       const result = await teamProxy.getTeam(id);
       return flattenResult(result);
     });
 
     // Get all teams
     ipcMain.handle(TeamAPIMethods.GET_TEAMS, async () => {
+      f.log(`️👉 Team API method ${TeamAPIMethods.GET_TEAMS} invoked`, 0);
       const result = await teamProxy.getTeams();
       return flattenResult(result);
     });
 
     // Update a team
     ipcMain.handle(TeamAPIMethods.UPDATE_TEAM, async (_, teamDTO: TeamDTO) => {
+      f.log(`️👉 Team API method ${TeamAPIMethods.UPDATE_TEAM} invoked`, 0);
       const { id, ...updateData } = teamDTO;
       const result = await teamProxy.updateTeam(id, updateData);
       return flattenResult(result);
@@ -39,6 +43,7 @@ export class TeamAPICommand extends AsyncCommand {
 
     // Delete a team
     ipcMain.handle(TeamAPIMethods.DELETE_TEAM, async (_, id: string) => {
+      f.log(`️👉 Team API method ${TeamAPIMethods.DELETE_TEAM} invoked`, 0);
       const result = await teamProxy.deleteTeam(id);
       return flattenResult(result);
     });

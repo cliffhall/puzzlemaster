@@ -9,13 +9,17 @@ import { ipcMain } from "electron";
 export class PhaseAPICommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
-    f.log("⚙️ PhaseAPICommand - Installing Phase API Handlers", 2);
+    f.log("⚙️ PhaseAPICommand - Installing Phase API Handlers", 3);
     const phaseProxy = f.retrieveProxy(PhaseProxy.NAME) as PhaseProxy;
 
     // Create a phase and return it
     ipcMain.handle(
       PhaseAPIMethods.CREATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
+        f.log(
+          `️👉 Phase API method ${PhaseAPIMethods.CREATE_PHASE} invoked`,
+          0,
+        );
         const result = await phaseProxy.createPhase(phaseDTO);
         return flattenResult(result);
       },
@@ -23,12 +27,14 @@ export class PhaseAPICommand extends AsyncCommand {
 
     // Get a phase by id
     ipcMain.handle(PhaseAPIMethods.GET_PHASE, async (_, id: string) => {
+      f.log(`️👉 Phase API method ${PhaseAPIMethods.GET_PHASE} invoked`, 0);
       const result = await phaseProxy.getPhase(id);
       return flattenResult(result);
     });
 
     // Get phases for a plan
     ipcMain.handle(PhaseAPIMethods.GET_PHASES, async (_, _planId: string) => {
+      f.log(`️👉 Phase API method ${PhaseAPIMethods.GET_PHASES} invoked`, 0);
       const result = await phaseProxy.getPhases(_planId);
       return flattenResult(result);
     });
@@ -37,6 +43,10 @@ export class PhaseAPICommand extends AsyncCommand {
     ipcMain.handle(
       PhaseAPIMethods.UPDATE_PHASE,
       async (_, phaseDTO: PhaseDTO) => {
+        f.log(
+          `️👉 Phase API method ${PhaseAPIMethods.UPDATE_PHASE} invoked`,
+          0,
+        );
         const { id, ...updateData } = phaseDTO;
         const result = await phaseProxy.updatePhase(id, updateData);
         return flattenResult(result);
@@ -45,6 +55,7 @@ export class PhaseAPICommand extends AsyncCommand {
 
     // Delete a phase
     ipcMain.handle(PhaseAPIMethods.DELETE_PHASE, async (_, id: string) => {
+      f.log(`️👉 Phase API method ${PhaseAPIMethods.DELETE_PHASE} invoked`, 0);
       const result = await phaseProxy.deletePhase(id);
       return flattenResult(result);
     });

@@ -9,29 +9,33 @@ import { ipcMain } from "electron";
 export class TaskAPICommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
-    f.log("⚙️ TaskAPICommand - Installing Task API Handlers", 2);
+    f.log("⚙️ TaskAPICommand - Installing Task API Handlers", 3);
     const taskProxy = f.retrieveProxy(TaskProxy.NAME) as TaskProxy;
 
     // Create a task and return it
     ipcMain.handle(TaskAPIMethods.CREATE_TASK, async (_, taskDTO: TaskDTO) => {
+      f.log(`️👉 Task API method ${TaskAPIMethods.CREATE_TASK} invoked`, 0);
       const result = await taskProxy.createTask(taskDTO);
       return flattenResult(result);
     });
 
     // Get a task by id
     ipcMain.handle(TaskAPIMethods.GET_TASK, async (_, id: string) => {
+      f.log(`️👉 Task API method ${TaskAPIMethods.GET_TASK} invoked`, 0);
       const result = await taskProxy.getTask(id);
       return flattenResult(result);
     });
 
     // Get all tasks
     ipcMain.handle(TaskAPIMethods.GET_TASKS, async () => {
+      f.log(`️👉 Task API method ${TaskAPIMethods.GET_TASKS} invoked`, 0);
       const result = await taskProxy.getTasks();
       return flattenResult(result);
     });
 
     // Update a task
     ipcMain.handle(TaskAPIMethods.UPDATE_TASK, async (_, taskDTO: TaskDTO) => {
+      f.log(`️👉 Task API method ${TaskAPIMethods.UPDATE_TASK} invoked`, 0);
       const { id, ...updateData } = taskDTO;
       const result = await taskProxy.updateTask(id, updateData);
       return flattenResult(result);
@@ -39,6 +43,7 @@ export class TaskAPICommand extends AsyncCommand {
 
     // Delete a task
     ipcMain.handle(TaskAPIMethods.DELETE_TASK, async (_, id: string) => {
+      f.log(`️👉 Task API method ${TaskAPIMethods.DELETE_TASK} invoked`, 0);
       const result = await taskProxy.deleteTask(id);
       return flattenResult(result);
     });

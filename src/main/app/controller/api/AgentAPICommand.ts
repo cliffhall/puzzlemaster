@@ -9,13 +9,17 @@ import { ipcMain } from "electron";
 export class AgentAPICommand extends AsyncCommand {
   public override execute(_note: INotification): void {
     const f: IAppFacade = this.facade as IAppFacade;
-    f.log("⚙️ AgentAPICommand - Installing Agent API Handlers", 2);
+    f.log("⚙️ AgentAPICommand - Installing Agent API Handlers", 3);
     const agentProxy = f.retrieveProxy(AgentProxy.NAME) as AgentProxy;
 
     // Create an agent and return it
     ipcMain.handle(
       AgentAPIMethods.CREATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
+        f.log(
+          `️👉 Agent API method ${AgentAPIMethods.CREATE_AGENT} invoked`,
+          0,
+        );
         const result = await agentProxy.createAgent(agentDTO);
         return flattenResult(result);
       },
@@ -23,12 +27,14 @@ export class AgentAPICommand extends AsyncCommand {
 
     // Get an agent by id
     ipcMain.handle(AgentAPIMethods.GET_AGENT, async (_, id: string) => {
+      f.log(`️👉 Agent API method ${AgentAPIMethods.GET_AGENT} invoked`, 0);
       const result = await agentProxy.getAgent(id);
       return flattenResult(result);
     });
 
     // Get all agents
     ipcMain.handle(AgentAPIMethods.GET_AGENTS, async () => {
+      f.log(`️👉 Agent API method ${AgentAPIMethods.GET_AGENTS} invoked`, 0);
       const result = await agentProxy.getAgents();
       return flattenResult(result);
     });
@@ -37,6 +43,10 @@ export class AgentAPICommand extends AsyncCommand {
     ipcMain.handle(
       AgentAPIMethods.UPDATE_AGENT,
       async (_, agentDTO: AgentDTO) => {
+        f.log(
+          `️👉 Agent API method ${AgentAPIMethods.UPDATE_AGENT} invoked`,
+          0,
+        );
         const { id, ...updateData } = agentDTO;
         const result = await agentProxy.updateAgent(id, updateData);
         return flattenResult(result);
@@ -45,6 +55,7 @@ export class AgentAPICommand extends AsyncCommand {
 
     // Delete an agent
     ipcMain.handle(AgentAPIMethods.DELETE_AGENT, async (_, id: string) => {
+      f.log(`️👉 Agent API method ${AgentAPIMethods.DELETE_AGENT} invoked`, 0);
       const result = await agentProxy.deleteAgent(id);
       return flattenResult(result);
     });
