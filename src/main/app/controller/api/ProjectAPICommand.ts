@@ -16,7 +16,10 @@ export class ProjectAPICommand extends AsyncCommand {
     ipcMain.handle(
       ProjectAPIMethods.CREATE_PROJECT,
       async (_, projectDTO: ProjectDTO) => {
-        f.log(`️👉 Project API method ${ProjectAPIMethods.CREATE_PROJECT} invoked`, 0);
+        f.log(
+          `️👉 Project API method ${ProjectAPIMethods.CREATE_PROJECT} invoked`,
+          0,
+        );
         const result = await projectProxy.createProject(projectDTO);
         return flattenResult(result);
       },
@@ -24,14 +27,20 @@ export class ProjectAPICommand extends AsyncCommand {
 
     // Get a project by id
     ipcMain.handle(ProjectAPIMethods.GET_PROJECT, async (_, id: string) => {
-      f.log(`️👉 Project API method ${ProjectAPIMethods.GET_PROJECT} invoked`, 0);
+      f.log(
+        `️👉 Project API method ${ProjectAPIMethods.GET_PROJECT} invoked`,
+        0,
+      );
       const result = await projectProxy.getProject(id);
       return flattenResult(result);
     });
 
     // Get all projects
     ipcMain.handle(ProjectAPIMethods.GET_PROJECTS, async () => {
-      f.log(`️👉 Project API method ${ProjectAPIMethods.GET_PROJECTS} invoked`, 0);
+      f.log(
+        `️👉 Project API method ${ProjectAPIMethods.GET_PROJECTS} invoked`,
+        0,
+      );
       const result = await projectProxy.getProjects();
       return flattenResult(result);
     });
