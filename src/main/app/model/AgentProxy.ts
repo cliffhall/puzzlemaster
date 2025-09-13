@@ -39,7 +39,6 @@ export class AgentProxy extends Proxy {
         name: agent.name,
         teamId: agent.teamId,
         roleId: agent.roleId,
-        tasks: [],
       });
     } catch (error) {
       return err(DomainError.fromError("Failed to create agent", error));
@@ -55,9 +54,6 @@ export class AgentProxy extends Proxy {
     try {
       const agent = await this.prismaClient.agent.findUnique({
         where: { id },
-        include: {
-          tasks: true,
-        },
       });
 
       if (!agent) {
@@ -69,7 +65,6 @@ export class AgentProxy extends Proxy {
         name: agent.name,
         teamId: agent.teamId,
         roleId: agent.roleId,
-        tasks: agent.tasks.map((task) => task.id),
       });
     } catch (error) {
       return err(DomainError.fromError("Failed to get agent", error));
@@ -82,11 +77,7 @@ export class AgentProxy extends Proxy {
    */
   public async getAgents(): Promise<Result<Agent[], DomainError>> {
     try {
-      const agents = await this.prismaClient.agent.findMany({
-        include: {
-          tasks: true,
-        },
-      });
+      const agents = await this.prismaClient.agent.findMany();
 
       const agentResults = agents.map((agent) =>
         Agent.create({
@@ -94,7 +85,6 @@ export class AgentProxy extends Proxy {
           name: agent.name,
           teamId: agent.teamId,
           roleId: agent.roleId,
-          tasks: agent.tasks.map((task) => task.id),
         }),
       );
 
@@ -120,9 +110,6 @@ export class AgentProxy extends Proxy {
       // First check if the agent exists
       const existingAgent = await this.prismaClient.agent.findUnique({
         where: { id },
-        include: {
-          tasks: true,
-        },
       });
 
       if (!existingAgent) {
@@ -145,9 +132,6 @@ export class AgentProxy extends Proxy {
       const agent = await this.prismaClient.agent.update({
         where: { id },
         data: updateData,
-        include: {
-          tasks: true,
-        },
       });
 
       return Agent.create({
@@ -155,7 +139,6 @@ export class AgentProxy extends Proxy {
         name: agent.name,
         teamId: agent.teamId,
         roleId: agent.roleId,
-        tasks: agent.tasks.map((task) => task.id),
       });
     } catch (error) {
       return err(DomainError.fromError("Failed to update agent", error));

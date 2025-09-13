@@ -11,10 +11,13 @@ Work in Progress
 - [x] Domain Model / Tests
 - [x] Database Schema
 - [x] Development / Production Database
-- [x] Node / PureMVC Backend Application [WIP]
-- [x] React Frontend Application
 - [x] IPCMain API for Frontend <-> Backend Comms
-- [x]
+- [x] Node / PureMVC Backend Application / Tests [WIP]
+- [x] React Frontend Application [WIP]
+- [ ] Backend PureMVC Agent Cores
+- [ ] Backend MCP Server Cores
+- [ ] Frontend Role CRUD
+- [ ] Frontend Job / Task execution
 
 ### Tech Stack
 - Puzzlemaster uses the [Puzzlebox MCP server](https://github.com/cliffhall/puzzlebox) for agent coordination. Puzzlebox serves dynamic state machines to represent the phases of a project plan.

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState, useCallback } from "react";
 import {
   Button,
   Group,
@@ -19,6 +19,7 @@ import {
   getActionsByPhase,
   deletePhase,
   getJobs,
+  getTasks,
 } from "../../client";
 import { Plan, Phase, Action, Job } from "../../../../domain";
 import { PhaseCreateForm } from "../Phase/PhaseCreateForm";
@@ -27,7 +28,7 @@ import { modals } from "@mantine/modals";
 import { IconPencil, IconPlus, IconX } from "@tabler/icons-react";
 
 export type PlanEditFormProps = {
-  projectId?: string; // if provided, we load plan by projectId (first match)
+  projectId?: string; // if provided, we load the plan by projectId (first match)
   planId?: string; // alternatively, direct plan id
   initialPlan?: Plan | null; // Pass plan data directly to avoid re-fetch
   mode: "display" | "edit";
@@ -61,6 +62,9 @@ export function PlanEditForm({
   const [jobsByPhase, setJobsByPhase] = useState<
     Record<string, Job | undefined>
   >({});
+  const [taskCountsByJobId, setTaskCountsByJobId] = useState<
+    Record<string, number>
+  >({});
   const [loadingPhases, setLoadingPhases] = useState(false);
   const [deletingPhaseId, setDeletingPhaseId] = useState<string | null>(null);
 
@@ -73,7 +77,16 @@ export function PlanEditForm({
 
   const isDisplay = mode === "display";
 
-  // load plan either by id or by projectId, or accept it as a prop
+  const refreshTaskCounts = useCallback(async () => {
+    const allTasks = (await getTasks()) || [];
+    const counts: Record<string, number> = {};
+    for (const t of allTasks) {
+      counts[t.jobId] = (counts[t.jobId] || 0) + 1;
+    }
+    setTaskCountsByJobId(counts);
+  }, []);
+
+  // load the plan either by id or by projectId, or accept it as a prop
   useEffect(() => {
     // If a plan is passed directly, use it and skip fetching.
     if (initialPlan) {
@@ -153,6 +166,7 @@ export function PlanEditForm({
         setPhases([]);
         setActionsByPhase({});
         setJobsByPhase({});
+        setTaskCountsByJobId({});
         return;
       }
       setLoadingPhases(true);
@@ -177,6 +191,14 @@ export function PlanEditForm({
           jobsByPhaseId.get(p.id),
         ]);
         setJobsByPhase(Object.fromEntries(jobsEntries));
+        // load tasks and compute counts by jobId
+        const allTasks = (await getTasks()) || [];
+        if (cancelled) return;
+        const counts: Record<string, number> = {};
+        for (const t of allTasks) {
+          counts[t.jobId] = (counts[t.jobId] || 0) + 1;
+        }
+        setTaskCountsByJobId(counts);
       } finally {
         if (!cancelled) setLoadingPhases(false);
       }
@@ -187,7 +209,7 @@ export function PlanEditForm({
     };
   }, [plan]);
 
-  // Clear job editor state when plan changes to prevent stale data
+  // Clear job editor state when the plan changes to prevent stale data
   useEffect(() => {
     setJobEditor(null);
   }, [projectId, planId, plan?.id]);
@@ -258,36 +280,46 @@ export function PlanEditForm({
                       >
                         {job?.name || " "}
                       </Text>
-                      {!isDisplay && !jobEditor && job && (
-                        <ActionIcon
-                          size="sm"
-                          variant="subtle"
-                          aria-label={`Edit job for ${phase.name}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            openEditJobInline(phase, job);
-                          }}
-                          title="Edit Job"
-                        >
-                          <IconPencil size={14} />
-                        </ActionIcon>
-                      )}
-                      {!isDisplay && !jobEditor && !job && (
-                        <ActionIcon
-                          size="sm"
-                          variant="subtle"
-                          aria-label={`Create job for ${phase.name}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            openCreateJobInline(phase);
-                          }}
-                          title="Create Job"
-                        >
-                          <IconPlus size={14} />
-                        </ActionIcon>
-                      )}
+                      <Group gap="xs" wrap="nowrap">
+                        {job && (
+                          <Text size="xs" c="dimmed">
+                            {(() => {
+                              const count = taskCountsByJobId[job.id] ?? 0;
+                              return `${count} ${count === 1 ? "task" : "tasks"}`;
+                            })()}
+                          </Text>
+                        )}
+                        {!isDisplay && !jobEditor && job && (
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            aria-label={`Edit job for ${phase.name}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              openEditJobInline(phase, job);
+                            }}
+                            title="Edit Job"
+                          >
+                            <IconPencil size={14} />
+                          </ActionIcon>
+                        )}
+                        {!isDisplay && !jobEditor && !job && (
+                          <ActionIcon
+                            size="sm"
+                            variant="subtle"
+                            aria-label={`Create job for ${phase.name}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              openCreateJobInline(phase);
+                            }}
+                            title="Create Job"
+                          >
+                            <IconPlus size={14} />
+                          </ActionIcon>
+                        )}
+                      </Group>
                     </Group>
                   </Table.Td>
 
@@ -404,9 +436,16 @@ export function PlanEditForm({
                           ...prev,
                           [jobEditor.phase.id]: job,
                         }));
+                        setTaskCountsByJobId((prev) => ({
+                          ...prev,
+                          [job.id]: 0,
+                        }));
                         setJobEditor(null);
                       }}
-                      onCancel={() => setJobEditor(null)}
+                      onCancel={() => {
+                        void refreshTaskCounts();
+                        setJobEditor(null);
+                      }}
                     />
                   ) : (
                     <JobEditForm
@@ -417,9 +456,13 @@ export function PlanEditForm({
                           ...prev,
                           [jobEditor.phase.id]: updated,
                         }));
+                        void refreshTaskCounts();
                         setJobEditor(null);
                       }}
-                      onCancel={() => setJobEditor(null)}
+                      onCancel={() => {
+                        void refreshTaskCounts();
+                        setJobEditor(null);
+                      }}
                     />
                   )}
                 </Stack>

@@ -58,7 +58,7 @@ describe("Agent", () => {
       expect(agent.tasks).toEqual([]);
     });
 
-    it.each(["id", "teamId", "roleId", "name", "tasks"] as const)(
+    it.each(["id", "teamId", "roleId", "name"] as const)(
       "should return a DomainError if %s is missing",
       (field) => {
         const { [field]: _omit, ...dto } = validDTO;
@@ -70,5 +70,16 @@ describe("Agent", () => {
         expect(error.message).toContain(field);
       },
     );
+
+    it("should create an Agent without tasks field", () => {
+      const { tasks: _omit, ...dto } = validDTO;
+      const result = Agent.create(dto as AgentDTO);
+
+      expect(result.isOk()).toBe(true);
+      const agent = result._unsafeUnwrap();
+      expect(agent.tasks).toBeUndefined();
+      expect(agent.id).toBe(validDTO.id);
+      expect(agent.name).toBe(validDTO.name);
+    });
   });
 });

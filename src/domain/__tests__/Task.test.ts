@@ -55,7 +55,7 @@ describe("Task", () => {
       },
     );
 
-    it.each(["id", "jobId", "agentId", "validatorId", "name"] as const)(
+    it.each(["id", "jobId", "name"] as const)(
       "should return a DomainError if %s is missing",
       (field) => {
         const { [field]: _omit, ...dto } = validDTO;
@@ -85,6 +85,39 @@ describe("Task", () => {
       expect(result.isOk()).toBe(true);
       const task = result._unsafeUnwrap();
       expect(task.description).toBeUndefined();
+    });
+
+    it("should create a Task without agentId", () => {
+      const { agentId: _omit, ...dto } = validDTO;
+      const result = Task.create(dto as TaskDTO);
+
+      expect(result.isOk()).toBe(true);
+      const task = result._unsafeUnwrap();
+      expect(task.agentId).toBeUndefined();
+      expect(task.validatorId).toBe(validDTO.validatorId);
+    });
+
+    it("should create a Task without validatorId", () => {
+      const { validatorId: _omit, ...dto } = validDTO;
+      const result = Task.create(dto as TaskDTO);
+
+      expect(result.isOk()).toBe(true);
+      const task = result._unsafeUnwrap();
+      expect(task.agentId).toBe(validDTO.agentId);
+      expect(task.validatorId).toBeUndefined();
+    });
+
+    it("should create a Task without both agentId and validatorId", () => {
+      const { agentId: _omit1, validatorId: _omit2, ...dto } = validDTO;
+      const result = Task.create(dto as TaskDTO);
+
+      expect(result.isOk()).toBe(true);
+      const task = result._unsafeUnwrap();
+      expect(task.agentId).toBeUndefined();
+      expect(task.validatorId).toBeUndefined();
+      expect(task.id).toBe(validDTO.id);
+      expect(task.jobId).toBe(validDTO.jobId);
+      expect(task.name).toBe(validDTO.name);
     });
   });
 });
