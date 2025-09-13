@@ -2,51 +2,51 @@
 
 An MCP client that allows teams of agents to complete long-horizon tasks.
 
-## [About](../README.md) · Domain Model · [Development](development.md)
+## [About](./index.md) · [Development](development.md) · Domain Model
 
 ### Entities
 
-[**Action**](src/types/domain/Action.ts)
+[**Action**](../src/domain/Action.ts)
 
 - An action that an agent can take to trigger a change to another phase of a plan.
 
-[**Agent**](src/types/domain/Agent.ts)
+[**Agent**](../src/domain/Agent.ts)
 
 - An agent with a specific role and assigned task list.
 
-[**Job**](src/types/domain/Job.ts)
+[**Job**](../src/domain/Job.ts)
 
 - A job is composed of one or more tasks that will complete a phase of a plan.
 
-[**Phase**](src/types/domain/Phase.ts)
+[**Phase**](../src/domain/Phase.ts)
 
 - A phase of a project's implementation plan. has an associated team and a job to complete before other phases can commence.
 
-[**Plan**](src/types/domain/Plan.ts)
+[**Plan**](../src/domain/Plan.ts)
 
 - A project's plan, to be implemented in one or more phases.
 
-[**Project**](src/types/domain/Project.ts)
+[**Project**](../src/domain/Project.ts)
 
 - A project with an implementation plan that can be executed by teams of agents.
 
-[**Role**](src/types/domain/Role.ts)
+[**Role**](../src/domain/Role.ts)
 
 - An agent's role within a team.
 
-[**Task**](src/types/domain/Task.ts)
+[**Task**](../src/domain/Task.ts)
 
 - Part of a job assigned to a single agent for completion.
 
-[**Team**](src/types/domain/Team.ts)
+[**Team**](../src/domain/Team.ts)
 
 - One or more agents assigned to complete a job associated with a single phase of a plan.
 
-[**Validator**](src/types/domain/Validator.ts)
+[**Validator**](../src/domain/Validator.ts)
 
 - A prompt template intended to validate whether a task is complete or if action can be taken.
 
-[DomainError](src/types/domain/DomainError.ts)
+[DomainError](../src/domain/DomainError.ts)
 
 - An error generated when creating or interacting with a domain entity.
 

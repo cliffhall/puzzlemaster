@@ -2,10 +2,19 @@
 
 An MCP client that allows teams of agents to complete long-horizon tasks.
 
-## [About](../README.md) · [Domain Model](domain-model.md) · Development
+## [About](./index.md) · Development · [Domain Model](domain-model.md)
 
 ### Status
 Work in Progress
+- [x] Tech Stack
+- [x] Electron Project Structure
+- [x] Domain Model / Tests
+- [x] Database Schema
+- [x] Development / Production Database
+- [x] Node / PureMVC Backend Application [WIP]
+- [x] React Frontend Application
+- [x] IPCMain API for Frontend <-> Backend Comms
+- [x]
 
 ### Tech Stack
 - Puzzlemaster uses the [Puzzlebox MCP server](https://github.com/cliffhall/puzzlebox) for agent coordination. Puzzlebox serves dynamic state machines to represent the phases of a project plan.
