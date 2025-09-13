@@ -102,15 +102,13 @@ export function JobEditForm({
             onClick={onCancel}
             disabled={submitting}
           >
-            Cancel
+            Done Editing
           </Button>
-          <Button
-            type="submit"
-            loading={submitting}
-            disabled={!name.trim() || !hasChanges}
-          >
-            Save Changes
-          </Button>
+          {name.trim() && hasChanges && (
+            <Button type="submit" loading={submitting}>
+              Save Changes
+            </Button>
+          )}
         </Group>
       </Stack>
     </form>
