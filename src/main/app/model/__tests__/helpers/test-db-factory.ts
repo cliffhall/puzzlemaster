@@ -1,4 +1,11 @@
-import { unlinkSync, existsSync } from "fs";
+import {
+  unlinkSync,
+  existsSync,
+  readdirSync,
+  statSync,
+  readFileSync,
+} from "fs";
+import * as path from "path";
 import { randomUUID } from "crypto";
 import { PrismaClient } from "db";
 
@@ -111,133 +118,79 @@ const applySchemaToTestDatabase = async (testDbUrl: string): Promise<void> => {
     },
   });
 
+  // Helper: Find all migration directories sorted ascending (14-digit timestamp prefix)
+  const findAllMigrations = (): string[] => {
+    const migrationsDir = path.resolve("prisma/migrations");
+
+    if (!existsSync(migrationsDir)) {
+      throw new Error("Migrations directory not found");
+    }
+
+    const migrationDirs = readdirSync(migrationsDir)
+      .filter((dir) => {
+        const fullPath = path.join(migrationsDir, dir);
+        return statSync(fullPath).isDirectory() && /^\d{14}_/.test(dir);
+      })
+      .sort(); // oldest to newest
+
+    if (migrationDirs.length === 0) {
+      throw new Error("No migration directories found");
+    }
+
+    return migrationDirs.map((dir) => path.join(migrationsDir, dir));
+  };
+
+  // Helper: Parse migration.sql and produce executable statements
+  const parseMigrationSql = (migrationDir: string): string[] => {
+    const migrationSqlPath = path.join(migrationDir, "migration.sql");
+    if (!existsSync(migrationSqlPath)) {
+      throw new Error(`migration.sql not found in ${migrationDir}`);
+    }
+
+    const sqlContent = readFileSync(migrationSqlPath, "utf8");
+
+    return sqlContent
+      .split(";")
+      .map((stmt) => stmt.trim())
+      .filter((stmt) => stmt.length > 0)
+      .map((stmt) =>
+        stmt
+          .split("\n")
+          .map((line) => {
+            let newLine: string = "";
+            const commentIndex = line.indexOf("--");
+            if (commentIndex !== -1) {
+              newLine = line.substring(0, commentIndex);
+            }
+            return newLine.trim();
+          })
+          .filter((line) => line.length > 0)
+          .join("\n"),
+      )
+      .filter((stmt) => stmt.trim().length > 0);
+  };
+
   try {
     console.log(
-      "Applying schema from prisma/schema.prisma to test database...",
+      "Applying schema to test database from migrations (oldest -> newest)...",
     );
 
-    // Create all tables based on the current Prisma schema
-    // This SQL is derived from the prisma/schema.prisma file
-
-    // Domain tables - from schema lines 14-174
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Project" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "description" TEXT,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL
+    // Find and parse all migrations
+    const migrationDirs = findAllMigrations();
+    for (const dir of migrationDirs) {
+      console.log("Using migration from:", path.basename(dir));
+      const sqlStatements = parseMigrationSql(dir);
+      console.log(
+        `Executing ${sqlStatements.length} SQL statements from migration...`,
       );
-    `);
 
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Plan" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "description" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "projectId" TEXT NOT NULL UNIQUE,
-        CONSTRAINT "Plan_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Phase" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "planId" TEXT NOT NULL,
-        CONSTRAINT "Phase_planId_fkey" FOREIGN KEY ("planId") REFERENCES "Plan" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Job" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "description" TEXT,
-        "status" TEXT NOT NULL DEFAULT 'PENDING',
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "phaseId" TEXT NOT NULL UNIQUE,
-        CONSTRAINT "Job_phaseId_fkey" FOREIGN KEY ("phaseId") REFERENCES "Phase" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Team" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "phaseId" TEXT NOT NULL UNIQUE,
-        CONSTRAINT "Team_phaseId_fkey" FOREIGN KEY ("phaseId") REFERENCES "Phase" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Role" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL UNIQUE,
-        "description" TEXT,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Agent" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "teamId" TEXT NOT NULL,
-        "roleId" TEXT NOT NULL,
-        CONSTRAINT "Agent_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-        CONSTRAINT "Agent_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Validator" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "template" TEXT NOT NULL,
-        "resource" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Task" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "description" TEXT,
-        "status" TEXT NOT NULL DEFAULT 'PENDING',
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "jobId" TEXT NOT NULL,
-        "agentId" TEXT,
-        "validatorId" TEXT,
-        CONSTRAINT "Task_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-      );
-    `);
-
-    await tempPrisma.$executeRawUnsafe(`
-      CREATE TABLE "Action" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "name" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL,
-        "phaseId" TEXT NOT NULL,
-        "targetPhaseId" TEXT NOT NULL,
-        "validatorId" TEXT NOT NULL,
-        CONSTRAINT "Action_phaseId_fkey" FOREIGN KEY ("phaseId") REFERENCES "Phase" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-        CONSTRAINT "Action_targetPhaseId_fkey" FOREIGN KEY ("targetPhaseId") REFERENCES "Phase" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-        CONSTRAINT "Action_validatorId_fkey" FOREIGN KEY ("validatorId") REFERENCES "Validator" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-    `);
+      // Execute each SQL statement from the migration
+      for (const statement of sqlStatements) {
+        if (statement.trim()) {
+          await tempPrisma.$executeRawUnsafe(statement);
+        }
+      }
+    }
 
     console.log("✓ Schema applied successfully to test database");
   } catch (error) {
