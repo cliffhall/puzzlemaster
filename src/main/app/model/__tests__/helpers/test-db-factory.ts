@@ -21,7 +21,7 @@ export const createTestPrismaClient = async (): Promise<{
   const testDbName = `test_${Date.now()}_${randomUUID().replace(/-/g, "")}`;
   const testDbUrl = `file:./${testDbName}.db`;
 
-  // Create PrismaClient with explicit database URL
+  // Create PrismaClient with an explicit database URL
   const prisma = new PrismaClient({
     datasources: {
       db: {
@@ -31,7 +31,7 @@ export const createTestPrismaClient = async (): Promise<{
   });
 
   try {
-    // Apply current schema using direct SQL execution
+    // Apply the current schema using direct SQL execution
     console.log(`Creating schema for test database: ${testDbUrl}`);
 
     await applySchemaToTestDatabase(testDbUrl);
@@ -58,9 +58,9 @@ export const createTestPrismaClient = async (): Promise<{
         // Database files are created in the prisma directory, not the current directory
         const dbPath = testDbUrl.replace("file:", "");
         const possiblePaths = [
-          dbPath, // Try current directory first
+          dbPath, // Try the current directory first
           `prisma/${dbPath}`, // Try prisma directory
-          `./prisma/${dbPath.replace("./", "")}`, // Try prisma directory with cleaned path
+          `./prisma/${dbPath.replace("./", "")}`, // Try prisma directory with the cleaned path
         ];
 
         for (const path of possiblePaths) {
@@ -82,9 +82,9 @@ export const createTestPrismaClient = async (): Promise<{
       await prisma.$disconnect();
       const dbPath = testDbUrl.replace("file:", "");
       const possiblePaths = [
-        dbPath, // Try current directory first
+        dbPath, // Try the current directory first
         `prisma/${dbPath}`, // Try prisma directory
-        `./prisma/${dbPath.replace("./", "")}`, // Try prisma directory with cleaned path
+        `./prisma/${dbPath.replace("./", "")}`, // Try prisma directory with the cleaned path
       ];
 
       for (const path of possiblePaths) {
@@ -106,7 +106,7 @@ export const createTestPrismaClient = async (): Promise<{
 /**
  * Applies the current schema to the test database using direct SQL
  * This approach ensures the test database exactly matches the Prisma schema
- * without relying on Prisma's db push command which doesn't work well with dynamic URLs
+ * without relying on Prisma's "db push" command, which doesn't work well with dynamic URLs
  */
 const applySchemaToTestDatabase = async (testDbUrl: string): Promise<void> => {
   // Create a temporary PrismaClient for the test database to execute SQL
