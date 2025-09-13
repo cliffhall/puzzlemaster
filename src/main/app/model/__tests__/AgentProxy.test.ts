@@ -129,7 +129,7 @@ describe("AgentProxy", () => {
         expect(agent.name).toBe(agentDTO.name);
         expect(agent.teamId).toBe(agentDTO.teamId);
         expect(agent.roleId).toBe(agentDTO.roleId);
-        expect(agent.tasks).toEqual([]);
+        expect(agent.tasks).toBeUndefined();
       }
     });
 

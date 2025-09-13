@@ -21,29 +21,27 @@ export class TaskProxy extends Proxy {
     taskDTO: TaskDTO,
   ): Promise<Result<Task, DomainError>> {
     try {
-      const task = await this.prismaClient.task.create({
-        data: {
-          id: taskDTO.id,
-          name: taskDTO.name,
-          description: taskDTO.description,
-          status: taskDTO.status,
-          job: {
-            connect: { id: taskDTO.jobId },
-          },
-          agent: {
-            connect: { id: taskDTO.agentId },
-          },
-          validator: {
-            connect: { id: taskDTO.validatorId },
-          },
+      const createData = {
+        id: taskDTO.id,
+        name: taskDTO.name,
+        description: taskDTO.description,
+        status: taskDTO.status as TaskStatus,
+        job: {
+          connect: { id: taskDTO.jobId },
         },
+        ...(taskDTO.agentId && { agentId: taskDTO.agentId }),
+        ...(taskDTO.validatorId && { validatorId: taskDTO.validatorId }),
+      };
+
+      const task = await this.prismaClient.task.create({
+        data: createData,
       });
 
       return Task.create({
         id: task.id,
         jobId: task.jobId,
-        agentId: task.agentId,
-        validatorId: task.validatorId,
+        agentId: task.agentId || undefined,
+        validatorId: task.validatorId || undefined,
         name: task.name,
         description: task.description || undefined,
         status: task.status as TaskStatus,
@@ -71,8 +69,8 @@ export class TaskProxy extends Proxy {
       return Task.create({
         id: task.id,
         jobId: task.jobId,
-        agentId: task.agentId,
-        validatorId: task.validatorId,
+        agentId: task.agentId || undefined,
+        validatorId: task.validatorId || undefined,
         name: task.name,
         description: task.description || undefined,
         status: task.status as TaskStatus,
@@ -94,8 +92,8 @@ export class TaskProxy extends Proxy {
         Task.create({
           id: task.id,
           jobId: task.jobId,
-          agentId: task.agentId,
-          validatorId: task.validatorId,
+          agentId: task.agentId || undefined,
+          validatorId: task.validatorId || undefined,
           name: task.name,
           description: task.description || undefined,
           status: task.status as TaskStatus,
@@ -121,7 +119,7 @@ export class TaskProxy extends Proxy {
     taskDTO: Partial<TaskDTO>,
   ): Promise<Result<Task, DomainError>> {
     try {
-      // First check if the task exists
+      // First, check if the task exists
       const existingTask = await this.prismaClient.task.findUnique({
         where: { id },
       });
@@ -131,23 +129,18 @@ export class TaskProxy extends Proxy {
       }
 
       // Prepare update data
-      const updateData: {
-        name?: string;
-        description?: string;
-        status?: TaskStatus;
-        job?: { connect: { id: string } };
-        agent?: { connect: { id: string } };
-        validator?: { connect: { id: string } };
-      } = {};
-      if (taskDTO.name) updateData.name = taskDTO.name;
-      if (taskDTO.description !== undefined)
-        updateData.description = taskDTO.description;
-      if (taskDTO.status) updateData.status = taskDTO.status as TaskStatus;
-      if (taskDTO.jobId) updateData.job = { connect: { id: taskDTO.jobId } };
-      if (taskDTO.agentId)
-        updateData.agent = { connect: { id: taskDTO.agentId } };
-      if (taskDTO.validatorId)
-        updateData.validator = { connect: { id: taskDTO.validatorId } };
+      const updateData = {
+        ...(taskDTO.name && { name: taskDTO.name }),
+        ...(taskDTO.description !== undefined && {
+          description: taskDTO.description,
+        }),
+        ...(taskDTO.status && { status: taskDTO.status as TaskStatus }),
+        ...(taskDTO.jobId && { job: { connect: { id: taskDTO.jobId } } }),
+        ...(taskDTO.agentId !== undefined && { agentId: taskDTO.agentId }),
+        ...(taskDTO.validatorId !== undefined && {
+          validatorId: taskDTO.validatorId,
+        }),
+      };
 
       // Update the task
       const task = await this.prismaClient.task.update({
@@ -158,8 +151,8 @@ export class TaskProxy extends Proxy {
       return Task.create({
         id: task.id,
         jobId: task.jobId,
-        agentId: task.agentId,
-        validatorId: task.validatorId,
+        agentId: task.agentId || undefined,
+        validatorId: task.validatorId || undefined,
         name: task.name,
         description: task.description || undefined,
         status: task.status as TaskStatus,
@@ -176,7 +169,7 @@ export class TaskProxy extends Proxy {
    */
   public async deleteTask(id: string): Promise<Result<boolean, DomainError>> {
     try {
-      // First check if the task exists
+      // First, check if the task exists
       const existingTask = await this.prismaClient.task.findUnique({
         where: { id },
       });

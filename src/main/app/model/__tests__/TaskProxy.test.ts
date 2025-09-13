@@ -348,4 +348,122 @@ describe("TaskProxy", () => {
       }
     });
   });
+
+  describe("optional agentId and validatorId", () => {
+    it("should create a task without agentId and validatorId", async () => {
+      // Create basic job hierarchy without agent/validator
+      const projectId = randomUUID();
+      await testSetup.prisma.project.create({
+        data: { id: projectId, name: "Test Project" },
+      });
+
+      const planId = randomUUID();
+      await testSetup.prisma.plan.create({
+        data: { id: planId, projectId, description: "Test plan" },
+      });
+
+      const phaseId = randomUUID();
+      await testSetup.prisma.phase.create({
+        data: { id: phaseId, name: "Test Phase", planId },
+      });
+
+      const jobId = randomUUID();
+      await testSetup.prisma.job.create({
+        data: { id: jobId, name: "Test Job", phaseId },
+      });
+
+      // Create task DTO without agentId and validatorId
+      const taskId = randomUUID();
+      const taskDTO = {
+        id: taskId,
+        name: "Task Without Agent/Validator",
+        description: "Testing optional fields",
+        status: "PENDING" as const,
+        jobId,
+        // agentId and validatorId are intentionally omitted
+      };
+
+      // Call the method under test
+      const result = await testSetup.taskProxy.createTask(taskDTO);
+
+      // Verify the result
+      if (result.isErr()) {
+        console.log(
+          "Error creating task without agentId/validatorId:",
+          result.error.message,
+        );
+      }
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        const task = result.value;
+        expect(task.id).toBe(taskDTO.id);
+        expect(task.name).toBe(taskDTO.name);
+        expect(task.description).toBe(taskDTO.description);
+        expect(task.status).toBe(taskDTO.status);
+        expect(task.jobId).toBe(taskDTO.jobId);
+        expect(task.agentId).toBeUndefined();
+        expect(task.validatorId).toBeUndefined();
+      }
+
+      // Verify the task was created in the database
+      const dbTask = await testSetup.prisma.task.findUnique({
+        where: { id: taskDTO.id },
+      });
+
+      expect(dbTask).not.toBeNull();
+      expect(dbTask?.name).toBe(taskDTO.name);
+      expect(dbTask?.agentId).toBeNull();
+      expect(dbTask?.validatorId).toBeNull();
+    });
+
+    it("should retrieve a task that has no agentId/validatorId", async () => {
+      // Create task without agent/validator (using same setup as previous test)
+      const projectId = randomUUID();
+      await testSetup.prisma.project.create({
+        data: { id: projectId, name: "Test Project" },
+      });
+
+      const planId = randomUUID();
+      await testSetup.prisma.plan.create({
+        data: { id: planId, projectId, description: "Test plan" },
+      });
+
+      const phaseId = randomUUID();
+      await testSetup.prisma.phase.create({
+        data: { id: phaseId, name: "Test Phase", planId },
+      });
+
+      const jobId = randomUUID();
+      await testSetup.prisma.job.create({
+        data: { id: jobId, name: "Test Job", phaseId },
+      });
+
+      const taskId = randomUUID();
+      const taskDTO = {
+        id: taskId,
+        name: "Task Without Agent/Validator",
+        status: "PENDING" as const,
+        jobId,
+      };
+
+      // Create the task first
+      await testSetup.taskProxy.createTask(taskDTO);
+
+      // Call the method under test
+      const result = await testSetup.taskProxy.getTask(taskDTO.id);
+
+      // Verify the result
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        const task = result.value;
+        expect(task.id).toBe(taskDTO.id);
+        expect(task.name).toBe(taskDTO.name);
+        expect(task.jobId).toBe(taskDTO.jobId);
+        expect(task.agentId).toBeUndefined();
+        expect(task.validatorId).toBeUndefined();
+      }
+    });
+  });
 });

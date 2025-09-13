@@ -79,11 +79,8 @@ model Task {
   job   Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
   jobId String
 
-  agent   Agent  @relation(fields: [agentId], references: [id])
-  agentId String
-
-  validator   Validator @relation(fields: [validatorId], references: [id])
-  validatorId String
+  agentId String?
+  validatorId String?
 }
 
 model Action {
@@ -128,8 +125,6 @@ model Agent {
 
   role   Role   @relation(fields: [roleId], references: [id])
   roleId String
-
-  tasks Task[]
 }
 
 model Role {
@@ -149,7 +144,6 @@ model Validator {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tasks   Task[]
   actions Action[]
 }
 

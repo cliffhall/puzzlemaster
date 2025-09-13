@@ -12,7 +12,7 @@ export const AgentSchema = z.object({
   teamId: z.string().uuid(),
   roleId: z.string().uuid(),
   name: z.string().min(1),
-  tasks: z.array(z.string().uuid()),
+  tasks: z.array(z.string().uuid()).optional(),
 });
 
 export const CreateAgentSchema = AgentSchema.omit({ id: true });
@@ -42,7 +42,7 @@ export class Agent {
     public readonly teamId: string,
     public readonly roleId: string,
     public name: string,
-    public tasks: string[],
+    public tasks: string[] | undefined,
   ) {}
 
   static create(dto: AgentDTO): Result<Agent, DomainError> {

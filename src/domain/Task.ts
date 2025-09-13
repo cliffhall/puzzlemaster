@@ -18,8 +18,8 @@ export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 export const TaskSchema = z.object({
   id: z.string().uuid(),
   jobId: z.string().uuid(),
-  agentId: z.string().uuid(),
-  validatorId: z.string().uuid(),
+  agentId: z.string().uuid().optional(),
+  validatorId: z.string().uuid().optional(),
   name: z.string().min(1),
   description: z.string().optional(),
   status: TaskStatusSchema.default("PENDING"),
@@ -50,8 +50,8 @@ export class Task {
   private constructor(
     public readonly id: string,
     public readonly jobId: string,
-    public readonly agentId: string,
-    public readonly validatorId: string,
+    public readonly agentId: string | undefined,
+    public readonly validatorId: string | undefined,
     public name: string,
     public description: string | undefined,
     public status: TaskStatus, // Added status property
