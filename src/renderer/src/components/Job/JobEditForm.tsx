@@ -9,12 +9,12 @@ import {
   ActionIcon,
   Button,
   Group,
+  Input,
   NavLink,
   Stack,
   Text,
   TextInput,
   Textarea,
-  Title,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconX } from "@tabler/icons-react";
@@ -193,7 +193,7 @@ export function JobEditForm({
 
         {/* Tasks section */}
         <Stack gap="xs">
-          <Title order={5}>Tasks</Title>
+          <Input.Label>Tasks</Input.Label>
 
           {/* Tasks list */}
           {tasks === null || loadingTasks ? (
@@ -202,17 +202,17 @@ export function JobEditForm({
             <Text c="dimmed">No tasks yet</Text>
           ) : (
             <Stack
+              pt={0}
               gap={0}
-              style={{
-                border: "1px solid var(--mantine-color-gray-3)",
-                borderRadius: 4,
-              }}
+              bd="1px solid var(--mantine-color-default-border)"
+              bdrs={5}
             >
               {tasks.map((t) => (
                 <NavLink
                   key={t.id}
                   href="#"
                   label={t.name}
+                  bdrs={5}
                   onClick={(e) => {
                     e.preventDefault();
                     openEditTaskModal(t);

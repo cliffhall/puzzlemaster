@@ -243,6 +243,48 @@ describe("TaskProxy", () => {
     });
   });
 
+  describe("getTaskCountsByJob", () => {
+    it("should return task counts grouped by job ID", async () => {
+      // Set up test data with multiple tasks for different jobs
+      const { taskDTO: task1DTO } = await createTestData(testSetup.prisma);
+      const { taskDTO: task2DTO } = await createTestData(testSetup.prisma);
+      const { taskDTO: task3DTO } = await createTestData(testSetup.prisma);
+
+      // Create task3 with same jobId as task1 to test counting
+      task3DTO.jobId = task1DTO.jobId;
+
+      // Create the tasks
+      await testSetup.taskProxy.createTask(task1DTO);
+      await testSetup.taskProxy.createTask(task2DTO);
+      await testSetup.taskProxy.createTask(task3DTO);
+
+      // Call the method under test
+      const result = await testSetup.taskProxy.getTaskCountsByJob();
+
+      // Verify the result
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        const counts = result.value;
+        expect(counts[task1DTO.jobId]).toBe(2); // task1 and task3
+        expect(counts[task2DTO.jobId]).toBe(1); // task2 only
+      }
+    });
+
+    it("should return an empty object when no tasks exist", async () => {
+      // Call the method under test
+      const result = await testSetup.taskProxy.getTaskCountsByJob();
+
+      // Verify the result
+      expect(result.isOk()).toBe(true);
+
+      if (result.isOk()) {
+        const counts = result.value;
+        expect(counts).toEqual({});
+      }
+    });
+  });
+
   describe("updateTask", () => {
     it("should update a task successfully", async () => {
       // Set up test data

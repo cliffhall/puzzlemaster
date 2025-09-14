@@ -38,10 +38,15 @@ export type TaskListResult =
   | { success: true; data: Task[] }
   | { success: false; error: string };
 
+export type TaskCountsResult =
+  | { success: true; data: Record<string, number> }
+  | { success: false; error: string };
+
 export enum TaskAPIMethods {
   CREATE_TASK = "create-task",
   GET_TASK = "get-task",
   GET_TASKS = "get-tasks",
+  GET_TASK_COUNTS_BY_JOB = "get-task-counts-by-job",
   UPDATE_TASK = "update-task",
   DELETE_TASK = "delete-task",
 }

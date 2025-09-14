@@ -19,7 +19,7 @@ import {
   getActionsByPhase,
   deletePhase,
   getJobs,
-  getTasks,
+  getTaskCountsByJob,
 } from "../../client";
 import { Plan, Phase, Action, Job } from "../../../../domain";
 import { PhaseCreateForm } from "../Phase/PhaseCreateForm";
@@ -78,11 +78,7 @@ export function PlanEditForm({
   const isDisplay = mode === "display";
 
   const refreshTaskCounts = useCallback(async () => {
-    const allTasks = (await getTasks()) || [];
-    const counts: Record<string, number> = {};
-    for (const t of allTasks) {
-      counts[t.jobId] = (counts[t.jobId] || 0) + 1;
-    }
+    const counts = (await getTaskCountsByJob()) || {};
     setTaskCountsByJobId(counts);
   }, []);
 
@@ -191,13 +187,9 @@ export function PlanEditForm({
           jobsByPhaseId.get(p.id),
         ]);
         setJobsByPhase(Object.fromEntries(jobsEntries));
-        // load tasks and compute counts by jobId
-        const allTasks = (await getTasks()) || [];
+        // load task counts by jobId efficiently
+        const counts = (await getTaskCountsByJob()) || {};
         if (cancelled) return;
-        const counts: Record<string, number> = {};
-        for (const t of allTasks) {
-          counts[t.jobId] = (counts[t.jobId] || 0) + 1;
-        }
         setTaskCountsByJobId(counts);
       } finally {
         if (!cancelled) setLoadingPhases(false);
@@ -234,7 +226,7 @@ export function PlanEditForm({
     return (
       <Stack gap="xs">
         <Group justify="space-between">
-          <Title order={5}>Phases</Title>
+            <Title order={5}>Phases</Title>
         </Group>
 
         {/* Table */}

@@ -33,6 +33,16 @@ export class TaskAPICommand extends AsyncCommand {
       return flattenResult(result);
     });
 
+    // Get task counts grouped by job ID
+    ipcMain.handle(TaskAPIMethods.GET_TASK_COUNTS_BY_JOB, async () => {
+      f.log(
+        `️👉 Task API method ${TaskAPIMethods.GET_TASK_COUNTS_BY_JOB} invoked`,
+        0,
+      );
+      const result = await taskProxy.getTaskCountsByJob();
+      return flattenResult(result);
+    });
+
     // Update a task
     ipcMain.handle(TaskAPIMethods.UPDATE_TASK, async (_, taskDTO: TaskDTO) => {
       f.log(`️👉 Task API method ${TaskAPIMethods.UPDATE_TASK} invoked`, 0);

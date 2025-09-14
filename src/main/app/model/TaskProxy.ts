@@ -109,6 +109,34 @@ export class TaskProxy extends Proxy {
   }
 
   /**
+   * Get task counts grouped by job ID
+   * @returns A Result containing a record of jobId -> count or a DomainError
+   */
+  public async getTaskCountsByJob(): Promise<
+    Result<Record<string, number>, DomainError>
+  > {
+    try {
+      const counts = await this.prismaClient.task.groupBy({
+        by: ["jobId"],
+        _count: {
+          id: true,
+        },
+      });
+
+      const result: Record<string, number> = {};
+      for (const count of counts) {
+        result[count.jobId] = count._count.id;
+      }
+
+      return ok(result);
+    } catch (error) {
+      return err(
+        DomainError.fromError("Failed to get task counts by job", error),
+      );
+    }
+  }
+
+  /**
    * Update a task
    * @param id The task ID
    * @param taskDTO The task data transfer object (can be only fields that changed)
