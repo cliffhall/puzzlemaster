@@ -126,6 +126,9 @@ export const ProjectEditForm = memo(function ProjectEditForm({
           description: description || undefined,
         });
         if (updated) {
+          // Update initial values to reflect the saved state
+          setInitialName(trimmed);
+          setInitialDescription(description || "");
           onUpdated?.(updated.id);
         } else {
           setError("Failed to update project.");
