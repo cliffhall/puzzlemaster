@@ -26,7 +26,7 @@ Phases.
       - Maintain a Phase's Job
         - Enter a name and optional description of the Job
         - Click the Save Job button
-        -
+  -
 I want to be able to maintain stock Plans, Roles, Teams, then, when creating a project, I can add a stock Plan which has
 Phases with Teams of Roled Agents ready to go.
 
