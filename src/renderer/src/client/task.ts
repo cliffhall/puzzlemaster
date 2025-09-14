@@ -59,7 +59,8 @@ export async function getTasks(): Promise<Task[] | undefined> {
 export async function getTaskCountsByJob(): Promise<
   Record<string, number> | undefined
 > {
-  const result: TaskCountsResult = await window.puzzlemaster.task.getTaskCountsByJob();
+  const result: TaskCountsResult =
+    await window.puzzlemaster.task.getTaskCountsByJob();
   let returnValue: Record<string, number> | undefined;
 
   if (result.success) {

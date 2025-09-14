@@ -158,7 +158,8 @@ const applySchemaToTestDatabase = async (testDbUrl: string): Promise<void> => {
           .split("\n")
           .map((line) => {
             const commentIndex = line.indexOf("--");
-            const newLine = commentIndex !== -1 ? line.substring(0, commentIndex) : line;
+            const newLine =
+              commentIndex !== -1 ? line.substring(0, commentIndex) : line;
             return newLine.trim();
           })
           .filter((line) => line.length > 0)

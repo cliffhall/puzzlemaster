@@ -7,7 +7,8 @@ export const task: TaskAPI = {
     ipcRenderer.invoke(TaskAPIMethods.CREATE_TASK, taskDTO),
   getTask: (id: string) => ipcRenderer.invoke(TaskAPIMethods.GET_TASK, id),
   getTasks: () => ipcRenderer.invoke(TaskAPIMethods.GET_TASKS),
-  getTaskCountsByJob: () => ipcRenderer.invoke(TaskAPIMethods.GET_TASK_COUNTS_BY_JOB),
+  getTaskCountsByJob: () =>
+    ipcRenderer.invoke(TaskAPIMethods.GET_TASK_COUNTS_BY_JOB),
   updateTask: (taskDTO: TaskDTO) =>
     ipcRenderer.invoke(TaskAPIMethods.UPDATE_TASK, taskDTO),
   deleteTask: (id: string) =>
