@@ -43,7 +43,7 @@ export function RoleCreateForm({
       setSubmitting(true);
       const created = await createRole({
         name: trimmed,
-        description: description || undefined,
+description: description.trim() || undefined,
       });
       if (created) {
         onCreated?.(created);
