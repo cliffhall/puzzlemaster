@@ -51,41 +51,23 @@ const writeActiveTab = (tab: string): void => {
   }
 };
 
-const sortBySavedOrder = (list: Project[], key: string): Project[] => {
-  const saved = readOrder(key);
-  // Keep only ids that still exist and maintain their order
-  const existingInSaved = saved.filter((id) => list.some((p) => p.id === id));
-  // Find ids not in saved and append them (stable)
-  const missing = list
-    .map((p) => p.id)
-    .filter((id) => !existingInSaved.includes(id));
-  const finalOrder = [...existingInSaved, ...missing];
-  // Persist cleaned/updated order
-  writeOrder(key, finalOrder);
-  // Return list sorted to match finalOrder
-  const orderIndex = new Map(finalOrder.map((id, idx) => [id, idx] as const));
-  return [...list].sort(
-    (a, b) => orderIndex.get(a.id)! - orderIndex.get(b.id)!,
-  );
-};
-
-const sortRolesBySavedOrder = (list: Role[]): Role[] => {
-  const saved = readOrder(ROLE_ORDER_KEY);
-  // Keep only ids that still exist and maintain their order
-  const existingInSaved = saved.filter((id) => list.some((r) => r.id === id));
-  // Find ids not in saved and append them (stable)
-  const missing = list
-    .map((r) => r.id)
-    .filter((id) => !existingInSaved.includes(id));
-  const finalOrder = [...existingInSaved, ...missing];
-  // Persist cleaned/updated order
-  writeOrder(ROLE_ORDER_KEY, finalOrder);
-  // Return list sorted to match finalOrder
-  const orderIndex = new Map(finalOrder.map((id, idx) => [id, idx] as const));
-  return [...list].sort(
-    (a, b) => orderIndex.get(a.id)! - orderIndex.get(b.id)!,
-  );
-};
+const createSortBySavedOrder =
+  <T extends { id: string }>(key: string) =>
+  (list: T[]): T[] => {
+    const saved = readOrder(key);
+    const existingInSaved = saved.filter((id) =>
+      list.some((item) => item.id === id),
+    );
+    const missing = list
+      .map((item) => item.id)
+      .filter((id) => !existingInSaved.includes(id));
+    const finalOrder = [...existingInSaved, ...missing];
+    writeOrder(key, finalOrder);
+    const orderIndex = new Map(finalOrder.map((id, idx) => [id, idx] as const));
+    return [...list].sort(
+      (a, b) => orderIndex.get(a.id)! - orderIndex.get(b.id)!,
+    );
+  };
 
 export function Shell(): ReactElement {
   const [opened, { toggle }] = useDisclosure(true);
@@ -103,15 +85,19 @@ export function Shell(): ReactElement {
   const [draftRoleName, setDraftRoleName] = useState<string | null>(null);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
+  const sortBySavedProjectOrder =
+    createSortBySavedOrder<Project>(PROJECT_ORDER_KEY);
+  const sortBySavedRoleOrder = createSortBySavedOrder<Role>(ROLE_ORDER_KEY);
+
   const loadProjects = useCallback(async (): Promise<void> => {
     const list = await getProjects();
-    const ordered = list ? sortBySavedOrder(list, PROJECT_ORDER_KEY) : [];
+    const ordered = list ? sortBySavedProjectOrder(list) : [];
     setProjects(ordered);
   }, []);
 
   const loadRoles = useCallback(async (): Promise<void> => {
     const list = await getRoles();
-    const ordered = list ? sortRolesBySavedOrder(list) : [];
+    const ordered = list ? sortBySavedRoleOrder(list) : [];
     setRoles(ordered);
   }, []);
 
