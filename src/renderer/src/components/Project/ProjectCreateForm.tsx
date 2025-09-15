@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import {
   Group,
   TextInput,
@@ -34,31 +34,28 @@ export function ProjectCreateForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      const trimmed = name.trim();
-      if (!trimmed || submitting) return;
-      setError(null);
-      try {
-        setSubmitting(true);
-        const created = await createProject({
-          name: trimmed,
-          description: description || undefined,
-        });
-        if (created) {
-          onCreated?.(created);
-        } else {
-          setError("Failed to create project.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed || submitting) return;
+    setError(null);
+    try {
+      setSubmitting(true);
+      const created = await createProject({
+        name: trimmed,
+        description: description || undefined,
+      });
+      if (created) {
+        onCreated?.(created);
+      } else {
+        setError("Failed to create project.");
       }
-    },
-    [name, description, submitting, onCreated],
-  );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Paper p="md" withBorder>

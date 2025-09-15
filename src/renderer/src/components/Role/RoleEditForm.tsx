@@ -1,11 +1,4 @@
-import React, {
-  ReactElement,
-  memo,
-  useCallback,
-  useEffect,
-  useState,
-  useMemo,
-} from "react";
+import React, { ReactElement, memo, useEffect, useState, useMemo } from "react";
 import {
   Group,
   TextInput,
@@ -87,34 +80,31 @@ export const RoleEditForm = memo(function RoleEditForm({
     setDescription(initialDescription);
   };
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      const trimmed = name.trim();
-      if (!trimmed || submitting || !hasChanges) return;
-      setError(null);
-      try {
-        setSubmitting(true);
-        const updated = await updateRole({
-          id: roleId,
-          name: trimmed,
-          description: description || undefined,
-        });
-        if (updated) {
-          setInitialName(trimmed);
-          setInitialDescription(description);
-          onUpdated?.(roleId);
-        } else {
-          setError("Failed to update role.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed || submitting || !hasChanges) return;
+    setError(null);
+    try {
+      setSubmitting(true);
+      const updated = await updateRole({
+        id: roleId,
+        name: trimmed,
+        description: description || undefined,
+      });
+      if (updated) {
+        setInitialName(trimmed);
+        setInitialDescription(description);
+        onUpdated?.(roleId);
+      } else {
+        setError("Failed to update role.");
       }
-    },
-    [roleId, name, description, submitting, hasChanges, onUpdated],
-  );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -131,7 +121,7 @@ export const RoleEditForm = memo(function RoleEditForm({
     <Paper p="md" withBorder>
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <Title order={3}>Edit Role</Title>
+          <Title order={3}>Role</Title>
           <TextInput
             label="Name"
             required

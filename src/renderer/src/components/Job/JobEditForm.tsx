@@ -77,40 +77,37 @@ export function JobEditForm({
   }, [refreshTasks]);
 
   // Save job fields
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (submitting) return;
-      setError(null);
-      const trimmed = name.trim();
-      if (!trimmed) {
-        setError("Name is required.");
-        return;
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Name is required.");
+      return;
+    }
+    if (!hasChanges) return;
+    try {
+      setSubmitting(true);
+      const updated = await updateJob({
+        id: job.id,
+        phaseId: job.phaseId,
+        name: trimmed,
+        description: description.trim() || undefined,
+        status: job.status,
+        tasks: job.tasks, // tasks list is managed independently via Task CRUD
+      });
+      if (updated) {
+        onUpdated?.(updated);
+      } else {
+        setError("Failed to update job.");
       }
-      if (!hasChanges) return;
-      try {
-        setSubmitting(true);
-        const updated = await updateJob({
-          id: job.id,
-          phaseId: job.phaseId,
-          name: trimmed,
-          description: description.trim() || undefined,
-          status: job.status,
-          tasks: job.tasks, // tasks list is managed independently via Task CRUD
-        });
-        if (updated) {
-          onUpdated?.(updated);
-        } else {
-          setError("Failed to update job.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [name, description, onUpdated, job, hasChanges, submitting],
-  );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   // Open the edit task modal
   const openEditTaskModal = (task: Task): void => {

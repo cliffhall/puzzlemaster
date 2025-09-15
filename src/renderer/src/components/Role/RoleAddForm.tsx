@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Group, Input, CloseButton, ActionIcon } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
@@ -22,21 +22,18 @@ export function AddRoleForm({
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      const trimmed = name.trim();
-      if (!trimmed || submitting) return;
-      try {
-        setSubmitting(true);
-        await onAdd?.(trimmed);
-        setName("");
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [name, onAdd, submitting],
-  );
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed || submitting) return;
+    try {
+      setSubmitting(true);
+      await onAdd?.(trimmed);
+      setName("");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} style={{ width: "100%" }}>

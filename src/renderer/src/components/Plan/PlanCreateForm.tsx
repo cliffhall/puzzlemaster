@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import {
   Group,
   Textarea,
@@ -32,36 +32,33 @@ export function PlanCreateForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (submitting) return;
-      setError(null);
-      try {
-        setSubmitting(true);
-        const trimmed = description.trim();
-        if (!trimmed) {
-          setError("Description is required.");
-          return;
-        }
-        const created = await createPlan({
-          projectId,
-          description: trimmed,
-          phases: [],
-        });
-        if (created) {
-          onCreated?.(created);
-        } else {
-          setError("Failed to create plan.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    try {
+      setSubmitting(true);
+      const trimmed = description.trim();
+      if (!trimmed) {
+        setError("Description is required.");
+        return;
       }
-    },
-    [submitting, description, projectId, onCreated],
-  );
+      const created = await createPlan({
+        projectId,
+        description: trimmed,
+        phases: [],
+      });
+      if (created) {
+        onCreated?.(created);
+      } else {
+        setError("Failed to create plan.");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <Paper p="md" withBorder>
