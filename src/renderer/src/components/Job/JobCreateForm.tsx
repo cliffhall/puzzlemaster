@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { Button, Group, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import { createJob } from "../../client";
 import { Job } from "../../../../domain";
@@ -27,42 +27,37 @@ export function JobCreateForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (submitting) return;
-      setError(null);
-      const trimmed = name.trim();
-      if (!trimmed) {
-        setError("Name is required.");
-        return;
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Name is required.");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      const created = await createJob({
+        phaseId,
+        name: trimmed,
+        description: description.trim() || undefined,
+        status: "PENDING",
+        tasks: [] as string[],
+      });
+      if (created) {
+        onCreated?.(created);
+        setName("");
+        setDescription("");
+      } else {
+        setError("Failed to create job.");
       }
-      try {
-        setSubmitting(true);
-        const created = await createJob({
-          phaseId,
-          name: trimmed,
-          description: description.trim() || undefined,
-          status: "PENDING",
-          tasks: [] as string[],
-        });
-        if (created) {
-          onCreated?.(created);
-          setName("");
-          setDescription("");
-        } else {
-          setError("Failed to create job.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    // Submitting could be stale if the form is re-rendered while submitting
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [name, description, onCreated, phaseId],
-  );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>

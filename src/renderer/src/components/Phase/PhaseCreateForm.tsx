@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { ActionIcon, CloseButton, Group, Input, Text } from "@mantine/core";
 import { createPhase } from "../../client";
 import { Phase } from "../../../../domain";
@@ -14,7 +14,7 @@ export type CreatePhaseFormProps = {
  * CreatePhaseForm
  *
  * Minimal form to create a Phase associated with a Plan.
- * Collects required name and creates the phase (with no actions initially).
+ * Collects the required name and creates the phase (with no actions initially).
  */
 export function PhaseCreateForm({
   planId,
@@ -24,37 +24,34 @@ export function PhaseCreateForm({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (submitting) return;
-      setError(null);
-      const trimmed = name.trim();
-      if (!trimmed) {
-        setError("Name is required.");
-        return;
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Name is required.");
+      return;
+    }
+    try {
+      setSubmitting(true);
+      const created = await createPhase({
+        planId,
+        name: trimmed,
+        actions: [],
+      });
+      if (created) {
+        onCreated?.(created);
+        setName("");
+      } else {
+        setError("Failed to create phase.");
       }
-      try {
-        setSubmitting(true);
-        const created = await createPhase({
-          planId,
-          name: trimmed,
-          actions: [],
-        });
-        if (created) {
-          onCreated?.(created);
-          setName("");
-        } else {
-          setError("Failed to create phase.");
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [name, planId, submitting, onCreated],
-  );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>

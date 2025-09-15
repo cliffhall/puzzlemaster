@@ -9,26 +9,26 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { createProject } from "../../client";
-import { Project } from "../../../../domain";
+import { createRole } from "../../client";
+import { Role } from "../../../../domain";
 
-export type ProjectCreateFormProps = {
+export type RoleCreateFormProps = {
   initialName?: string;
-  onCreated?: (project: Project) => void;
+  onCreated?: (role: Role) => void;
   onCancel?: () => void;
 };
 
 /**
- * ProjectCreateForm
+ * RoleCreateForm
  *
  * A full-screen form in AppShell.Main that collects all fields required by
- * CreateProjectDTO (name, description?) and calls the Project API.
+ * CreateRoleDTO (name, description?) and calls the Role API.
  */
-export function ProjectCreateForm({
+export function RoleCreateForm({
   initialName = "",
   onCreated,
   onCancel,
-}: ProjectCreateFormProps): ReactElement {
+}: RoleCreateFormProps): ReactElement {
   const [name, setName] = useState(initialName);
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -41,14 +41,14 @@ export function ProjectCreateForm({
     setError(null);
     try {
       setSubmitting(true);
-      const created = await createProject({
+      const created = await createRole({
         name: trimmed,
-        description: description || undefined,
+description: description.trim() || undefined,
       });
       if (created) {
         onCreated?.(created);
       } else {
-        setError("Failed to create project.");
+        setError("Failed to create role.");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -61,20 +61,20 @@ export function ProjectCreateForm({
     <Paper p="md" withBorder>
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <Title order={3}>Create Project</Title>
+          <Title order={3}>Create Role</Title>
           <TextInput
             label="Name"
             required
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="My new project"
+            placeholder="My new role"
           />
           <Textarea
             label="Description"
-            description="Optional description of the project"
+            description="Optional description of the role"
             value={description}
             onChange={(e) => setDescription(e.currentTarget.value)}
-            placeholder="Describe your project (optional)"
+            placeholder="Describe your role (optional)"
             autosize
             minRows={3}
           />
@@ -89,7 +89,7 @@ export function ProjectCreateForm({
               Cancel
             </Button>
             <Button type="submit" loading={submitting} disabled={!name.trim()}>
-              Save Project
+              Save Role
             </Button>
           </Group>
         </Stack>

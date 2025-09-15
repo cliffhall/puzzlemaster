@@ -2,23 +2,23 @@ import React, { ReactElement, useState } from "react";
 import { Group, Input, CloseButton, ActionIcon } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 
-export type AddProjectFormProps = {
+export type AddRoleFormProps = {
   onAdd?: (name: string) => void | Promise<void>;
   placeholder?: string;
 };
 
 /**
- * AddProjectForm
+ * AddRoleForm
  *
- * A small inline form used to add a new Project by name.
+ * A small inline form used to add a new Role by name.
  * - Uses Mantine Input and an ActionIcon with a plus icon
  * - Submits on button click or Enter key
  * - Clears input after successful submission
  */
-export function AddProjectForm({
+export function AddRoleForm({
   onAdd,
-  placeholder = "Project name",
-}: AddProjectFormProps): ReactElement {
+  placeholder = "Role name",
+}: AddRoleFormProps): ReactElement {
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -54,7 +54,7 @@ export function AddProjectForm({
         <ActionIcon
           type="submit"
           variant="filled"
-          aria-label="Add Project"
+          aria-label="Add Role"
           disabled={!name.trim() || submitting}
         >
           <IconPlus stroke={1.5} />

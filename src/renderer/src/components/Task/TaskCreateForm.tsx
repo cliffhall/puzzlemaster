@@ -55,25 +55,22 @@ export function TaskCreateForm({
     [jobId, onCreated],
   );
 
-  const handleSubmit = useCallback(
-    async (e?: React.FormEvent) => {
-      if (e) e.preventDefault();
-      if (submitting) return;
-      setError(null);
-      const trimmed = name.trim();
-      if (!trimmed) {
-        setError("Name is required.");
-        return;
-      }
-      setSubmitting(true);
-      try {
-        openCreateTaskModal(trimmed);
-      } finally {
-        setSubmitting(false);
-      }
-    },
-    [name, submitting, openCreateTaskModal],
-  );
+  const handleSubmit = async (e?: React.FormEvent): Promise<void> => {
+    if (e) e.preventDefault();
+    if (submitting) return;
+    setError(null);
+    const trimmed = name.trim();
+    if (!trimmed) {
+      setError("Name is required.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      openCreateTaskModal(trimmed);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div>

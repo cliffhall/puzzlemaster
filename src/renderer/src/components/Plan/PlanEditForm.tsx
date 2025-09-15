@@ -226,7 +226,7 @@ export function PlanEditForm({
     return (
       <Stack gap="xs">
         <Group justify="space-between">
-            <Title order={5}>Phases</Title>
+          <Title order={5}>Phases</Title>
         </Group>
 
         {/* Table */}
