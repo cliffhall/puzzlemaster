@@ -150,27 +150,22 @@ export const RoleEditForm = memo(function RoleEditForm({
           />
           {error && <Text c="red">{error}</Text>}
           <Group justify="flex-end">
-            <Button variant="default" onClick={onClose}>
-              Close
+            <Button
+              variant="default"
+              type="button"
+              onClick={hasChanges ? handleCancel : onClose}
+              disabled={submitting}
+            >
+              {hasChanges ? "Cancel" : "Close"}
             </Button>
             {name.trim() && hasChanges && (
-              <Group>
-                <Button
-                  variant="default"
-                  type="button"
-                  onClick={handleCancel}
-                  disabled={submitting || !hasChanges}
-                >
-                  Cancel Changes
-                </Button>
-                <Button
-                  type="submit"
-                  loading={submitting}
-                  disabled={!name.trim() || !hasChanges}
-                >
-                  Save Role
-                </Button>
-              </Group>
+              <Button
+                type="submit"
+                loading={submitting}
+                disabled={!name.trim() || !hasChanges}
+              >
+                Save {hasChanges ? "Changes" : "Role"}
+              </Button>
             )}
           </Group>
         </Stack>
