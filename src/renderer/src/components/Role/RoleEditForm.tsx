@@ -90,11 +90,11 @@ export const RoleEditForm = memo(function RoleEditForm({
       const updated = await updateRole({
         id: roleId,
         name: trimmed,
-        description: description || undefined,
+        description: description.trim() || undefined,
       });
       if (updated) {
         setInitialName(trimmed);
-        setInitialDescription(description);
+        setInitialDescription(description.trim());
         onUpdated?.(roleId);
       } else {
         setError("Failed to update role.");
